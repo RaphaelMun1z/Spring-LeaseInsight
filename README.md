@@ -25,8 +25,10 @@
 </ol>
 
 <h2>Tecnologias Utilizadas</h2>
-<img align="center" alt="Rapha-Java" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-plain.svg">
-<img align="center" alt="Rapha-Spring" src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg" alt="spring" width="30" height="30"/>
+<div>
+  <img align="center" alt="Rapha-Java" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-plain.svg">
+  <img align="center" alt="Rapha-Spring" src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg" alt="spring" width="30" height="30"/>
+</div>
 <ul>
   <li>Java 21</li>
   <li>Spring Boot 3</li>
