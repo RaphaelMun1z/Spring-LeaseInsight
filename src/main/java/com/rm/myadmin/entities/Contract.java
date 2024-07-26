@@ -2,12 +2,15 @@ package com.rm.myadmin.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,13 +21,16 @@ public class Contract implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	// private Long residence_id;
 	// private Long tenant_id;
 	private LocalDate contract_start_date;
 	private LocalDate contract_end_date;
 	private Double rental_value;
 	private String contract_status;
+
+	@OneToMany(mappedBy = "contract")
+	private List<RentalHistory> rentals = new ArrayList<>();
 
 	public Contract() {
 
@@ -78,6 +84,10 @@ public class Contract implements Serializable {
 
 	public void setContract_status(String contract_status) {
 		this.contract_status = contract_status;
+	}
+
+	public List<RentalHistory> getRentals() {
+		return rentals;
 	}
 
 	@Override
