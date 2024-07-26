@@ -24,6 +24,8 @@
   </li>
 </ol>
 
+<img align="center" alt="architecture" src="https://miro.medium.com/v2/resize:fit:1400/1*neBcAZJyLGpE7KHc3sH8bw.png" alt="architecture" width="500" height="228"/>
+
 <h2>Tecnologias Utilizadas</h2>
 <div>
   <img align="center" alt="Rapha-Java" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-plain.svg">
