@@ -33,7 +33,7 @@
 <ul>
   <li>Java 21</li>
   <li>Spring Boot 3</li>
-  <li>Spring Data JPA</li>
+  <li>JPA/Hibernate</li>
   <li>H2 Database</li>
   <li>Maven</li>
 </ul>
