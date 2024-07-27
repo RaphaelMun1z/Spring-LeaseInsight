@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rm.myadmin.entities.enums.ContractStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,13 +29,13 @@ public class Contract implements Serializable {
 	// private Long residence_id;
 	// private Long tenant_id;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate contract_start_date;
+	private LocalDate contractStartDate;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate contract_end_date;
+	private LocalDate contractEndDate;
 
-	private Double rental_value;
-	private String contract_status;
+	private Double rentalValue;
+	private Integer contractStatus;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "contract")
@@ -44,14 +45,14 @@ public class Contract implements Serializable {
 
 	}
 
-	public Contract(Long id, LocalDate contract_start_date, LocalDate contract_end_date, Double rental_value,
-			String contract_status) {
+	public Contract(Long id, LocalDate contractStartDate, LocalDate contractEndDate, Double rentalValue,
+			ContractStatus contractStatus) {
 		super();
 		this.id = id;
-		this.contract_start_date = contract_start_date;
-		this.contract_end_date = contract_end_date;
-		this.rental_value = rental_value;
-		this.contract_status = contract_status;
+		this.contractStartDate = contractStartDate;
+		this.contractEndDate = contractEndDate;
+		this.rentalValue = rentalValue;
+		setContractStatus(contractStatus);
 	}
 
 	public Long getId() {
@@ -62,36 +63,38 @@ public class Contract implements Serializable {
 		this.id = id;
 	}
 
-	public LocalDate getContract_start_date() {
-		return contract_start_date;
+	public LocalDate getContractStartDate() {
+		return contractStartDate;
 	}
 
-	public void setContract_start_date(LocalDate contract_start_date) {
-		this.contract_start_date = contract_start_date;
+	public void setContractStartDate(LocalDate contractStartDate) {
+		this.contractStartDate = contractStartDate;
 	}
 
-	public LocalDate getContract_end_date() {
-		return contract_end_date;
+	public LocalDate getContractEndDate() {
+		return contractEndDate;
 	}
 
-	public void setContract_end_date(LocalDate contract_end_date) {
-		this.contract_end_date = contract_end_date;
+	public void setContractEndDate(LocalDate contractEndDate) {
+		this.contractEndDate = contractEndDate;
 	}
 
-	public Double getRental_value() {
-		return rental_value;
+	public Double getRentalValue() {
+		return rentalValue;
 	}
 
-	public void setRental_value(Double rental_value) {
-		this.rental_value = rental_value;
+	public void setRentalValue(Double rentalValue) {
+		this.rentalValue = rentalValue;
 	}
 
-	public String getContract_status() {
-		return contract_status;
+	public ContractStatus getContractStatus() {
+		return ContractStatus.valueOf(contractStatus);
 	}
 
-	public void setContract_status(String contract_status) {
-		this.contract_status = contract_status;
+	public void setContractStatus(ContractStatus contractStatus) {
+		if (contractStatus != null) {
+			this.contractStatus = contractStatus.getCode();
+		}
 	}
 
 	public List<RentalHistory> getRentals() {
