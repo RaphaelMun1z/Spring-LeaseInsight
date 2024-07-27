@@ -14,12 +14,14 @@ import org.springframework.context.annotation.Profile;
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.entities.Residence;
+import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.entities.enums.ContractStatus;
 import com.rm.myadmin.entities.enums.OccupancyStatus;
 import com.rm.myadmin.entities.enums.PaymentStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
 import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.repositories.RentalHistoryRepository;
+import com.rm.myadmin.repositories.ResidenceAddressRepository;
 import com.rm.myadmin.repositories.ResidenceRepository;
 
 @Configuration
@@ -34,16 +36,22 @@ public class TestConfig implements CommandLineRunner {
 	@Autowired
 	private ResidenceRepository residenceRepository;
 
+	@Autowired
+	private ResidenceAddressRepository residenceAddress;
+
 	@Override
 	public void run(String... args) throws Exception {
+		ResidenceAddress ra1 = new ResidenceAddress(null, 315, "Av. Mal. Mallet", "Canto do Forte", "Praia Grande",
+				"São Paulo", "Brasil", "11222-333", "Próximo ao quartel");
+
+		residenceAddress.saveAll(Arrays.asList(ra1));
+
 		Residence r1 = new Residence(null, PropertyType.House, "Casa nova, moderna, alto padrão.", null,
 				"Condomínio ABC", 3, 2, 1, 112.5f, 87.3f, 2, Year.of(2023), OccupancyStatus.Occupied,
-				new BigDecimal("1615900.00"), new BigDecimal("3500.00"), Instant.parse("2024-07-10T12:35:12Z"));
+				new BigDecimal("1615900.00"), new BigDecimal("3500.00"), Instant.parse("2024-07-10T12:35:12Z"), ra1);
 		Residence r2 = new Residence(null, PropertyType.Apartment, "Apartamento com vista para o mar, bem iluminado.",
 				101, "Edifício Solar", 2, 1, 0, 75.0f, 65.0f, 1, Year.of(2022), OccupancyStatus.PendingMoveOut,
-				new BigDecimal("850000.00"), new BigDecimal("2000.00"), Instant.parse("2024-06-15T08:30:00Z"));
-
-		//residenceRepository.saveAll(Arrays.asList(r1, r2));
+				new BigDecimal("850000.00"), new BigDecimal("2000.00"), Instant.parse("2024-06-15T08:30:00Z"), ra1);
 
 		Contract c1 = new Contract(null, r1, LocalDate.now(), LocalDate.now(), 1500.0, ContractStatus.Active);
 		Contract c2 = new Contract(null, r2, LocalDate.now(), LocalDate.now(), 1100.0, ContractStatus.Renewed);

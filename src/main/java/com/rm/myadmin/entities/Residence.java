@@ -15,6 +15,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -50,6 +52,10 @@ public class Residence implements Serializable {
 	private BigDecimal rentalValue;
 	private Instant dateLastRenovation;
 
+	@ManyToOne
+	@JoinColumn(name = "residence_address_id")
+	private ResidenceAddress residenceAddress;
+
 	public Residence() {
 
 	}
@@ -57,7 +63,7 @@ public class Residence implements Serializable {
 	public Residence(Long id, PropertyType propertyType, String description, Integer aptNumber, String complement,
 			int numberBedrooms, int numberBathrooms, int numberSuites, float totalArea, float builtArea,
 			int garageSpaces, Year yearConstruction, OccupancyStatus occupancyStatus, BigDecimal marketValue,
-			BigDecimal rentalValue, Instant dateLastRenovation) {
+			BigDecimal rentalValue, Instant dateLastRenovation, ResidenceAddress residenceAddress) {
 		super();
 		this.id = id;
 		setPropertyType(propertyType);
@@ -75,6 +81,7 @@ public class Residence implements Serializable {
 		this.marketValue = marketValue;
 		this.rentalValue = rentalValue;
 		this.dateLastRenovation = dateLastRenovation;
+		setResidenceAddress(residenceAddress);
 	}
 
 	public Long getId() {
@@ -215,6 +222,14 @@ public class Residence implements Serializable {
 
 	public void setDateLastRenovation(Instant dateLastRenovation) {
 		this.dateLastRenovation = dateLastRenovation;
+	}
+
+	public ResidenceAddress getResidenceAddress() {
+		return residenceAddress;
+	}
+
+	public void setResidenceAddress(ResidenceAddress residenceAddress) {
+		this.residenceAddress = residenceAddress;
 	}
 
 	@Override
