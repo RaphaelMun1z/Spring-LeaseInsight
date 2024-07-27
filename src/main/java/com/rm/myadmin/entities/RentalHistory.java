@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.rm.myadmin.entities.enums.PaymentStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +30,7 @@ public class RentalHistory implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate rental_end_date;
 
-	private String payment_status;
+	private Integer payment_status;
 
 	@ManyToOne
 	@JoinColumn(name = "contract_id")
@@ -39,13 +40,13 @@ public class RentalHistory implements Serializable {
 
 	}
 
-	public RentalHistory(Long id, LocalDate rental_start_date, LocalDate rental_end_date, String payment_status,
+	public RentalHistory(Long id, LocalDate rental_start_date, LocalDate rental_end_date, PaymentStatus payment_status,
 			Contract contract) {
 		super();
 		this.id = id;
 		this.rental_start_date = rental_start_date;
 		this.rental_end_date = rental_end_date;
-		this.payment_status = payment_status;
+		setPayment_status(payment_status);
 		this.contract = contract;
 	}
 
@@ -73,12 +74,14 @@ public class RentalHistory implements Serializable {
 		this.rental_end_date = rental_end_date;
 	}
 
-	public String getPayment_status() {
-		return payment_status;
+	public PaymentStatus getPayment_status() {
+		return PaymentStatus.valueOf(payment_status);
 	}
 
-	public void setPayment_status(String payment_status) {
-		this.payment_status = payment_status;
+	public void setPayment_status(PaymentStatus payment_status) {
+		if (payment_status != null) {
+			this.payment_status = payment_status.getCode();
+		}
 	}
 
 	public Contract getContract() {
