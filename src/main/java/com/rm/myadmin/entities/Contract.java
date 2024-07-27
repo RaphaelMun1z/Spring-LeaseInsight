@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,11 +27,16 @@ public class Contract implements Serializable {
 
 	// private Long residence_id;
 	// private Long tenant_id;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate contract_start_date;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate contract_end_date;
+
 	private Double rental_value;
 	private String contract_status;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "contract")
 	private List<RentalHistory> rentals = new ArrayList<>();
 
