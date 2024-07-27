@@ -14,7 +14,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,7 +28,11 @@ public class Contract implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// private Long residence_id;
+	@JsonIgnore
+	@OneToOne
+	@MapsId
+	private Residence residence;
+
 	// private Long tenant_id;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate contractStartDate;
@@ -45,10 +51,11 @@ public class Contract implements Serializable {
 
 	}
 
-	public Contract(Long id, LocalDate contractStartDate, LocalDate contractEndDate, Double rentalValue,
-			ContractStatus contractStatus) {
+	public Contract(Long id, Residence residence, LocalDate contractStartDate, LocalDate contractEndDate,
+			Double rentalValue, ContractStatus contractStatus) {
 		super();
 		this.id = id;
+		this.residence = residence;
 		this.contractStartDate = contractStartDate;
 		this.contractEndDate = contractEndDate;
 		this.rentalValue = rentalValue;
@@ -61,6 +68,14 @@ public class Contract implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Residence getResidence() {
+		return residence;
+	}
+
+	public void setResidence(Residence residence) {
+		this.residence = residence;
 	}
 
 	public LocalDate getContractStartDate() {
