@@ -14,6 +14,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -33,7 +35,10 @@ public class Contract implements Serializable {
 	@MapsId
 	private Residence residence;
 
-	// private Long tenant_id;
+	@ManyToOne
+	@JoinColumn(name = "tenant_id")
+	private Tenant tenant;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate contractStartDate;
 
@@ -51,11 +56,12 @@ public class Contract implements Serializable {
 
 	}
 
-	public Contract(Long id, Residence residence, LocalDate contractStartDate, LocalDate contractEndDate,
+	public Contract(Long id, Residence residence, Tenant tenant, LocalDate contractStartDate, LocalDate contractEndDate,
 			Double rentalValue, ContractStatus contractStatus) {
 		super();
 		this.id = id;
 		this.residence = residence;
+		this.tenant = tenant;
 		this.contractStartDate = contractStartDate;
 		this.contractEndDate = contractEndDate;
 		this.rentalValue = rentalValue;
@@ -76,6 +82,14 @@ public class Contract implements Serializable {
 
 	public void setResidence(Residence residence) {
 		this.residence = residence;
+	}
+
+	public Tenant getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(Tenant tenant) {
+		this.tenant = tenant;
 	}
 
 	public LocalDate getContractStartDate() {

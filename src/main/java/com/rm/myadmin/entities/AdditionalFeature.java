@@ -1,12 +1,17 @@
 package com.rm.myadmin.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,6 +24,10 @@ public class AdditionalFeature implements Serializable {
 	private Long id;
 
 	private String feature;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "feature")
+	private List<ResidenceFeature> residencesFeatures = new ArrayList<>();
 
 	public AdditionalFeature() {
 
@@ -44,6 +53,10 @@ public class AdditionalFeature implements Serializable {
 
 	public void setFeature(String feature) {
 		this.feature = feature;
+	}
+
+	public List<ResidenceFeature> getResidencesFeatures() {
+		return residencesFeatures;
 	}
 
 	@Override

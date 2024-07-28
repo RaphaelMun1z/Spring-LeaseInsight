@@ -4,8 +4,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Year;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rm.myadmin.entities.enums.OccupancyStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
 
@@ -17,6 +20,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -35,7 +39,7 @@ public class Residence implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "owner_id")
 	private Owner owner;
-	
+
 	private Integer propertyType;
 	private String description;
 	private Integer aptNumber;
@@ -58,6 +62,10 @@ public class Residence implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "residence_address_id")
 	private ResidenceAddress residenceAddress;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "property")
+	List<ResidenceFeature> features = new ArrayList<>();
 
 	public Residence() {
 
