@@ -32,7 +32,10 @@ public class Residence implements Serializable {
 	@OneToOne(mappedBy = "residence", cascade = CascadeType.ALL)
 	private Contract contract;
 
-	// private Long owner_id;
+	@ManyToOne
+	@JoinColumn(name = "owner_id")
+	private Owner owner;
+	
 	private Integer propertyType;
 	private String description;
 	private Integer aptNumber;
@@ -60,12 +63,14 @@ public class Residence implements Serializable {
 
 	}
 
-	public Residence(Long id, PropertyType propertyType, String description, Integer aptNumber, String complement,
-			int numberBedrooms, int numberBathrooms, int numberSuites, float totalArea, float builtArea,
-			int garageSpaces, Year yearConstruction, OccupancyStatus occupancyStatus, BigDecimal marketValue,
-			BigDecimal rentalValue, Instant dateLastRenovation, ResidenceAddress residenceAddress) {
+	public Residence(Long id, Owner owner, PropertyType propertyType, String description, Integer aptNumber,
+			String complement, int numberBedrooms, int numberBathrooms, int numberSuites, float totalArea,
+			float builtArea, int garageSpaces, Year yearConstruction, OccupancyStatus occupancyStatus,
+			BigDecimal marketValue, BigDecimal rentalValue, Instant dateLastRenovation,
+			ResidenceAddress residenceAddress) {
 		super();
 		this.id = id;
+		this.owner = owner;
 		setPropertyType(propertyType);
 		this.description = description;
 		this.aptNumber = aptNumber;
@@ -81,7 +86,7 @@ public class Residence implements Serializable {
 		this.marketValue = marketValue;
 		this.rentalValue = rentalValue;
 		this.dateLastRenovation = dateLastRenovation;
-		setResidenceAddress(residenceAddress);
+		this.residenceAddress = residenceAddress;
 	}
 
 	public Long getId() {
@@ -98,6 +103,14 @@ public class Residence implements Serializable {
 
 	public void setContract(Contract contract) {
 		this.contract = contract;
+	}
+
+	public Owner getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Owner owner) {
+		this.owner = owner;
 	}
 
 	public PropertyType getPropertyType() {
