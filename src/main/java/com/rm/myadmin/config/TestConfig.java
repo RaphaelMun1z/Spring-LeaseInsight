@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.rm.myadmin.entities.AdditionalFeature;
+import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.RentalHistory;
@@ -23,7 +24,9 @@ import com.rm.myadmin.entities.enums.ContractStatus;
 import com.rm.myadmin.entities.enums.OccupancyStatus;
 import com.rm.myadmin.entities.enums.PaymentStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
+import com.rm.myadmin.entities.enums.TenantStatus;
 import com.rm.myadmin.repositories.AdditionalFeatureRepository;
+import com.rm.myadmin.repositories.BillingAddressRepository;
 import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.repositories.OwnerRepository;
 import com.rm.myadmin.repositories.RentalHistoryRepository;
@@ -45,7 +48,7 @@ public class TestConfig implements CommandLineRunner {
 	private ResidenceRepository residenceRepository;
 
 	@Autowired
-	private ResidenceAddressRepository residenceAddress;
+	private ResidenceAddressRepository residenceAddressRepository;
 
 	@Autowired
 	private OwnerRepository ownerRepository;
@@ -58,7 +61,10 @@ public class TestConfig implements CommandLineRunner {
 
 	@Autowired
 	private TenantRepository tenantRepository;
-	
+
+	@Autowired
+	private BillingAddressRepository billingAddressRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
 		Owner o1 = new Owner(null, "Garen Demácia", "(13) 91234-5678", "garendemacia@gmail.com");
@@ -69,7 +75,7 @@ public class TestConfig implements CommandLineRunner {
 		ResidenceAddress ra1 = new ResidenceAddress(null, 315, "Av. Mal. Mallet", "Canto do Forte", "Praia Grande",
 				"São Paulo", "Brasil", "11222-333", "Próximo ao quartel");
 
-		residenceAddress.saveAll(Arrays.asList(ra1));
+		residenceAddressRepository.saveAll(Arrays.asList(ra1));
 
 		Residence r1 = new Residence(null, o1, PropertyType.House, "Casa nova, moderna, alto padrão.", null,
 				"Condomínio ABC", 3, 2, 1, 112.5f, 87.3f, 2, Year.of(2023), OccupancyStatus.Occupied,
@@ -79,10 +85,16 @@ public class TestConfig implements CommandLineRunner {
 				Year.of(2022), OccupancyStatus.PendingMoveOut, new BigDecimal("850000.00"), new BigDecimal("2000.00"),
 				Instant.parse("2024-06-15T08:30:00Z"), ra1);
 
-		Tenant t1 = new Tenant(null, LocalDate.of(2000, 6, 15), "111.111.111.11", "22.222.222.2", LocalDate.now());
+		BillingAddress ba1 = new BillingAddress(null, 502, "Av. Pres. Kennedy", "Guilhermina", "Praia Grande",
+				"São Paulo", "Brasil", "33444-111", "Próximo ao Extra");
+		
+		billingAddressRepository.saveAll(Arrays.asList(ba1));
+		
+		Tenant t1 = new Tenant(null, LocalDate.of(2000, 6, 15), "111.111.111.11", "22.222.222.2", LocalDate.now(),
+				TenantStatus.Pending, ba1);
 
 		tenantRepository.saveAll(Arrays.asList(t1));
-		
+
 		Contract c1 = new Contract(null, r1, t1, LocalDate.now(), LocalDate.now(), 1500.0, ContractStatus.Active);
 		Contract c2 = new Contract(null, r2, t1, LocalDate.now(), LocalDate.now(), 1100.0, ContractStatus.Renewed);
 
@@ -95,7 +107,7 @@ public class TestConfig implements CommandLineRunner {
 
 		RentalHistory rh1 = new RentalHistory(null, LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 31),
 				PaymentStatus.Paid, c1);
-		RentalHistory rh2 = new RentalHistory(null, LocalDate.of(2024, 2, 1), LocalDate.of(2024, 2, 29),
+		RentalHistory rh2 = new RentalHistory(null, LocalDate.of(2024, 2, 1), LocalDate.of(2024, 2, 28),
 				PaymentStatus.Overdue, c1);
 		RentalHistory rh3 = new RentalHistory(null, LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 31),
 				PaymentStatus.Pending, c2);
