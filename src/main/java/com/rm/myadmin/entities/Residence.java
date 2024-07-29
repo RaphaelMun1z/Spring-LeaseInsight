@@ -4,11 +4,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rm.myadmin.entities.enums.OccupancyStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
 
@@ -59,13 +58,12 @@ public class Residence implements Serializable {
 	private BigDecimal rentalValue;
 	private Instant dateLastRenovation;
 
+	@OneToMany(mappedBy = "id.residence")
+	private Set<ResidenceFeature> features = new HashSet<>();
+
 	@ManyToOne
 	@JoinColumn(name = "residence_address_id")
 	private ResidenceAddress residenceAddress;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "property")
-	List<ResidenceFeature> features = new ArrayList<>();
 
 	public Residence() {
 
@@ -243,6 +241,10 @@ public class Residence implements Serializable {
 
 	public void setDateLastRenovation(Instant dateLastRenovation) {
 		this.dateLastRenovation = dateLastRenovation;
+	}
+
+	public Set<ResidenceFeature> getFeatures() {
+		return features;
 	}
 
 	public ResidenceAddress getResidenceAddress() {
