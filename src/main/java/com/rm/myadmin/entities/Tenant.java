@@ -15,7 +15,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,13 +29,17 @@ public class Tenant implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// private user_id
+	@JsonIgnore
+	@OneToOne
+	@MapsId
+	private User user;
+	
 	private LocalDate dateOfBirth;
 	private String cpf;
 	private String rg;
 	private LocalDate registrationDate;
 	private Integer tenantStatus;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "tenant_billing_address_id")
 	private BillingAddress tenantBillingAddress;
@@ -46,10 +52,11 @@ public class Tenant implements Serializable {
 
 	}
 
-	public Tenant(Long id, LocalDate dateOfBirth, String cpf, String rg, LocalDate registrationDate,
+	public Tenant(Long id, User user, LocalDate dateOfBirth, String cpf, String rg, LocalDate registrationDate,
 			TenantStatus tenantStatus, BillingAddress tenantBillingAddress) {
 		super();
 		this.id = id;
+		this.user = user;
 		this.dateOfBirth = dateOfBirth;
 		this.cpf = cpf;
 		this.rg = rg;
@@ -64,6 +71,14 @@ public class Tenant implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public LocalDate getDateOfBirth() {
