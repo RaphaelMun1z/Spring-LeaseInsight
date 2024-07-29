@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rm.myadmin.entities.enums.TenantStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -29,8 +32,11 @@ public class Tenant implements Serializable {
 	private String cpf;
 	private String rg;
 	private LocalDate registrationDate;
-	// private tenant_status;
-	// private current_address_id;
+	private Integer tenantStatus;
+	
+	@ManyToOne
+	@JoinColumn(name = "tenant_billing_address_id")
+	private BillingAddress tenantBillingAddress;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "tenant")
@@ -40,13 +46,16 @@ public class Tenant implements Serializable {
 
 	}
 
-	public Tenant(Long id, LocalDate dateOfBirth, String cpf, String rg, LocalDate registrationDate) {
+	public Tenant(Long id, LocalDate dateOfBirth, String cpf, String rg, LocalDate registrationDate,
+			TenantStatus tenantStatus, BillingAddress tenantBillingAddress) {
 		super();
 		this.id = id;
 		this.dateOfBirth = dateOfBirth;
 		this.cpf = cpf;
 		this.rg = rg;
 		this.registrationDate = registrationDate;
+		setTenantStatus(tenantStatus);
+		this.tenantBillingAddress = tenantBillingAddress;
 	}
 
 	public Long getId() {
@@ -87,6 +96,22 @@ public class Tenant implements Serializable {
 
 	public void setRegistrationDate(LocalDate registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	public TenantStatus getTenantStatus() {
+		return TenantStatus.valueOf(tenantStatus);
+	}
+
+	public void setTenantStatus(TenantStatus tenantStatus) {
+		this.tenantStatus = tenantStatus.getCode();
+	}
+
+	public BillingAddress getTenantBillingAddress() {
+		return tenantBillingAddress;
+	}
+
+	public void setTenantBillingAddress(BillingAddress tenantBillingAddress) {
+		this.tenantBillingAddress = tenantBillingAddress;
 	}
 
 	public List<Contract> getContracts() {
