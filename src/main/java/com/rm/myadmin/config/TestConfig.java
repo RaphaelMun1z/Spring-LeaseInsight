@@ -20,13 +20,11 @@ import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.entities.ResidenceFeature;
 import com.rm.myadmin.entities.Tenant;
-import com.rm.myadmin.entities.User;
 import com.rm.myadmin.entities.enums.ContractStatus;
 import com.rm.myadmin.entities.enums.OccupancyStatus;
 import com.rm.myadmin.entities.enums.PaymentStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
 import com.rm.myadmin.entities.enums.TenantStatus;
-import com.rm.myadmin.entities.enums.UserType;
 import com.rm.myadmin.repositories.AdditionalFeatureRepository;
 import com.rm.myadmin.repositories.BillingAddressRepository;
 import com.rm.myadmin.repositories.ContractRepository;
@@ -36,7 +34,6 @@ import com.rm.myadmin.repositories.ResidenceAddressRepository;
 import com.rm.myadmin.repositories.ResidenceFeatureRepository;
 import com.rm.myadmin.repositories.ResidenceRepository;
 import com.rm.myadmin.repositories.TenantRepository;
-import com.rm.myadmin.repositories.UserRepository;
 
 @Configuration
 @Profile("test")
@@ -68,19 +65,16 @@ public class TestConfig implements CommandLineRunner {
 	@Autowired
 	private BillingAddressRepository billingAddressRepository;
 
-	@Autowired
-	private UserRepository userRepository;
-
 	@Override
 	public void run(String... args) throws Exception {
-		Owner o1 = new Owner(null, "Garen Demácia", "(13) 91234-5678", "garendemacia@gmail.com");
-		Owner o2 = new Owner(null, "Lux", "(11) 94321-8765", "lux@gmail.com");
+		Owner o1 = new Owner(null, "Garen Demácia", "(13) 91234-5678", "garendemacia@gmail.com", "password123");
+		Owner o2 = new Owner(null, "Lux", "(11) 94321-8765", "lux@gmail.com", "senha321");
 
 		ownerRepository.saveAll(Arrays.asList(o1, o2));
 
 		ResidenceAddress ra1 = new ResidenceAddress(null, 315, "Av. Mal. Mallet", "Canto do Forte", "Praia Grande",
 				"São Paulo", "Brasil", "11222-333", "Próximo ao quartel");
-		
+
 		residenceAddressRepository.saveAll(Arrays.asList(ra1));
 
 		Residence r1 = new Residence(null, o1, PropertyType.HOUSE, "Casa nova, moderna, alto padrão.", null,
@@ -96,17 +90,11 @@ public class TestConfig implements CommandLineRunner {
 
 		billingAddressRepository.save(ba1);
 
-		User u1 = new User(null, "Darius", "(11) 91111-2222", "darius@gmail.com", "senha123", UserType.ADM);
-		User u2 = new User(null, "Ashe", "(13) 91122-1122", "ashe@gmail.com", "algumasenha", UserType.CLIENT);
-
-		Tenant t1 = new Tenant(null, u2, LocalDate.of(2000, 6, 15), "111.111.111.11", "22.222.222.2", LocalDate.now(),
-				TenantStatus.PENDING, ba1);
+		Tenant t1 = new Tenant(null, "Nautilus", "(13) 91212-1212", "nautilus@gmail.com", "senhaa123",
+				LocalDate.of(2000, 6, 15), "111.111.111.11", "22.222.222.2", LocalDate.now(), TenantStatus.PENDING,
+				ba1);
 
 		tenantRepository.save(t1);
-
-		u2.setTenant(t1);
-
-		userRepository.saveAll(Arrays.asList(u1, u2));
 
 		Contract c1 = new Contract(null, r1, t1, LocalDate.now(), LocalDate.now(), 1500.0, ContractStatus.ACTIVE);
 		Contract c2 = new Contract(null, r2, t1, LocalDate.now(), LocalDate.now(), 1100.0, ContractStatus.RENEWED);
@@ -141,7 +129,7 @@ public class TestConfig implements CommandLineRunner {
 		ResidenceFeature rf5 = new ResidenceFeature(r2, af4);
 
 		residenceFeatureRepository.saveAll(Arrays.asList(rf1, rf2, rf3, rf4, rf5));
-	
+
 	}
 
 }
