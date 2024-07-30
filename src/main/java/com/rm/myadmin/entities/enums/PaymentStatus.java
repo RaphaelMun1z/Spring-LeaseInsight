@@ -1,15 +1,15 @@
 package com.rm.myadmin.entities.enums;
 
 public enum PaymentStatus {
-	Pending(1), 
-	Paid(2), 
-	Overdue(3), 
-	Canceled(4), 
-	InProcess(5), 
-	PartiallyPaid(6), 
-	Disputed(7), 
-	Refunded(8),
-	InCollection(9);
+	PENDING(1),
+	PAID(2),
+	OVERDUE(3),
+	CANCELED(4),
+	IN_PROCESS(5),
+	PARTIALLY_PAID(6),
+	DISPUTED(7),
+	REFUNDED(8),
+	IN_COLLECTION(9);
 
 	private int code;
 

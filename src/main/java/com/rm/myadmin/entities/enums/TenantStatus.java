@@ -1,11 +1,11 @@
 package com.rm.myadmin.entities.enums;
 
 public enum TenantStatus {
-	Active(1),
-	Inactive(2),
-	Pending(3),
-	Former(4),
-	Prospective(5);
+	ACTIVE(1),
+	INACTIVE(2),
+	PENDING(3),
+	FORMER(4),
+	PROSPECTIVE(5);
 
 	private int code;
 

@@ -1,18 +1,18 @@
 package com.rm.myadmin.entities.enums;
 
 public enum ContractStatus {
-	Active(1),
-	Terminated(2),
-	Expired(3),
-	PendingApproval(4),
-	Approved(5),
-	Rejected(6),
-	UnderReview(7),
-	Renewed(8),
-	Canceled(9),
-	Suspended(10),
-	InNegotiation(11),
-	Hold(12);
+	ACTIVE(1),
+	TERMINATED(2),
+	EXPIRED(3),
+	PENDING_APPROVAL(4),
+	APPROVED(5),
+	REJECTED(6),
+	UNDER_REVIEW(7),
+	RENEWED(8),
+	CANCELED(9),
+	SUSPENDED(10),
+	IN_NEGOTIATION(11),
+	HOLD(12);
 
 	private int code;
 

@@ -1,14 +1,14 @@
 package com.rm.myadmin.entities.enums;
 
 public enum PropertyType {
-	House(1),
-	Condo(2),
-	Farm(3),
-	Warehouse(4),
-	CommercialApartment(5),
-	RetailStore(6),
-	Apartment(7),
-	LandPlot(8);
+	HOUSE(1),
+	CONDO(2),
+	FARM(3),
+	WAREHOUSE(4),
+	COMMERCIAL_APARTMENT(5),
+	RETAIL_STORE(6),
+	APARTMENT(7),
+	LAND_PLOT(8);
 
 	private int code;
 

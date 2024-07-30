@@ -1,14 +1,14 @@
 package com.rm.myadmin.entities.enums;
 
 public enum OccupancyStatus {
-	Occupied(1),
-	Vacant(2),
-	PendingMoveIn(3),
-	PendingMoveOut(4),
-	UnderMaintenance(5),
-	Leased(6),
-	Available(7),
-	Reserved(8);
+	OCCUPIED(1),
+	VACANT(2),
+	PENDING_MOVE_IN(3),
+	PENDING_MOVE_OUT(4),
+	UNDER_MAINTENANCE(5),
+	LEASED(6),
+	AVAILABLE(7),
+	RESERVED(8);
 
 	private int code;
 
