@@ -1,23 +1,14 @@
 package com.rm.myadmin.entities;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-import com.rm.myadmin.entities.enums.UserType;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
-@Table(name = "tb_user")
-public class User implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+@MappedSuperclass
+public abstract class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -26,23 +17,18 @@ public class User implements Serializable {
 	private String phone;
 	private String email;
 	private String password;
-	private Integer userType;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-	private Tenant tenant;
-
-	public User() {
+	protected User() {
 
 	}
 
-	public User(Long id, String name, String phone, String email, String password, UserType userType) {
+	protected User(Long id, String name, String phone, String email, String password) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.phone = phone;
 		this.email = email;
 		this.password = password;
-		setUserType(userType);
 	}
 
 	public Long getId() {
@@ -83,22 +69,6 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public UserType getUserType() {
-		return UserType.valueOf(userType);
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType.getCode();
-	}
-
-	public Tenant getTenant() {
-		return tenant;
-	}
-
-	public void setTenant(Tenant tenant) {
-		this.tenant = tenant;
 	}
 
 	@Override
