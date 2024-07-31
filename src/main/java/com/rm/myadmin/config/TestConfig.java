@@ -96,8 +96,8 @@ public class TestConfig implements CommandLineRunner {
 
 		tenantRepository.save(t1);
 
-		Contract c1 = new Contract(null, r1, t1, LocalDate.of(2024, 4, 20), LocalDate.of(2024, 10, 10), 1637.73,
-				ContractStatus.ACTIVE, 22);
+		Contract c1 = new Contract(null, r1, t1, LocalDate.of(2024, 4, 20), LocalDate.of(2024, 10, 10), 950.00,
+				ContractStatus.ACTIVE, 10);
 		Contract c2 = new Contract(null, r2, t1, LocalDate.of(2024, 4, 20), LocalDate.of(2024, 10, 20), 1100.0,
 				ContractStatus.RENEWED, 22);
 
@@ -109,8 +109,8 @@ public class TestConfig implements CommandLineRunner {
 		residenceRepository.saveAll(Arrays.asList(r1, r2));
 
 		RentalHistory rh1 = new RentalHistory(null, LocalDate.of(2024, 4, 20), PaymentStatus.PAID, c1);
-		RentalHistory rh2 = new RentalHistory(null, LocalDate.of(2024, 5, 20), PaymentStatus.OVERDUE, c1);
-		RentalHistory rh3 = new RentalHistory(null, LocalDate.of(2024, 6, 20), PaymentStatus.PENDING, c1);
+		RentalHistory rh2 = new RentalHistory(null, LocalDate.of(2024, 5, 10), PaymentStatus.OVERDUE, c1);
+		RentalHistory rh3 = new RentalHistory(null, LocalDate.of(2024, 6, 10), PaymentStatus.PENDING, c1);
 
 		rentalHistoryRepository.saveAll(Arrays.asList(rh1, rh2, rh3));
 
