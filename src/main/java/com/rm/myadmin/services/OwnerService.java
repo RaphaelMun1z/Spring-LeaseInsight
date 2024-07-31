@@ -22,4 +22,8 @@ public class OwnerService {
 		Optional<Owner> obj = repository.findById(id);
 		return obj.get();
 	}
+
+	public Owner create(Owner obj) {
+		return repository.save(obj);
+	}
 }
