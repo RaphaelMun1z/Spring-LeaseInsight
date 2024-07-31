@@ -22,4 +22,8 @@ public class TenantService {
 		Optional<Tenant> obj = repository.findById(id);
 		return obj.get();
 	}
+
+	public Tenant create(Tenant obj) {
+		return repository.save(obj);
+	}
 }
