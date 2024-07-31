@@ -1,7 +1,10 @@
 package com.rm.myadmin.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -30,6 +33,8 @@ public class RentalHistory implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate rentalEndDate;
 
+	private Double rentalValue;
+
 	private Integer paymentStatus;
 
 	@ManyToOne
@@ -39,14 +44,14 @@ public class RentalHistory implements Serializable {
 	public RentalHistory() {
 	}
 
-	public RentalHistory(Long id, LocalDate rentalStartDate, LocalDate rentalEndDate, PaymentStatus paymentStatus,
-			Contract contract) {
+	public RentalHistory(Long id, LocalDate rentalStartDate, PaymentStatus paymentStatus, Contract contract) {
 		super();
 		this.id = id;
-		this.rentalStartDate = rentalStartDate;
-		this.rentalEndDate = rentalEndDate;
-		setPaymentStatus(paymentStatus);
 		this.contract = contract;
+		this.rentalStartDate = rentalStartDate;
+		this.rentalEndDate = rentalStartDate.plusMonths(1);
+		setPaymentStatus(paymentStatus);
+		setRentalValue();
 	}
 
 	public Long getId() {
@@ -77,6 +82,31 @@ public class RentalHistory implements Serializable {
 		return PaymentStatus.valueOf(paymentStatus);
 	}
 
+	public long getReferenceMonth() {
+		long month = rentalStartDate.getMonthValue();
+		return month;
+	}
+
+	private double calculateRentalDifferenceValue() {
+		int dueDateMonth = rentalStartDate.getMonthValue();
+
+		if (contract.getInvoiceDueDate() < rentalStartDate.getDayOfMonth()) {
+			dueDateMonth = rentalStartDate.plusMonths(1).getMonthValue();
+		}
+
+		LocalDate dueDate = LocalDate.of(rentalStartDate.getYear(), dueDateMonth, contract.getInvoiceDueDate());
+
+		long daysDifference = ChronoUnit.DAYS.between(rentalStartDate, dueDate);
+
+		double dailyRentalPrice = (double) contract.getDefaultRentalValue() / (double) rentalStartDate.lengthOfMonth();
+		double valueDifference = daysDifference * dailyRentalPrice;
+
+		BigDecimal bdValue = new BigDecimal(valueDifference);
+		bdValue = bdValue.setScale(2, RoundingMode.CEILING);
+
+		return bdValue.doubleValue();
+	}
+
 	public void setPaymentStatus(PaymentStatus paymentStatus) {
 		if (paymentStatus != null) {
 			this.paymentStatus = paymentStatus.getCode();
@@ -89,6 +119,14 @@ public class RentalHistory implements Serializable {
 
 	public void setContract(Contract contract) {
 		this.contract = contract;
+	}
+
+	public Double getRentalValue() {
+		return rentalValue;
+	}
+
+	public void setRentalValue() {
+		this.rentalValue = calculateRentalDifferenceValue();
 	}
 
 	@Override

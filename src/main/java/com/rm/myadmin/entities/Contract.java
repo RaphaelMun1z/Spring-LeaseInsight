@@ -2,6 +2,7 @@ package com.rm.myadmin.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,8 +46,9 @@ public class Contract implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate contractEndDate;
 
-	private Double rentalValue;
+	private Double defaultRentalValue;
 	private Integer contractStatus;
+	private int invoiceDueDate;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "contract")
@@ -57,15 +59,16 @@ public class Contract implements Serializable {
 	}
 
 	public Contract(Long id, Residence residence, Tenant tenant, LocalDate contractStartDate, LocalDate contractEndDate,
-			Double rentalValue, ContractStatus contractStatus) {
+			Double defaultRentalValue, ContractStatus contractStatus, int invoiceDueDate) {
 		super();
 		this.id = id;
 		this.residence = residence;
 		this.tenant = tenant;
 		this.contractStartDate = contractStartDate;
 		this.contractEndDate = contractEndDate;
-		this.rentalValue = rentalValue;
+		this.defaultRentalValue = defaultRentalValue;
 		setContractStatus(contractStatus);
+		setInvoiceDueDate(invoiceDueDate);
 	}
 
 	public Long getId() {
@@ -108,12 +111,17 @@ public class Contract implements Serializable {
 		this.contractEndDate = contractEndDate;
 	}
 
-	public Double getRentalValue() {
-		return rentalValue;
+	public long getContractPeriodInMonths() {
+		long difference = ChronoUnit.MONTHS.between(contractStartDate, contractEndDate);
+		return difference;
 	}
 
-	public void setRentalValue(Double rentalValue) {
-		this.rentalValue = rentalValue;
+	public Double getDefaultRentalValue() {
+		return defaultRentalValue;
+	}
+
+	public void setDefaultRentalValue(Double defaultRentalValue) {
+		this.defaultRentalValue = defaultRentalValue;
 	}
 
 	public ContractStatus getContractStatus() {
@@ -123,6 +131,16 @@ public class Contract implements Serializable {
 	public void setContractStatus(ContractStatus contractStatus) {
 		if (contractStatus != null) {
 			this.contractStatus = contractStatus.getCode();
+		}
+	}
+
+	public int getInvoiceDueDate() {
+		return invoiceDueDate;
+	}
+
+	public void setInvoiceDueDate(int invoiceDueDate) {
+		if (invoiceDueDate >= 1 && invoiceDueDate <= 31) {
+			this.invoiceDueDate = invoiceDueDate;
 		}
 	}
 
