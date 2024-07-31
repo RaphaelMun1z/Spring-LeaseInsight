@@ -49,7 +49,7 @@ public class RentalHistory implements Serializable {
 		this.id = id;
 		this.contract = contract;
 		this.rentalStartDate = rentalStartDate;
-		this.rentalEndDate = rentalStartDate.plusMonths(1);
+		this.rentalEndDate = rentalEndDateGenerator();
 		setPaymentStatus(paymentStatus);
 		setRentalValue();
 	}
@@ -87,24 +87,44 @@ public class RentalHistory implements Serializable {
 		return month;
 	}
 
-	private double calculateRentalDifferenceValue() {
-		int dueDateMonth = rentalStartDate.getMonthValue();
-
-		if (contract.getInvoiceDueDate() < rentalStartDate.getDayOfMonth()) {
-			dueDateMonth = rentalStartDate.plusMonths(1).getMonthValue();
+	private LocalDate rentalEndDateGenerator() {
+		LocalDate date = LocalDate.of(rentalStartDate.getYear(), (int) getReferenceMonth(),
+				contract.getInvoiceDueDate());
+		
+		LocalDate dueDate = LocalDate.of(rentalStartDate.getYear(), rentalStartDate.getMonthValue(), contract.getInvoiceDueDate());
+		if (dueDate.isAfter(rentalStartDate)) {
+			return date;
 		}
 
-		LocalDate dueDate = LocalDate.of(rentalStartDate.getYear(), dueDateMonth, contract.getInvoiceDueDate());
+		return date.plusMonths(1);
+	}
 
-		long daysDifference = ChronoUnit.DAYS.between(rentalStartDate, dueDate);
-
+	private double calculateRentalDifferenceValue(LocalDate startDate, LocalDate endDate) {
+		long daysDifference = ChronoUnit.DAYS.between(startDate, endDate);
 		double dailyRentalPrice = (double) contract.getDefaultRentalValue() / (double) rentalStartDate.lengthOfMonth();
-		double valueDifference = daysDifference * dailyRentalPrice;
-
-		BigDecimal bdValue = new BigDecimal(valueDifference);
+		BigDecimal bdValue = new BigDecimal(daysDifference * dailyRentalPrice);
 		bdValue = bdValue.setScale(2, RoundingMode.CEILING);
-
 		return bdValue.doubleValue();
+// // Mês da data de vencimento
+//		int dueDateMonth = rentalStartDate.getMonthValue();
+//
+//		// Se o dia de vencimento for antes do início do aluguel
+//		if (contract.getInvoiceDueDate() < rentalStartDate.getDayOfMonth()) {
+//			dueDateMonth = rentalStartDate.plusMonths(1).getMonthValue();
+//		}
+//
+//		// Data de vencimento
+//		LocalDate dueDate = LocalDate.of(rentalStartDate.getYear(), dueDateMonth, contract.getInvoiceDueDate());
+//
+//		long daysDifference = ChronoUnit.DAYS.between(rentalStartDate, dueDate);
+//
+//		double dailyRentalPrice = (double) contract.getDefaultRentalValue() / (double) rentalStartDate.lengthOfMonth();
+//		double valueDifference = daysDifference * dailyRentalPrice;
+//
+//		BigDecimal bdValue = new BigDecimal(valueDifference);
+//		bdValue = bdValue.setScale(2, RoundingMode.CEILING);
+//
+//		return bdValue.doubleValue();
 	}
 
 	public void setPaymentStatus(PaymentStatus paymentStatus) {
@@ -126,7 +146,7 @@ public class RentalHistory implements Serializable {
 	}
 
 	public void setRentalValue() {
-		this.rentalValue = calculateRentalDifferenceValue();
+		this.rentalValue = calculateRentalDifferenceValue(rentalStartDate, rentalEndDate);
 	}
 
 	@Override
