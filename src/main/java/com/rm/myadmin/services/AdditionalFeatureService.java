@@ -22,4 +22,8 @@ public class AdditionalFeatureService {
 		Optional<AdditionalFeature> obj = repository.findById(id);
 		return obj.get();
 	}
+
+	public AdditionalFeature create(AdditionalFeature obj) {
+		return repository.save(obj);
+	}
 }
