@@ -22,4 +22,8 @@ public class RentalHistoryService {
 		Optional<RentalHistory> obj = repository.findById(id);
 		return obj.get();
 	}
+
+	public RentalHistory create(RentalHistory obj) {
+		return repository.save(obj);
+	}
 }
