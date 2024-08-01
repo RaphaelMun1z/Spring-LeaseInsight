@@ -22,4 +22,8 @@ public class ContractService {
 		Optional<Contract> obj = repository.findById(id);
 		return obj.get();
 	}
+
+	public Contract create(Contract obj) {
+		return repository.save(obj);
+	}
 }
