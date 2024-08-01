@@ -22,4 +22,8 @@ public class BillingAddressService {
 		Optional<BillingAddress> obj = repository.findById(id);
 		return obj.get();
 	}
+
+	public BillingAddress create(BillingAddress obj) {
+		return repository.save(obj);
+	}
 }
