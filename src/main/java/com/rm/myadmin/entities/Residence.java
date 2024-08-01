@@ -61,7 +61,7 @@ public class Residence implements Serializable {
 	@OneToMany(mappedBy = "id.residence")
 	private Set<ResidenceFeature> features = new HashSet<>();
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "residence_address_id")
 	private ResidenceAddress residenceAddress;
 
