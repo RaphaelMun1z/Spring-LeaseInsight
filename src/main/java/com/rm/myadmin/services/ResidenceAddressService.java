@@ -22,4 +22,8 @@ public class ResidenceAddressService {
 		Optional<ResidenceAddress> obj = repository.findById(id);
 		return obj.get();
 	}
+
+	public ResidenceAddress create(ResidenceAddress obj) {
+		return repository.save(obj);
+	}
 }
