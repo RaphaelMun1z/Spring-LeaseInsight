@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.Contract;
+import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -31,7 +32,9 @@ public class ContractService {
 	}
 
 	public Contract create(Contract obj) {
-		obj.setResidence(residenceService.findById(obj.getResidence().getId()));
+		Residence r = residenceService.findById(obj.getResidence().getId());
+		obj.setResidence(r);
+		r.setContract(obj);
 		obj.setTenant(tenantService.findById(obj.getTenant().getId()));
 		return repository.save(obj);
 	}
