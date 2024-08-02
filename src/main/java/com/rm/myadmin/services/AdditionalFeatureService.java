@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.AdditionalFeature;
 import com.rm.myadmin.repositories.AdditionalFeatureRepository;
+import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class AdditionalFeatureService {
@@ -20,10 +21,14 @@ public class AdditionalFeatureService {
 
 	public AdditionalFeature findById(Long id) {
 		Optional<AdditionalFeature> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	public AdditionalFeature create(AdditionalFeature obj) {
 		return repository.save(obj);
+	}
+
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }

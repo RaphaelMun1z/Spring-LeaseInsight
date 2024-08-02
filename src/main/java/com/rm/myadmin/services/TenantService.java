@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.repositories.TenantRepository;
+import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class TenantService {
@@ -20,10 +21,14 @@ public class TenantService {
 
 	public Tenant findById(Long id) {
 		Optional<Tenant> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	public Tenant create(Tenant obj) {
 		return repository.save(obj);
+	}
+
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }

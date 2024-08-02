@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.repositories.ResidenceAddressRepository;
+import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class ResidenceAddressService {
@@ -20,10 +21,14 @@ public class ResidenceAddressService {
 
 	public ResidenceAddress findById(Long id) {
 		Optional<ResidenceAddress> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	public ResidenceAddress create(ResidenceAddress obj) {
 		return repository.save(obj);
+	}
+
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }

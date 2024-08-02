@@ -8,18 +8,23 @@ import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.User;
 import com.rm.myadmin.repositories.UserRepository;
+import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class UserService {
 	@Autowired
-	private UserRepository<User> userRepository;
+	private UserRepository<User> repository;
 
 	public List<User> findAll() {
-		return userRepository.findAll();
+		return repository.findAll();
 	}
 
 	public User findById(Long id) {
-		Optional<User> obj = userRepository.findById(id);
-		return obj.get();
+		Optional<User> obj = repository.findById(id);
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+	}
+
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }

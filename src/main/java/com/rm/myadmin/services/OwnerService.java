@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.repositories.OwnerRepository;
+import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class OwnerService {
@@ -20,10 +21,14 @@ public class OwnerService {
 
 	public Owner findById(Long id) {
 		Optional<Owner> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	public Owner create(Owner obj) {
 		return repository.save(obj);
+	}
+
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }

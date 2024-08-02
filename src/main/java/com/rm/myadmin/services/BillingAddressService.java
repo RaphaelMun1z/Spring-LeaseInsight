@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.repositories.BillingAddressRepository;
+import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class BillingAddressService {
@@ -20,10 +21,14 @@ public class BillingAddressService {
 
 	public BillingAddress findById(Long id) {
 		Optional<BillingAddress> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	public BillingAddress create(BillingAddress obj) {
 		return repository.save(obj);
+	}
+
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }

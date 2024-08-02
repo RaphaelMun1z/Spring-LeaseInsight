@@ -8,11 +8,18 @@ import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.repositories.ContractRepository;
+import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class ContractService {
 	@Autowired
 	private ContractRepository repository;
+
+	@Autowired
+	private ResidenceService residenceService;
+
+	@Autowired
+	private TenantService tenantService;
 
 	public List<Contract> findAll() {
 		return repository.findAll();
@@ -20,10 +27,16 @@ public class ContractService {
 
 	public Contract findById(Long id) {
 		Optional<Contract> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	public Contract create(Contract obj) {
+		obj.setResidence(residenceService.findById(obj.getResidence().getId()));
+		obj.setTenant(tenantService.findById(obj.getTenant().getId()));
 		return repository.save(obj);
+	}
+
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }
