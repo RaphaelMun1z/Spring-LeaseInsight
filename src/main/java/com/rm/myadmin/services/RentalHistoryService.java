@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.repositories.RentalHistoryRepository;
+import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -33,6 +36,26 @@ public class RentalHistoryService {
 	}
 
 	public void delete(Long id) {
-		repository.deleteById(id);
+		try {
+			if (repository.existsById(id)) {
+				repository.deleteById(id);
+			} else {
+				throw new ResourceNotFoundException(id);
+			}
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
+	}
+
+	public RentalHistory update(Long id, RentalHistory obj) {
+		RentalHistory entity = repository.getReferenceById(id);
+		updateData(entity, obj);
+		return repository.save(entity);
+	}
+
+	private void updateData(RentalHistory entity, RentalHistory obj) {
+		entity.setPaymentStatus(obj.getPaymentStatus());
 	}
 }

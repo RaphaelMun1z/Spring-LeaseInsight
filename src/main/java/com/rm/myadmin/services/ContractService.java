@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.repositories.ContractRepository;
+import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -40,6 +43,30 @@ public class ContractService {
 	}
 
 	public void delete(Long id) {
-		repository.deleteById(id);
+		try {
+			if (repository.existsById(id)) {
+				repository.deleteById(id);
+			} else {
+				throw new ResourceNotFoundException(id);
+			}
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
+	}
+
+	public Contract update(Long id, Contract obj) {
+		Contract entity = repository.getReferenceById(id);
+		updateData(entity, obj);
+		return repository.save(entity);
+	}
+
+	private void updateData(Contract entity, Contract obj) {
+		entity.setContractStartDate(obj.getContractStartDate());
+		entity.setContractEndDate(obj.getContractEndDate());
+		entity.setDefaultRentalValue(obj.getDefaultRentalValue());
+		entity.setContractStatus(obj.getContractStatus());
+		entity.setInvoiceDueDate(obj.getInvoiceDueDate());
 	}
 }

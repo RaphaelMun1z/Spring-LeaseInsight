@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.repositories.ResidenceAddressRepository;
+import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -29,6 +32,33 @@ public class ResidenceAddressService {
 	}
 
 	public void delete(Long id) {
-		repository.deleteById(id);
+		try {
+			if (repository.existsById(id)) {
+				repository.deleteById(id);
+			} else {
+				throw new ResourceNotFoundException(id);
+			}
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
+	}
+
+	public ResidenceAddress update(Long id, ResidenceAddress obj) {
+		ResidenceAddress entity = repository.getReferenceById(id);
+		updateData(entity, obj);
+		return repository.save(entity);
+	}
+
+	private void updateData(ResidenceAddress entity, ResidenceAddress obj) {
+		entity.setNumber(obj.getNumber());
+		entity.setStreet(obj.getStreet());
+		entity.setDistrict(obj.getDistrict());
+		entity.setCity(obj.getCity());
+		entity.setState(obj.getState());
+		entity.setCountry(obj.getCountry());
+		entity.setCep(obj.getCep());
+		entity.setComplement(obj.getComplement());
 	}
 }

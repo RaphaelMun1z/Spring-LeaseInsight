@@ -34,7 +34,7 @@ public class Residence implements Serializable {
 	private Long id;
 
 	@JsonIgnore
-	@OneToOne(mappedBy = "residence", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "residence")
 	private Contract contract;
 
 	@ManyToOne
@@ -60,10 +60,10 @@ public class Residence implements Serializable {
 	private BigDecimal rentalValue;
 	private Instant dateLastRenovation;
 
-	@OneToMany(mappedBy = "id.residence")
+	@OneToMany(mappedBy = "id.residence", cascade = CascadeType.ALL)
 	private Set<ResidenceFeature> features = new HashSet<>();
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "residence_address_id")
 	private ResidenceAddress residenceAddress;
 

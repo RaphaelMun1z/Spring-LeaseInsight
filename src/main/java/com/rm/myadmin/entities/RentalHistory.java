@@ -78,7 +78,7 @@ public class RentalHistory implements Serializable {
 		this.rentalEndDate = rentalEndDate;
 	}
 
-	public PaymentStatus getPayment_status() {
+	public PaymentStatus getPaymentStatus() {
 		return PaymentStatus.valueOf(paymentStatus);
 	}
 
@@ -90,8 +90,9 @@ public class RentalHistory implements Serializable {
 	private LocalDate rentalEndDateGenerator() {
 		LocalDate date = LocalDate.of(rentalStartDate.getYear(), (int) getReferenceMonth(),
 				contract.getInvoiceDueDate());
-		
-		LocalDate dueDate = LocalDate.of(rentalStartDate.getYear(), rentalStartDate.getMonthValue(), contract.getInvoiceDueDate());
+
+		LocalDate dueDate = LocalDate.of(rentalStartDate.getYear(), rentalStartDate.getMonthValue(),
+				contract.getInvoiceDueDate());
 		if (dueDate.isAfter(rentalStartDate)) {
 			return date;
 		}
