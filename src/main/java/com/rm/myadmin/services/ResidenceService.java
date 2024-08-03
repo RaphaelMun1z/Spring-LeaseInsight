@@ -8,7 +8,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.rm.myadmin.entities.AdditionalFeature;
 import com.rm.myadmin.entities.Residence;
+import com.rm.myadmin.entities.ResidenceFeature;
 import com.rm.myadmin.repositories.ResidenceRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
@@ -19,6 +21,12 @@ import jakarta.persistence.EntityNotFoundException;
 public class ResidenceService {
 	@Autowired
 	private ResidenceRepository repository;
+
+	@Autowired
+	private AdditionalFeatureService additionalFeatureService;
+
+	@Autowired
+	private ResidenceFeatureService residenceFeatureService;
 
 	public List<Residence> findAll() {
 		return repository.findAll();
@@ -75,4 +83,11 @@ public class ResidenceService {
 		entity.setDateLastRenovation(obj.getDateLastRenovation());
 	}
 
+	public ResidenceFeature addFeature(ResidenceFeature obj) {
+		Residence r = this.findById(obj.getProperty().getId());
+		AdditionalFeature af = additionalFeatureService.findById(obj.getFeature().getId());
+		obj.setProperty(r);
+		obj.setFeature(af);
+		return residenceFeatureService.create(obj);
+	}
 }

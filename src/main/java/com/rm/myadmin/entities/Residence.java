@@ -60,7 +60,8 @@ public class Residence implements Serializable {
 	private BigDecimal rentalValue;
 	private Instant dateLastRenovation;
 
-	@OneToMany(mappedBy = "id.residence", cascade = CascadeType.ALL)
+	@JsonIgnore
+	@OneToMany(mappedBy = "id.property", cascade = CascadeType.ALL)
 	private Set<ResidenceFeature> features = new HashSet<>();
 
 	@ManyToOne

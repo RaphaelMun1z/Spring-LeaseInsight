@@ -15,19 +15,19 @@ public class ResidenceFeaturePK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne
-	@JoinColumn(name = "residence_id")
-	private Residence residence;
+	@JoinColumn(name = "property_id")
+	private Residence property;
 
 	@ManyToOne
-	@JoinColumn(name = "additional_feature_id")
+	@JoinColumn(name = "feature_id")
 	private AdditionalFeature additionalFeature;
 
-	public Residence getResidence() {
-		return residence;
+	public Residence getProperty() {
+		return property;
 	}
 
-	public void setResidence(Residence residence) {
-		this.residence = residence;
+	public void setProperty(Residence property) {
+		this.property = property;
 	}
 
 	public AdditionalFeature getAdditionalFeature() {
@@ -40,7 +40,7 @@ public class ResidenceFeaturePK implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(additionalFeature, residence);
+		return Objects.hash(additionalFeature, property);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class ResidenceFeaturePK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ResidenceFeaturePK other = (ResidenceFeaturePK) obj;
-		return Objects.equals(additionalFeature, other.additionalFeature) && Objects.equals(residence, other.residence);
+		return Objects.equals(additionalFeature, other.additionalFeature) && Objects.equals(property, other.property);
 	}
 
 }

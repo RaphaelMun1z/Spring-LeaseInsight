@@ -3,7 +3,6 @@ package com.rm.myadmin.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rm.myadmin.entities.pk.ResidenceFeaturePK;
 
 import jakarta.persistence.EmbeddedId;
@@ -24,17 +23,20 @@ public class ResidenceFeature implements Serializable {
 
 	public ResidenceFeature(Residence property, AdditionalFeature feature) {
 		super();
-		id.setResidence(property);
-		id.setAdditionalFeature(feature);
+		this.id.setProperty(property);
+		this.id.setAdditionalFeature(feature);
 	}
 
-	@JsonIgnore
+	public ResidenceFeaturePK getId() {
+		return id;
+	}
+
 	public Residence getProperty() {
-		return id.getResidence();
+		return id.getProperty();
 	}
 
 	public void setProperty(Residence property) {
-		id.setResidence(property);
+		id.setProperty(property);
 	}
 
 	public AdditionalFeature getFeature() {

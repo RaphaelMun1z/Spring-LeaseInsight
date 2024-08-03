@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.myadmin.entities.Residence;
+import com.rm.myadmin.entities.ResidenceFeature;
+import com.rm.myadmin.entities.pk.ResidenceFeaturePK;
 import com.rm.myadmin.services.ResidenceService;
 
 @RestController
@@ -53,5 +55,12 @@ public class ResidenceResource {
 	public ResponseEntity<Residence> update(@PathVariable Long id, @RequestBody Residence obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
+	}
+
+	@PostMapping(value = "/add-feature")
+	public ResponseEntity<ResidenceFeaturePK> addFeature(@RequestBody ResidenceFeature obj) {
+		ResidenceFeature rf = service.addFeature(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(rf.getId()).toUri();
+		return ResponseEntity.created(uri).body(rf.getId());
 	}
 }
