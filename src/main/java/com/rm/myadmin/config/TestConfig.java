@@ -114,12 +114,12 @@ public class TestConfig implements CommandLineRunner {
 		AdditionalFeature af4 = new AdditionalFeature(null, "Academia");
 		additionalFeatureRepository.saveAll(Arrays.asList(af1, af2, af3, af4));
 
-		ResidenceFeature rf1 = new ResidenceFeature(r1, af1);
+		//ResidenceFeature rf1 = new ResidenceFeature(r1, af1);
 		ResidenceFeature rf2 = new ResidenceFeature(r1, af2);
 		ResidenceFeature rf3 = new ResidenceFeature(r1, af3);
 		ResidenceFeature rf4 = new ResidenceFeature(r2, af1);
 		ResidenceFeature rf5 = new ResidenceFeature(r2, af4);
-		residenceFeatureRepository.saveAll(Arrays.asList(rf1, rf2, rf3, rf4, rf5));
+		residenceFeatureRepository.saveAll(Arrays.asList(rf2, rf3, rf4, rf5));
 	}
 
 }
