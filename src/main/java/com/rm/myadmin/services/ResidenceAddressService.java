@@ -13,6 +13,8 @@ import com.rm.myadmin.repositories.ResidenceAddressRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class ResidenceAddressService {
 	@Autowired
@@ -46,9 +48,13 @@ public class ResidenceAddressService {
 	}
 
 	public ResidenceAddress update(Long id, ResidenceAddress obj) {
-		ResidenceAddress entity = repository.getReferenceById(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			ResidenceAddress entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(ResidenceAddress entity, ResidenceAddress obj) {

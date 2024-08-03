@@ -13,6 +13,8 @@ import com.rm.myadmin.repositories.OwnerRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class OwnerService {
 	@Autowired
@@ -46,9 +48,13 @@ public class OwnerService {
 	}
 
 	public Owner update(Long id, Owner obj) {
-		Owner entity = repository.getReferenceById(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			Owner entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(Owner entity, Owner obj) {

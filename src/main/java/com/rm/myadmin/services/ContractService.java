@@ -14,6 +14,8 @@ import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class ContractService {
 	@Autowired
@@ -57,9 +59,13 @@ public class ContractService {
 	}
 
 	public Contract update(Long id, Contract obj) {
-		Contract entity = repository.getReferenceById(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			Contract entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(Contract entity, Contract obj) {

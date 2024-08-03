@@ -13,6 +13,8 @@ import com.rm.myadmin.repositories.BillingAddressRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class BillingAddressService {
 	@Autowired
@@ -46,9 +48,13 @@ public class BillingAddressService {
 	}
 
 	public BillingAddress update(Long id, BillingAddress obj) {
-		BillingAddress entity = repository.getReferenceById(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			BillingAddress entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(BillingAddress entity, BillingAddress obj) {

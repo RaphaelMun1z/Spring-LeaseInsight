@@ -13,6 +13,8 @@ import com.rm.myadmin.repositories.TenantRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class TenantService {
 	@Autowired
@@ -46,9 +48,13 @@ public class TenantService {
 	}
 
 	public Tenant update(Long id, Tenant obj) {
-		Tenant entity = repository.getReferenceById(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			Tenant entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(Tenant entity, Tenant obj) {

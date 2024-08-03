@@ -13,6 +13,8 @@ import com.rm.myadmin.repositories.AdditionalFeatureRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class AdditionalFeatureService {
 	@Autowired
@@ -44,11 +46,15 @@ public class AdditionalFeatureService {
 			throw new DatabaseException(e.getMessage());
 		}
 	}
-	
+
 	public AdditionalFeature update(Long id, AdditionalFeature obj) {
-		AdditionalFeature entity = repository.getReferenceById(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			AdditionalFeature entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(AdditionalFeature entity, AdditionalFeature obj) {

@@ -13,6 +13,8 @@ import com.rm.myadmin.repositories.RentalHistoryRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class RentalHistoryService {
 	@Autowired
@@ -50,9 +52,13 @@ public class RentalHistoryService {
 	}
 
 	public RentalHistory update(Long id, RentalHistory obj) {
-		RentalHistory entity = repository.getReferenceById(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			RentalHistory entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(RentalHistory entity, RentalHistory obj) {
