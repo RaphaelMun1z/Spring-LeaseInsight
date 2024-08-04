@@ -77,7 +77,7 @@ public class TestConfig implements CommandLineRunner {
 		billingAddressRepository.save(ba1);
 
 		Tenant t1 = new Tenant(null, "Nautilus", "(13) 91212-1212", "nautilus@gmail.com", "senhaa123",
-				LocalDate.of(2000, 6, 15), "111.111.111.11", "22.222.222.2", LocalDate.now(), TenantStatus.PENDING,
+				LocalDate.of(2000, 6, 15), "507.205.280-03", "22.222.222-2", LocalDate.now(), TenantStatus.PENDING,
 				ba1);
 		tenantRepository.save(t1);
 
