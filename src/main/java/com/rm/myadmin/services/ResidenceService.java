@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.AdditionalFeature;
 import com.rm.myadmin.entities.Residence;
+import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.entities.ResidenceFeature;
 import com.rm.myadmin.repositories.ResidenceRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
@@ -21,6 +22,9 @@ import jakarta.persistence.EntityNotFoundException;
 public class ResidenceService {
 	@Autowired
 	private ResidenceRepository repository;
+
+	@Autowired
+	private ResidenceAddressService residenceAddressService;
 
 	@Autowired
 	private AdditionalFeatureService additionalFeatureService;
@@ -38,6 +42,8 @@ public class ResidenceService {
 	}
 
 	public Residence create(Residence obj) {
+		ResidenceAddress ra = residenceAddressService.findById(obj.getResidenceAddress().getId());
+		obj.setResidenceAddress(ra);
 		return repository.save(obj);
 	}
 

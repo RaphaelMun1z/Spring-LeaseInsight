@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.repositories.TenantRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
@@ -20,6 +21,9 @@ public class TenantService {
 	@Autowired
 	private TenantRepository repository;
 
+	@Autowired
+	private BillingAddressService billingAddressService;
+
 	public List<Tenant> findAll() {
 		return repository.findAll();
 	}
@@ -30,6 +34,8 @@ public class TenantService {
 	}
 
 	public Tenant create(Tenant obj) {
+		BillingAddress tba = billingAddressService.findById(obj.getTenantBillingAddress().getId());
+		obj.setTenantBillingAddress(tba);
 		return repository.save(obj);
 	}
 

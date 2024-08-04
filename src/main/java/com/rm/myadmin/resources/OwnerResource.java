@@ -18,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.services.OwnerService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/owners")
 public class OwnerResource {
@@ -37,7 +39,7 @@ public class OwnerResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Owner> insert(@RequestBody Owner obj) {
+	public ResponseEntity<Owner> insert(@RequestBody @Valid Owner obj) {
 		obj = service.create(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
