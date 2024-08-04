@@ -2,12 +2,14 @@ package com.rm.myadmin.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.rm.myadmin.dto.ContractDTO;
 import com.rm.myadmin.entities.AdditionalFeature;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceAddress;
@@ -96,4 +98,16 @@ public class ResidenceService {
 		obj.setFeature(af);
 		return residenceFeatureService.create(obj);
 	}
+
+	public Set<ResidenceFeature> getFeatures(Long id) {
+		Residence r = this.findById(id);
+		return r.getFeatures();
+	}
+
+	public ContractDTO getCurrentContract(Long id) {
+		Residence r = this.findById(id);
+		ContractDTO cDTO = new ContractDTO(r.getContract());
+		return cDTO;
+	}
+
 }
