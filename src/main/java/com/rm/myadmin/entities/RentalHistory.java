@@ -17,6 +17,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tb_rental_history")
@@ -28,15 +30,21 @@ public class RentalHistory implements Serializable {
 	private Long id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@NotNull(message = "Required field")
 	private LocalDate rentalStartDate;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@NotNull(message = "Required field")
 	private LocalDate rentalEndDate;
 
+	@Min(value = 1)
+	@NotNull(message = "Required field")
 	private Double rentalValue;
 
+	@NotNull(message = "Invalid field value")
 	private Integer paymentStatus;
 
+	@NotNull(message = "Required field")
 	@ManyToOne
 	@JoinColumn(name = "contract_id")
 	private Contract contract;
@@ -89,7 +97,7 @@ public class RentalHistory implements Serializable {
 
 	private LocalDate rentalEndDateGenerator() {
 		LocalDate date = LocalDate.of(rentalStartDate.getYear(), (int) getReferenceMonth(),
-				contract.getInvoiceDueDate());
+				contract.getInvoiceDueDate() - 1);
 
 		LocalDate dueDate = LocalDate.of(rentalStartDate.getYear(), rentalStartDate.getMonthValue(),
 				contract.getInvoiceDueDate());
@@ -101,7 +109,7 @@ public class RentalHistory implements Serializable {
 	}
 
 	private double calculateRentalDifferenceValue(LocalDate startDate, LocalDate endDate) {
-		long daysDifference = ChronoUnit.DAYS.between(startDate, endDate);
+		long daysDifference = ChronoUnit.DAYS.between(startDate, endDate) + 1;
 		double dailyRentalPrice = (double) contract.getDefaultRentalValue() / (double) rentalStartDate.lengthOfMonth();
 		BigDecimal bdValue = new BigDecimal(daysDifference * dailyRentalPrice);
 		bdValue = bdValue.setScale(2, RoundingMode.CEILING);

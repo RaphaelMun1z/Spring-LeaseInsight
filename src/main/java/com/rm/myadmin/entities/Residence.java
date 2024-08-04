@@ -8,12 +8,12 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rm.myadmin.entities.enums.OccupancyStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +23,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tb_residence")
@@ -33,40 +35,69 @@ public class Residence implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@JsonIgnore
-	@OneToOne(mappedBy = "residence")
-	private Contract contract;
+	@NotNull(message = "Invalid field value")
+	private Integer propertyType;
 
+	@NotNull(message = "Required field")
+	private String description;
+
+	private Integer aptNumber;
+
+	private String complement;
+
+	@NotNull(message = "Required field")
+	private int numberBedrooms;
+
+	@NotNull(message = "Required field")
+	private int numberBathrooms;
+
+	@NotNull(message = "Required field")
+	private int numberSuites;
+
+	@Min(value = 1)
+	@NotNull(message = "Invalid field value")
+	private float totalArea;
+
+	@NotNull(message = "Required field")
+	private float builtArea;
+
+	@NotNull(message = "Required field")
+	private int garageSpaces;
+
+	private Year yearConstruction;
+
+	@NotNull(message = "Invalid field value")
+	private Integer occupancyStatus;
+
+	@Min(value = 1)
+	@NotNull(message = "Invalid field value")
+	private BigDecimal marketValue;
+
+	@Min(value = 1)
+	@NotNull(message = "Invalid field value")
+	private BigDecimal rentalValue;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+	@NotNull(message = "Required field")
+	private Instant dateLastRenovation;
+
+	@NotNull(message = "Required field")
+	@ManyToOne
+	@JoinColumn(name = "residence_address_id")
+	private ResidenceAddress residenceAddress;
+
+	@NotNull(message = "Required field")
 	@ManyToOne
 	@JoinColumn(name = "owner_id")
 	private Owner owner;
-
-	private Integer propertyType;
-	private String description;
-	private Integer aptNumber;
-
-	@Column(nullable = true)
-	private String complement;
-
-	private int numberBedrooms;
-	private int numberBathrooms;
-	private int numberSuites;
-	private float totalArea;
-	private float builtArea;
-	private int garageSpaces;
-	private Year yearConstruction;
-	private Integer occupancyStatus;
-	private BigDecimal marketValue;
-	private BigDecimal rentalValue;
-	private Instant dateLastRenovation;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.property", cascade = CascadeType.ALL)
 	private Set<ResidenceFeature> features = new HashSet<>();
 
-	@ManyToOne
-	@JoinColumn(name = "residence_address_id")
-	private ResidenceAddress residenceAddress;
+	@JsonIgnore
+	@OneToOne(mappedBy = "residence")
+	private Contract contract;
 
 	public Residence() {
 

@@ -2,8 +2,8 @@ package com.rm.myadmin.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -48,7 +48,7 @@ public class Tenant extends User implements Serializable {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "tenant")
-	List<Contract> contracts = new ArrayList<>();
+	Set<Contract> contracts = new HashSet<>();
 
 	public Tenant() {
 		super();
@@ -113,7 +113,7 @@ public class Tenant extends User implements Serializable {
 		this.tenantBillingAddress = tenantBillingAddress;
 	}
 
-	public List<Contract> getContracts() {
+	public Set<Contract> getContracts() {
 		return contracts;
 	}
 

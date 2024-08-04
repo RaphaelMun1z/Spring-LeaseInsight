@@ -1,8 +1,8 @@
 package com.rm.myadmin.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,7 +17,7 @@ public class Owner extends User implements Serializable {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "owner")
-	private List<Residence> properties = new ArrayList<>();
+	private Set<Residence> properties = new HashSet<>();
 
 	public Owner() {
 		super();
@@ -27,7 +27,7 @@ public class Owner extends User implements Serializable {
 		super(id, name, phone, email, password);
 	}
 
-	public List<Residence> getProperties() {
+	public Set<Residence> getProperties() {
 		return properties;
 	}
 

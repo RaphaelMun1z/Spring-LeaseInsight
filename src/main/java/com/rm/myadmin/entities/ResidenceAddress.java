@@ -1,8 +1,8 @@
 package com.rm.myadmin.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,7 +17,7 @@ public class ResidenceAddress extends Address implements Serializable {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "residenceAddress")
-	private List<Residence> residences = new ArrayList<>();
+	private Set<Residence> residences = new HashSet<>();
 
 	public ResidenceAddress() {
 		super();
@@ -28,7 +28,7 @@ public class ResidenceAddress extends Address implements Serializable {
 		super(id, number, street, district, city, state, country, cep, complement);
 	}
 
-	public List<Residence> getResidences() {
+	public Set<Residence> getResidences() {
 		return residences;
 	}
 }

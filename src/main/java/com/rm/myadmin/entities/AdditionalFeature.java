@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "tb_additional_feature")
@@ -18,6 +20,8 @@ public class AdditionalFeature implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotBlank(message = "Invalid field value")
+	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String feature;
 
 	public AdditionalFeature() {

@@ -23,17 +23,17 @@ public abstract class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
+	@NotBlank(message = "Invalid field value")
 	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String name;
 
-	@PhoneNumber
+	@PhoneNumber(message = "Invalid field value")
 	private String phone;
 
-	@Email
+	@Email(message = "Invalid field value")
 	private String email;
 
-	@NotBlank
+	@NotBlank(message = "Required field")
 	private String password;
 
 	protected User() {

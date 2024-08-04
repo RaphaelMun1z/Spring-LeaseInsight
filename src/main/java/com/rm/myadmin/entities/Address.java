@@ -2,10 +2,15 @@ package com.rm.myadmin.entities;
 
 import java.util.Objects;
 
+import com.rm.myadmin.entities.validation.constraints.CEP;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @MappedSuperclass
 public abstract class Address {
@@ -13,13 +18,32 @@ public abstract class Address {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotNull(message = "Required field")
 	private int number;
+
+	@NotBlank(message = "Invalid field value")
+	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String street;
+
+	@NotBlank(message = "Invalid field value")
+	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String district;
+
+	@NotBlank(message = "Invalid field value")
+	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String city;
+
+	@NotBlank(message = "Invalid field value")
+	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String state;
+
+	@NotBlank(message = "Invalid field value")
+	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String country;
+
+	@CEP(message = "Invalid field value")
 	private String cep;
+	
 	private String complement;
 
 	protected Address() {

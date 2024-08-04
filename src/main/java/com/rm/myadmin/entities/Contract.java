@@ -3,9 +3,9 @@ package com.rm.myadmin.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,6 +20,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tb_contract")
@@ -30,27 +33,38 @@ public class Contract implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@NotNull(message = "Required field")
+	private LocalDate contractStartDate;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@NotNull(message = "Required field")
+	private LocalDate contractEndDate;
+
+	@NotNull(message = "Required field")
+	private Double defaultRentalValue;
+
+	@NotNull(message = "Invalid field value")
+	private Integer contractStatus;
+
+	@Min(value = 1)
+	@Max(value = 31)
+	@NotNull(message = "Required field")
+	private int invoiceDueDate;
+
+	@NotNull(message = "Required field")
 	@OneToOne
 	@JoinColumn(name = "residence_id")
 	private Residence residence;
 
+	@NotNull(message = "Required field")
 	@ManyToOne
 	@JoinColumn(name = "tenant_id")
 	private Tenant tenant;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate contractStartDate;
-
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate contractEndDate;
-
-	private Double defaultRentalValue;
-	private Integer contractStatus;
-	private int invoiceDueDate;
-
 	@JsonIgnore
 	@OneToMany(mappedBy = "contract")
-	private List<RentalHistory> rentals = new ArrayList<>();
+	private Set<RentalHistory> rentals = new HashSet<>();
 
 	public Contract() {
 
@@ -142,7 +156,7 @@ public class Contract implements Serializable {
 		}
 	}
 
-	public List<RentalHistory> getRentals() {
+	public Set<RentalHistory> getRentals() {
 		return rentals;
 	}
 
