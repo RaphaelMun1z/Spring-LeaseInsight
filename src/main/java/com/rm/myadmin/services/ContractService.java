@@ -1,15 +1,21 @@
 package com.rm.myadmin.services;
 
+import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.Contract;
+import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.entities.Residence;
+import com.rm.myadmin.entities.enums.PaymentStatus;
 import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
@@ -27,6 +33,9 @@ public class ContractService {
 	@Autowired
 	private TenantService tenantService;
 
+	@Autowired
+	private RentalHistoryService rentalHistoryService;
+
 	public List<Contract> findAll() {
 		return repository.findAll();
 	}
@@ -41,7 +50,14 @@ public class ContractService {
 		obj.setResidence(r);
 		r.setContract(obj);
 		obj.setTenant(tenantService.findById(obj.getTenant().getId()));
-		return repository.save(obj);
+		Contract contract = repository.save(obj);
+		createFirstRental(obj);
+		return contract;
+	}
+
+	private void createFirstRental(Contract c) {
+		RentalHistory rental = new RentalHistory(null, c.getContractStartDate(), PaymentStatus.PENDING, c);
+		rentalHistoryService.create(rental);
 	}
 
 	public void delete(Long id) {
@@ -74,5 +90,30 @@ public class ContractService {
 		entity.setDefaultRentalValue(obj.getDefaultRentalValue());
 		entity.setContractStatus(obj.getContractStatus());
 		entity.setInvoiceDueDate(obj.getInvoiceDueDate());
+	}
+
+	public Set<Contract> findByContractStatus(Integer code) {
+		return repository.findByContractStatus(code);
+	}
+
+	@Scheduled(cron = "0 0 0 * * *")
+	public void checkContractInvoiceDueDate() {
+		LocalDate today = LocalDate.now();
+		Set<Contract> contracts = this.findByContractStatus(1);
+
+		for (Contract c : contracts) {
+			int dueDate = c.getInvoiceDueDate();
+			if ((int) dueDate > today.getMonth().length(Year.isLeap(today.getYear()))) {
+				dueDate = today.getMonth().length(Year.isLeap(today.getYear()));
+			}
+
+			if (dueDate == today.getDayOfMonth()) {
+				System.out.println("O contrato com ID " + c.getId() + " está vencido hoje.");
+				System.out.println("Gerar fatura.");
+				RentalHistory rental = new RentalHistory(null, today, PaymentStatus.PENDING, c);
+				rentalHistoryService.create(rental);
+			}
+		}
+		System.out.println("verificações do dia finalizadas.");
 	}
 }
