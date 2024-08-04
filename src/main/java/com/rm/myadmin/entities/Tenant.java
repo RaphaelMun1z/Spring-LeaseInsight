@@ -5,26 +5,43 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rm.myadmin.entities.enums.TenantStatus;
+import com.rm.myadmin.entities.validation.constraints.BirthDate;
+import com.rm.myadmin.entities.validation.constraints.RG;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tb_tenant")
 public class Tenant extends User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@BirthDate(message = "Invalid date of birth")
 	private LocalDate dateOfBirth;
+
+	@CPF(message = "Invalid CPF value")
 	private String cpf;
+
+	@RG(message = "Invalid RG value")
 	private String rg;
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@NotNull(message = "Required field")
 	private LocalDate registrationDate;
+
+	@NotNull(message = "Invalid field value")
 	private Integer tenantStatus;
 
+	@NotNull(message = "Required field")
 	@ManyToOne
 	@JoinColumn(name = "tenant_billing_address_id")
 	private BillingAddress tenantBillingAddress;
