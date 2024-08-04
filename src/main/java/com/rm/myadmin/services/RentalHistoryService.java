@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class RentalHistoryService {
 	private RentalHistoryRepository repository;
 
 	@Autowired
+	@Lazy
 	private ContractService contractService;
 
 	public List<RentalHistory> findAll() {
