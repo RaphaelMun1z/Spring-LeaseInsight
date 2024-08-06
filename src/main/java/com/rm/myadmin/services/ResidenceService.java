@@ -1,16 +1,20 @@
 package com.rm.myadmin.services;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.dto.ContractDTO;
+import com.rm.myadmin.dto.ResidenceFeatureDTO;
 import com.rm.myadmin.entities.AdditionalFeature;
+import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.entities.ResidenceFeature;
@@ -33,6 +37,10 @@ public class ResidenceService {
 
 	@Autowired
 	private ResidenceFeatureService residenceFeatureService;
+
+	@Lazy
+	@Autowired
+	private OwnerService ownerService;
 
 	public List<Residence> findAll() {
 		return repository.findAll();
@@ -99,15 +107,24 @@ public class ResidenceService {
 		return residenceFeatureService.create(obj);
 	}
 
-	public Set<ResidenceFeature> getFeatures(Long id) {
+	public Set<ResidenceFeatureDTO> getFeatures(Long id) {
 		Residence r = this.findById(id);
-		return r.getFeatures();
+		Set<ResidenceFeatureDTO> fDTO = new HashSet<>();
+		for (ResidenceFeature residenceFeature : r.getFeatures()) {
+			fDTO.add(new ResidenceFeatureDTO(residenceFeature));
+		}
+		return fDTO;
 	}
 
 	public ContractDTO getCurrentContract(Long id) {
 		Residence r = this.findById(id);
 		ContractDTO cDTO = new ContractDTO(r.getContract());
 		return cDTO;
+	}
+
+	public Set<Residence> findByOwner(Long id) {
+		Owner owner = ownerService.findById(id);
+		return repository.findByOwner(owner);
 	}
 
 }
