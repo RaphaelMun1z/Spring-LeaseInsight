@@ -72,4 +72,5 @@ public class TenantService {
 		entity.setRg(obj.getRg());
 		entity.setTenantStatus(obj.getTenantStatus());
 	}
+
 }

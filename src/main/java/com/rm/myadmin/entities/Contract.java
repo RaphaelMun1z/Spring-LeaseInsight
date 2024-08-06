@@ -45,7 +45,7 @@ public class Contract implements Serializable {
 	private Double defaultRentalValue;
 
 	@NotNull(message = "Invalid field value")
-	private Integer contractStatus;
+	private int contractStatus;
 
 	@Min(value = 1)
 	@Max(value = 31)
