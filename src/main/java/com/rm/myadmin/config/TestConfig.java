@@ -70,7 +70,7 @@ public class TestConfig implements CommandLineRunner {
 				"São Paulo", "Brasil", "33444-111", "Próximo ao Extra");
 		billingAddressRepository.save(ba1);
 
-		Tenant t1 = new Tenant(null, "Nautilus", "(13) 91212-1212", "nautilus@gmail.com", "senhaa123",
+		Tenant t1 = new Tenant(null, "Nautilus", "(13) 91212-1212", "raphaelmunizvarela@gmail.com", "senhaa123",
 				LocalDate.of(2000, 6, 15), "507.205.280-03", "22.222.222-2", LocalDate.now(), TenantStatus.PENDING,
 				ba1);
 		tenantRepository.save(t1);
@@ -82,16 +82,16 @@ public class TestConfig implements CommandLineRunner {
 		Residence r1 = new Residence(null, o1, PropertyType.HOUSE, "Casa nova, moderna, alto padrão.", null,
 				"Condomínio ABC", 3, 2, 1, 112.5f, 87.3f, 2, Year.of(2023), OccupancyStatus.OCCUPIED,
 				new BigDecimal("1615900.00"), new BigDecimal("3500.00"), Instant.parse("2024-07-10T12:35:12Z"), ra1);
-		Residence r2 = new Residence(null, o2, PropertyType.APARTMENT,
+		Residence r2 = new Residence(null, o1, PropertyType.APARTMENT,
 				"Apartamento com vista para o mar, bem iluminado.", 101, "Edifício Solar", 2, 1, 0, 75.0f, 65.0f, 1,
 				Year.of(2022), OccupancyStatus.PENDING_MOVE_OUT, new BigDecimal("850000.00"), new BigDecimal("2000.00"),
 				Instant.parse("2024-06-15T08:30:00Z"), ra1);
 		residenceRepository.saveAll(Arrays.asList(r1, r2));
 
 		Contract c1 = new Contract(null, r1, t1, LocalDate.of(2024, 4, 20), LocalDate.of(2024, 10, 10), 950.00,
-				ContractStatus.ACTIVE, 4);
+				ContractStatus.ACTIVE, 5);
 		Contract c2 = new Contract(null, r2, t1, LocalDate.of(2024, 4, 20), LocalDate.of(2024, 10, 20), 1100.0,
-				ContractStatus.RENEWED, 5);
+				ContractStatus.RENEWED, 6);
 		contractRepository.saveAll(Arrays.asList(c1, c2));
 
 		r1.setContract(c1);
