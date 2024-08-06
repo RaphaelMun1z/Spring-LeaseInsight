@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.myadmin.dto.ContractDTO;
+import com.rm.myadmin.dto.ResidenceFeatureDTO;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceFeature;
 import com.rm.myadmin.entities.pk.ResidenceFeaturePK;
@@ -77,8 +78,8 @@ public class ResidenceResource {
 	}
 
 	@GetMapping(value = "/{id}/features")
-	public ResponseEntity<Set<ResidenceFeature>> getFeatures(@PathVariable Long id) {
-		Set<ResidenceFeature> features = service.getFeatures(id);
+	public ResponseEntity<Set<ResidenceFeatureDTO>> getFeatures(@PathVariable Long id) {
+		Set<ResidenceFeatureDTO> features = service.getFeatures(id);
 		return ResponseEntity.ok().body(features);
 	}
 
