@@ -5,30 +5,27 @@ import java.time.LocalDate;
 import org.springframework.beans.BeanUtils;
 
 import com.rm.myadmin.entities.Contract;
-import com.rm.myadmin.entities.Tenant;
 
 public class ContractDTO {
 	private Long id;
 	private LocalDate contractStartDate;
 	private LocalDate contractEndDate;
 	private Double defaultRentalValue;
-	private Integer contractStatus;
+	private int contractStatus;
 	private int invoiceDueDate;
-	private Tenant tenant;
 
 	public ContractDTO() {
 
 	}
 
 	public ContractDTO(Long id, LocalDate contractStartDate, LocalDate contractEndDate, Double defaultRentalValue,
-			Integer contractStatus, int invoiceDueDate, Tenant tenant) {
+			Integer contractStatus, int invoiceDueDate) {
 		this.id = id;
 		this.contractStartDate = contractStartDate;
 		this.contractEndDate = contractEndDate;
 		this.defaultRentalValue = defaultRentalValue;
 		this.contractStatus = contractStatus;
 		this.invoiceDueDate = invoiceDueDate;
-		this.tenant = tenant;
 	}
 
 	public ContractDTO(Contract contract) {
@@ -81,14 +78,6 @@ public class ContractDTO {
 
 	public void setInvoiceDueDate(int invoiceDueDate) {
 		this.invoiceDueDate = invoiceDueDate;
-	}
-
-	public Tenant getTenant() {
-		return tenant;
-	}
-
-	public void setTenant(Tenant tenant) {
-		this.tenant = tenant;
 	}
 
 }
