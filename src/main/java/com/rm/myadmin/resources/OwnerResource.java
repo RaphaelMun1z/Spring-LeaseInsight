@@ -2,8 +2,10 @@ package com.rm.myadmin.resources;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +24,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.myadmin.dto.ResidenceDTO;
 import com.rm.myadmin.entities.Owner;
+import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.services.OwnerService;
+import com.rm.myadmin.services.ResidenceService;
 
 import jakarta.validation.Valid;
 
@@ -32,6 +37,9 @@ import jakarta.validation.Valid;
 public class OwnerResource {
 	@Autowired
 	private OwnerService service;
+
+	@Autowired
+	private ResidenceService residenceService;
 
 	@GetMapping
 	public ResponseEntity<List<Owner>> findAll() {
@@ -63,7 +71,17 @@ public class OwnerResource {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
-	
+
+	@GetMapping(value = "/{id}/residences")
+	public ResponseEntity<Set<ResidenceDTO>> getResidences(@PathVariable Long id) {
+		Set<Residence> list = residenceService.findByOwner(id);
+		Set<ResidenceDTO> residences = new HashSet<>();
+		for (Residence residence : list) {
+			residences.add(new ResidenceDTO(residence));
+		}
+		return ResponseEntity.ok().body(residences);
+	}
+
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public Map<String, String> validationExceptionHandler(MethodArgumentNotValidException ex) {

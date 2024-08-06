@@ -2,6 +2,7 @@ package com.rm.myadmin.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -9,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.rm.myadmin.entities.Owner;
+import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.repositories.OwnerRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
@@ -19,6 +21,9 @@ import jakarta.persistence.EntityNotFoundException;
 public class OwnerService {
 	@Autowired
 	private OwnerRepository repository;
+
+	@Autowired
+	private ResidenceService residenceService;
 
 	public List<Owner> findAll() {
 		return repository.findAll();
@@ -61,5 +66,9 @@ public class OwnerService {
 		entity.setName(obj.getName());
 		entity.setEmail(obj.getEmail());
 		entity.setPhone(obj.getPhone());
+	}
+
+	public Set<Residence> findResidences(Long id) {
+		return residenceService.findByOwner(id);
 	}
 }
