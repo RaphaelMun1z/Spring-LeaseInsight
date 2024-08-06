@@ -2,8 +2,10 @@ package com.rm.myadmin.resources;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +24,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.myadmin.dto.ContractDTO;
+import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.Tenant;
+import com.rm.myadmin.services.ContractService;
 import com.rm.myadmin.services.TenantService;
 
 import jakarta.validation.Valid;
@@ -32,6 +37,9 @@ import jakarta.validation.Valid;
 public class TenantResource {
 	@Autowired
 	private TenantService service;
+
+	@Autowired
+	private ContractService contractService;
 
 	@GetMapping
 	public ResponseEntity<List<Tenant>> findAll() {
@@ -62,6 +70,16 @@ public class TenantResource {
 	public ResponseEntity<Tenant> update(@PathVariable Long id, @RequestBody Tenant obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
+	}
+
+	@GetMapping(value = "/{id}/contracts")
+	public ResponseEntity<Set<ContractDTO>> getContracts(@PathVariable Long id) {
+		Set<Contract> contracts = contractService.findByTenant(id);
+		Set<ContractDTO> list = new HashSet<>();
+		for (Contract c : contracts) {
+			list.add(new ContractDTO(c));
+		}
+		return ResponseEntity.ok().body(list);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
