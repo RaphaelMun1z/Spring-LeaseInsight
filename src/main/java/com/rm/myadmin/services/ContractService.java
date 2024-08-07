@@ -122,7 +122,6 @@ public class ContractService {
 
 				if (dueDate == today.getDayOfMonth()) {
 					System.out.println("O contrato com ID " + c.getId() + " está vencido hoje.");
-					System.out.println("Gerar fatura.");
 					RentalHistory rental = new RentalHistory(null, today, PaymentStatus.PENDING, c);
 					rentalHistoryService.create(rental);
 					String emailBody = "Olá " + c.getTenant().getName() + ",\n\n" + "Esperamos que você esteja bem!\n\n"
