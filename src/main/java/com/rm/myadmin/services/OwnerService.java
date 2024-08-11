@@ -29,7 +29,7 @@ public class OwnerService {
 		return repository.findAll();
 	}
 
-	public Owner findById(Long id) {
+	public Owner findById(String id) {
 		Optional<Owner> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
@@ -38,7 +38,7 @@ public class OwnerService {
 		return repository.save(obj);
 	}
 
-	public void delete(Long id) {
+	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
@@ -52,7 +52,7 @@ public class OwnerService {
 		}
 	}
 
-	public Owner update(Long id, Owner obj) {
+	public Owner update(String id, Owner obj) {
 		try {
 			Owner entity = repository.getReferenceById(id);
 			updateData(entity, obj);
@@ -68,7 +68,7 @@ public class OwnerService {
 		entity.setPhone(obj.getPhone());
 	}
 
-	public Set<Residence> findResidences(Long id) {
+	public Set<Residence> findResidences(String id) {
 		return residenceService.findByOwner(id);
 	}
 }

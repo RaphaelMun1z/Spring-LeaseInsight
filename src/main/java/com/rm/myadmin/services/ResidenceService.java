@@ -122,7 +122,7 @@ public class ResidenceService {
 		return cDTO;
 	}
 
-	public Set<Residence> findByOwner(Long id) {
+	public Set<Residence> findByOwner(String id) {
 		Owner owner = ownerService.findById(id);
 		return repository.findByOwner(owner);
 	}

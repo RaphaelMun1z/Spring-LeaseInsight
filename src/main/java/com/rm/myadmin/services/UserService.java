@@ -22,12 +22,12 @@ public class UserService {
 		return repository.findAll();
 	}
 
-	public User findById(Long id) {
+	public User findById(String id) {
 		Optional<User> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
-	public void delete(Long id) {
+	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);

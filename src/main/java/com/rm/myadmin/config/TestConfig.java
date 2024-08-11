@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.rm.myadmin.entities.AdditionalFeature;
 import com.rm.myadmin.entities.BillingAddress;
@@ -61,16 +62,15 @@ public class TestConfig implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
-		Owner o1 = new Owner(null, "Garen Demácia", "(13) 91234-5678", "garendemacia@gmail.com", "password123");
-		Owner o2 = new Owner(null, "Lux", "(11) 94321-8765", "lux@gmail.com", "senha321");
+		Owner o1 = new Owner(null, "Garen Demácia", "(13) 91234-5678", "garendemacia@gmail.com", new BCryptPasswordEncoder().encode("password123"));
+		Owner o2 = new Owner(null, "Lux", "(11) 94321-8765", "lux@gmail.com", new BCryptPasswordEncoder().encode("senha123"));
 		ownerRepository.saveAll(Arrays.asList(o1, o2));
 
 		BillingAddress ba1 = new BillingAddress(null, 502, "Av. Pres. Kennedy", "Guilhermina", "Praia Grande",
 				"São Paulo", "Brasil", "33444-111", "Próximo ao Extra");
 		billingAddressRepository.save(ba1);
 
-		Tenant t1 = new Tenant(null, "Nautilus", "(13) 91212-1212", "raphaelmunizvarela@gmail.com", "senhaa123",
+		Tenant t1 = new Tenant(null, "Nautilus", "(13) 91212-1212", "raphaelmunizvarela@gmail.com", "senha",
 				LocalDate.of(2000, 6, 15), "507.205.280-03", "22.222.222-2", LocalDate.now(), TenantStatus.PENDING,
 				ba1);
 		tenantRepository.save(t1);

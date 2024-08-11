@@ -8,34 +8,28 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.rm.myadmin.entities.BillingAddress;
-import com.rm.myadmin.entities.Tenant;
-import com.rm.myadmin.repositories.TenantRepository;
+import com.rm.myadmin.entities.Staff;
+import com.rm.myadmin.repositories.StaffRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class TenantService {
+public class StaffService {
 	@Autowired
-	private TenantRepository repository;
+	private StaffRepository repository;
 
-	@Autowired
-	private BillingAddressService billingAddressService;
-
-	public List<Tenant> findAll() {
+	public List<Staff> findAll() {
 		return repository.findAll();
 	}
 
-	public Tenant findById(String id) {
-		Optional<Tenant> obj = repository.findById(id);
+	public Staff findById(String id) {
+		Optional<Staff> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
-	public Tenant create(Tenant obj) {
-		BillingAddress tba = billingAddressService.findById(obj.getTenantBillingAddress().getId());
-		obj.setTenantBillingAddress(tba);
+	public Staff create(Staff obj) {
 		return repository.save(obj);
 	}
 
@@ -53,9 +47,9 @@ public class TenantService {
 		}
 	}
 
-	public Tenant update(String id, Tenant obj) {
+	public Staff update(String id, Staff obj) {
 		try {
-			Tenant entity = repository.getReferenceById(id);
+			Staff entity = repository.getReferenceById(id);
 			updateData(entity, obj);
 			return repository.save(entity);
 		} catch (EntityNotFoundException e) {
@@ -63,14 +57,9 @@ public class TenantService {
 		}
 	}
 
-	private void updateData(Tenant entity, Tenant obj) {
+	private void updateData(Staff entity, Staff obj) {
 		entity.setName(obj.getName());
 		entity.setEmail(obj.getEmail());
 		entity.setPhone(obj.getPhone());
-		entity.setDateOfBirth(obj.getDateOfBirth());
-		entity.setCpf(obj.getCpf());
-		entity.setRg(obj.getRg());
-		entity.setTenantStatus(obj.getTenantStatus());
 	}
-
 }

@@ -2,10 +2,8 @@ package com.rm.myadmin.resources;
 
 import java.net.URI;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,40 +22,34 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.myadmin.dto.ContractDTO;
-import com.rm.myadmin.entities.Contract;
-import com.rm.myadmin.entities.Tenant;
-import com.rm.myadmin.services.ContractService;
-import com.rm.myadmin.services.TenantService;
+import com.rm.myadmin.entities.Staff;
+import com.rm.myadmin.services.StaffService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/tenants")
-public class TenantResource {
+@RequestMapping(value = "/staffs")
+public class StaffResource {
 	@Autowired
-	private TenantService service;
-
-	@Autowired
-	private ContractService contractService;
+	private StaffService service;
 
 	@GetMapping
-	public ResponseEntity<List<Tenant>> findAll() {
-		List<Tenant> list = service.findAll();
+	public ResponseEntity<List<Staff>> findAll() {
+		List<Staff> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<Tenant> findById(@PathVariable String id) {
-		Tenant obj = service.findById(id);
-		return ResponseEntity.ok().body(obj);
-	}
-
 	@PostMapping
-	public ResponseEntity<Tenant> createTenant(@RequestBody @Valid Tenant obj) {
+	public ResponseEntity<Staff> insert(@RequestBody @Valid Staff obj) {
 		obj = service.create(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
+	}
+
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<Staff> findById(@PathVariable String id) {
+		Staff obj = service.findById(id);
+		return ResponseEntity.ok().body(obj);
 	}
 
 	@DeleteMapping(value = "/{id}")
@@ -67,19 +59,9 @@ public class TenantResource {
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Tenant> update(@PathVariable String id, @RequestBody Tenant obj) {
+	public ResponseEntity<Staff> update(@PathVariable String id, @RequestBody Staff obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
-	}
-
-	@GetMapping(value = "/{id}/contracts")
-	public ResponseEntity<Set<ContractDTO>> getContracts(@PathVariable String id) {
-		Set<Contract> contracts = contractService.findByTenant(id);
-		Set<ContractDTO> list = new HashSet<>();
-		for (Contract c : contracts) {
-			list.add(new ContractDTO(c));
-		}
-		return ResponseEntity.ok().body(list);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

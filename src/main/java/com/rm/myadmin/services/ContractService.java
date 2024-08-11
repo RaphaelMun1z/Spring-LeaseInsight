@@ -18,6 +18,7 @@ import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.entities.enums.ContractStatus;
 import com.rm.myadmin.entities.enums.PaymentStatus;
+import com.rm.myadmin.entities.enums.TemplatesEnum;
 import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
@@ -56,7 +57,7 @@ public class ContractService {
 		r.setContract(obj);
 		obj.setTenant(tenantService.findById(obj.getTenant().getId()));
 		Contract contract = repository.save(obj);
-		sendWelcomeEmail(contract);
+		sendContractBeginEmail(contract);
 		createFirstRental(obj);
 		return contract;
 	}
@@ -103,42 +104,19 @@ public class ContractService {
 		return repository.findByContractStatus(code);
 	}
 
-	public Set<Contract> findByTenant(Long id) {
+	public Set<Contract> findByTenant(String id) {
 		Tenant tenant = tenantService.findById(id);
 		return repository.findByTenant(tenant);
 	}
 
-	private void sendWelcomeEmail(Contract c) {
-		String emailBody = "\r\n" + "Prezado(a) " + c.getTenant().getName() + ",\r\n" + "\r\n"
-				+ "É com grande satisfação que damos as boas-vindas à MyAdmin Locações. Estamos muito felizes em tê-lo(a) como nosso cliente e esperamos que a sua experiência conosco seja excelente.\r\n"
-				+ "\r\n"
-				+ "Nossa missão é oferecer o melhor serviço de locação de imóveis, com um atendimento personalizado e soluções que atendam perfeitamente às suas necessidades. A partir de agora, você pode contar com nossa equipe dedicada e profissional para auxiliá-lo(a) em todas as etapas do processo de locação.\r\n"
-				+ "\r\n" + "Aqui estão alguns detalhes importantes para o seu início conosco:\r\n" + "\r\n"
-				+ "    Portal do Cliente: Acesse www.myadminlocacoes.com/cliente para gerenciar seus contratos, visualizar suas faturas e atualizar suas informações de contato.\r\n"
-				+ "    Suporte: Nosso suporte está disponível de segunda a sexta-feira, das 9h às 18h, pelo telefone (11) 1234-5678 ou pelo e-mail suporte@myadminlocacoes.com. Não hesite em nos contatar caso precise de assistência.\r\n"
-				+ "    Documentos: Anexamos a este e-mail os documentos essenciais referentes ao seu contrato de locação. Por favor, revise-os com atenção e entre em contato conosco caso tenha qualquer dúvida.\r\n"
-				+ "\r\n"
-				+ "Estamos aqui para garantir que sua jornada conosco seja tranquila e satisfatória. Agradecemos a confiança depositada em nossos serviços e estamos à disposição para qualquer necessidade.\r\n"
-				+ "\r\n" + "Mais uma vez, seja bem-vindo(a) à MyAdmin Locações.\r\n" + "\r\n" + "Atenciosamente,\r\n"
-				+ "\r\n" + "Equipe MyAdmin Locações\r\n" + "(11) 1234-5678\r\n" + "suporte@myadminlocacoes.com";
-
-		emailService.sendEmail(c.getTenant().getEmail(), "Bem-vindo(a) à MyAdmin Locações", emailBody);
+	private void sendContractBeginEmail(Contract c) {
+		emailService.sendEmail(TemplatesEnum.WELCOME, c.getTenant().getName(), c.getTenant().getEmail(),
+				"Bem-vindo(a) à LeaseInsight");
 	}
 
 	private void sendInvoiceByEmail(Contract c, RentalHistory rental) {
-		String emailBody = "Olá " + c.getTenant().getName() + ",\n\n" + "Esperamos que você esteja bem!\n\n"
-				+ "Gostaríamos de informar que a sua fatura de aluguel referente ao período de "
-				+ rental.getRentalStartDate() + " - " + rental.getRentalEndDate()
-				+ " já está disponível para consulta.\n\n" + "Detalhes da Fatura:\n" + "- Valor: R$ "
-				+ rental.getRentalValue() + "\n" + "- Data de Vencimento: " + rental.getRentalEndDate() + "\n\n"
-				+ "Para acessar a fatura e realizar o pagamento, por favor, acesse o nosso portal através do link abaixo:\n"
-				+ "www.myadmin.com\n\n"
-				+ "Se tiver qualquer dúvida ou precisar de assistência, não hesite em entrar em contato conosco.\n\n"
-				+ "Agradecemos pela sua atenção.\n\n" + "Atenciosamente,\n" + "MyAdmin Locações\n" + "---\n"
-				+ "Este é um e-mail automático, por favor, não responda.";
-
-		emailService.sendEmail(c.getTenant().getEmail(),
-				"[FatOura Disponível] Sua Fatura de Aluguel Já Está Disponível", emailBody);
+		emailService.sendEmail(TemplatesEnum.INVOICE, c.getTenant().getName(), c.getTenant().getEmail(),
+				"[Fatura Disponível] Sua Fatura de Aluguel Já Está Disponível");
 	}
 
 	@Scheduled(cron = "0 50 20 * * *")

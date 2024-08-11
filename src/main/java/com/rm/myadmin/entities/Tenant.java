@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rm.myadmin.entities.enums.TenantStatus;
+import com.rm.myadmin.entities.enums.UserRole;
 import com.rm.myadmin.entities.validation.constraints.BirthDate;
 import com.rm.myadmin.entities.validation.constraints.RG;
 
@@ -54,9 +55,10 @@ public class Tenant extends User implements Serializable {
 		super();
 	}
 
-	public Tenant(Long id, String name, String phone, String email, String password, LocalDate dateOfBirth, String cpf,
-			String rg, LocalDate registrationDate, TenantStatus tenantStatus, BillingAddress tenantBillingAddress) {
-		super(id, name, phone, email, password);
+	public Tenant(String id, String name, String phone, String email, String password, LocalDate dateOfBirth,
+			String cpf, String rg, LocalDate registrationDate, TenantStatus tenantStatus,
+			BillingAddress tenantBillingAddress) {
+		super(id, name, phone, email, password, UserRole.TENANT);
 		this.dateOfBirth = dateOfBirth;
 		this.cpf = cpf;
 		this.rg = rg;

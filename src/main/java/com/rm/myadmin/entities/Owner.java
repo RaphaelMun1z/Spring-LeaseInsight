@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rm.myadmin.entities.enums.UserRole;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -23,8 +24,8 @@ public class Owner extends User implements Serializable {
 		super();
 	}
 
-	public Owner(Long id, String name, String phone, String email, String password) {
-		super(id, name, phone, email, password);
+	public Owner(String id, String name, String phone, String email, String password) {
+		super(id, name, phone, email, password, UserRole.OWNER);
 	}
 
 	public Set<Residence> getProperties() {

@@ -48,32 +48,32 @@ public class OwnerResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Owner> findById(@PathVariable Long id) {
+	public ResponseEntity<Owner> findById(@PathVariable String id) {
 		Owner obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@PostMapping
-	public ResponseEntity<Owner> insert(@RequestBody @Valid Owner obj) {
+	public ResponseEntity<Owner> createOwner(@RequestBody @Valid Owner obj) {
 		obj = service.create(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Owner> update(@PathVariable Long id, @RequestBody Owner obj) {
+	public ResponseEntity<Owner> update(@PathVariable String id, @RequestBody Owner obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@GetMapping(value = "/{id}/residences")
-	public ResponseEntity<Set<ResidenceDTO>> getResidences(@PathVariable Long id) {
+	public ResponseEntity<Set<ResidenceDTO>> getResidences(@PathVariable String id) {
 		Set<Residence> list = residenceService.findByOwner(id);
 		Set<ResidenceDTO> residences = new HashSet<>();
 		for (Residence residence : list) {
