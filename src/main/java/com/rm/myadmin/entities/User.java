@@ -66,7 +66,7 @@ public abstract class User implements UserDetails {
 		this.phone = phone;
 		this.email = email;
 		this.password = password;
-		this.role = role;
+		setRole(role);
 	}
 
 	public String getId() {
@@ -109,27 +109,26 @@ public abstract class User implements UserDetails {
 		this.password = password;
 	}
 
+	private void setRole(UserRole role) {
+		if (role == null) {
+			throw new IllegalStateException("Role cannot be null");
+		}
+
+		this.role = role;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		System.out.println("==============================|");
-		System.out.println(role);
-		System.out.println("|==============================");
-		
-		switch (role) {
-		case UserRole.ADM: {
+		if (role == UserRole.ADM) {
 			return List.of(new SimpleGrantedAuthority("ROLE_ADM"), new SimpleGrantedAuthority("ROLE_STAFF"));
-		}
-		case UserRole.STAFF: {
+		} else if (role == UserRole.STAFF) {
 			return List.of(new SimpleGrantedAuthority("ROLE_STAFF"), new SimpleGrantedAuthority("ROLE_OWNER"),
 					new SimpleGrantedAuthority("ROLE_TENANT"));
-		}
-		case UserRole.OWNER: {
+		} else if (role == UserRole.OWNER) {
 			return List.of(new SimpleGrantedAuthority("ROLE_OWNER"));
-		}
-		case UserRole.TENANT: {
+		} else if (role == UserRole.TENANT) {
 			return List.of(new SimpleGrantedAuthority("ROLE_TENANT"));
-		}
-		default:
+		} else {
 			throw new IllegalArgumentException("Unexpected value: " + this.role);
 		}
 	}

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.rm.myadmin.entities.AdditionalFeature;
+import com.rm.myadmin.entities.Adm;
 import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.Owner;
@@ -25,6 +26,7 @@ import com.rm.myadmin.entities.enums.OccupancyStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
 import com.rm.myadmin.entities.enums.TenantStatus;
 import com.rm.myadmin.repositories.AdditionalFeatureRepository;
+import com.rm.myadmin.repositories.AdmRepository;
 import com.rm.myadmin.repositories.BillingAddressRepository;
 import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.repositories.OwnerRepository;
@@ -60,10 +62,18 @@ public class TestConfig implements CommandLineRunner {
 	@Autowired
 	private BillingAddressRepository billingAddressRepository;
 
+	@Autowired
+	private AdmRepository admRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
-		Owner o1 = new Owner(null, "Garen Demácia", "(13) 91234-5678", "garendemacia@gmail.com", new BCryptPasswordEncoder().encode("password123"));
-		Owner o2 = new Owner(null, "Lux", "(11) 94321-8765", "lux@gmail.com", new BCryptPasswordEncoder().encode("senha123"));
+		Adm adm = new Adm(null, "Irineu", "(11) 91234-5678", "irineu@gmail.com", "$2a$10$0P9rooXJBsWKpHufu19Xwei7JC3QSw8C1KqfBRxB5zfMVS4RNZkEu");
+		admRepository.save(adm);
+
+		Owner o1 = new Owner(null, "Garen Demácia", "(13) 91234-5678", "garendemacia@gmail.com",
+				new BCryptPasswordEncoder().encode("password123"));
+		Owner o2 = new Owner(null, "Lux", "(11) 94321-8765", "lux@gmail.com",
+				new BCryptPasswordEncoder().encode("senha123"));
 		ownerRepository.saveAll(Arrays.asList(o1, o2));
 
 		BillingAddress ba1 = new BillingAddress(null, 502, "Av. Pres. Kennedy", "Guilhermina", "Praia Grande",

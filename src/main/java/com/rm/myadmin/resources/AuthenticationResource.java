@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rm.myadmin.dto.LoginRequestDTO;
 import com.rm.myadmin.dto.LoginResponseDTO;
 import com.rm.myadmin.dto.RegisterRequestDTO;
-import com.rm.myadmin.entities.Adm;
+import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.User;
 import com.rm.myadmin.infra.security.TokenService;
-import com.rm.myadmin.repositories.AdmRepository;
+import com.rm.myadmin.repositories.OwnerRepository;
 
 import jakarta.validation.Valid;
 
@@ -25,9 +25,6 @@ import jakarta.validation.Valid;
 public class AuthenticationResource {
 	@Autowired
 	private AuthenticationManager authenticationManager;
-
-	@Autowired
-	private AdmRepository repository;
 
 	@Autowired
 	private TokenService tokenService;
@@ -40,18 +37,5 @@ public class AuthenticationResource {
 		var token = tokenService.generateToken((User) auth.getPrincipal());
 
 		return ResponseEntity.ok(new LoginResponseDTO(token));
-	}
-
-	@PostMapping("/register")
-	public ResponseEntity register(@RequestBody @Valid RegisterRequestDTO data) {
-		if (this.repository.findByEmail(data.email()) != null)
-			return ResponseEntity.badRequest().build();
-
-		String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-		Adm user = new Adm(null, data.name(), data.phone(), data.email(), encryptedPassword);
-
-		this.repository.save(user);
-
-		return ResponseEntity.ok().build();
 	}
 }

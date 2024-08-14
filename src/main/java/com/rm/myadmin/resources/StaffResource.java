@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.myadmin.dto.RegisterRequestDTO;
+import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.Staff;
 import com.rm.myadmin.services.StaffService;
 
@@ -41,6 +44,16 @@ public class StaffResource {
 
 	@PostMapping
 	public ResponseEntity<Staff> insert(@RequestBody @Valid Staff obj) {
+		if (this.repository.findByEmail(obj.email()) != null)
+			return ResponseEntity.badRequest().build();
+
+		String encryptedPassword = new BCryptPasswordEncoder().encode(obj.password());
+		Owner user = new Owner(null, obj.name(), obj.phone(), obj.email(), encryptedPassword);
+
+		this.repository.save(user);
+
+		return ResponseEntity.ok().build();
+		
 		obj = service.create(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
