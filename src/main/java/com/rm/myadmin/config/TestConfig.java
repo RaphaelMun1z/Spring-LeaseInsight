@@ -20,6 +20,7 @@ import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.entities.ResidenceFeature;
+import com.rm.myadmin.entities.Staff;
 import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.entities.enums.ContractStatus;
 import com.rm.myadmin.entities.enums.OccupancyStatus;
@@ -33,6 +34,7 @@ import com.rm.myadmin.repositories.OwnerRepository;
 import com.rm.myadmin.repositories.ResidenceAddressRepository;
 import com.rm.myadmin.repositories.ResidenceFeatureRepository;
 import com.rm.myadmin.repositories.ResidenceRepository;
+import com.rm.myadmin.repositories.StaffRepository;
 import com.rm.myadmin.repositories.TenantRepository;
 
 @Configuration
@@ -65,13 +67,21 @@ public class TestConfig implements CommandLineRunner {
 	@Autowired
 	private AdmRepository admRepository;
 
+	@Autowired
+	private StaffRepository staffRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
-		Adm adm = new Adm(null, "Irineu", "(11) 91234-5678", "irineu@gmail.com", "$2a$10$0P9rooXJBsWKpHufu19Xwei7JC3QSw8C1KqfBRxB5zfMVS4RNZkEu");
+		Adm adm = new Adm(null, "Irineu", "(11) 91234-5678", "irineu@gmail.com",
+				"$2a$10$0P9rooXJBsWKpHufu19Xwei7JC3QSw8C1KqfBRxB5zfMVS4RNZkEu");
 		admRepository.save(adm);
 
+		Staff staff = new Staff(null, "Staff", "(11) 91234-5688", "staff@gmail.com",
+				"$2a$10$0P9rooXJBsWKpHufu19Xwei7JC3QSw8C1KqfBRxB5zfMVS4RNZkEu");
+		staffRepository.save(staff);
+
 		Owner o1 = new Owner(null, "Garen Demácia", "(13) 91234-5678", "garendemacia@gmail.com",
-				new BCryptPasswordEncoder().encode("password123"));
+				"$2a$10$0P9rooXJBsWKpHufu19Xwei7JC3QSw8C1KqfBRxB5zfMVS4RNZkEu");
 		Owner o2 = new Owner(null, "Lux", "(11) 94321-8765", "lux@gmail.com",
 				new BCryptPasswordEncoder().encode("senha123"));
 		ownerRepository.saveAll(Arrays.asList(o1, o2));
@@ -80,9 +90,9 @@ public class TestConfig implements CommandLineRunner {
 				"São Paulo", "Brasil", "33444-111", "Próximo ao Extra");
 		billingAddressRepository.save(ba1);
 
-		Tenant t1 = new Tenant(null, "Nautilus", "(13) 91212-1212", "raphaelmunizvarela@gmail.com", "senha",
-				LocalDate.of(2000, 6, 15), "507.205.280-03", "22.222.222-2", LocalDate.now(), TenantStatus.PENDING,
-				ba1);
+		Tenant t1 = new Tenant(null, "Nautilus", "(13) 91212-1212", "raphaelmunizvarela@gmail.com",
+				"$2a$10$0P9rooXJBsWKpHufu19Xwei7JC3QSw8C1KqfBRxB5zfMVS4RNZkEu", LocalDate.of(2000, 6, 15),
+				"507.205.280-03", "22.222.222-2", LocalDate.now(), TenantStatus.PENDING, ba1);
 		tenantRepository.save(t1);
 
 		ResidenceAddress ra1 = new ResidenceAddress(null, 315, "Av. Mal. Mallet", "Canto do Forte", "Praia Grande",

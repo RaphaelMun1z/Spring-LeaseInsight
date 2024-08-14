@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,9 +24,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.myadmin.dto.RegisterRequestDTO;
+import com.rm.myadmin.dto.AdmRegisterRequestDTO;
 import com.rm.myadmin.entities.Adm;
-import com.rm.myadmin.entities.Owner;
+import com.rm.myadmin.repositories.AdmRepository;
 import com.rm.myadmin.services.AdmService;
 
 import jakarta.validation.Valid;
@@ -36,32 +37,47 @@ public class AdmResource {
 	@Autowired
 	private AdmService service;
 
+	@Autowired
+	private AdmRepository repository;
+
 	@GetMapping
+	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<List<Adm>> findAll() {
 		List<Adm> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/{id}")
+	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Adm> findById(@PathVariable String id) {
 		Adm obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@PostMapping
-	public ResponseEntity<Adm> insert(@RequestBody @Valid Adm obj) {
-		obj = service.create(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+	@PreAuthorize("hasRole('ADM')")
+	public ResponseEntity<Adm> insert(@RequestBody @Valid AdmRegisterRequestDTO obj) {
+		if (repository.findByEmail(obj.email()) != null)
+			return ResponseEntity.badRequest().build();
+
+		String encryptedPassword = new BCryptPasswordEncoder().encode(obj.password());
+		Adm user = new Adm(null, obj.name(), obj.phone(), obj.email(), encryptedPassword);
+
+		Adm adm = service.create(user);
+
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(adm.getId()).toUri();
+		return ResponseEntity.created(uri).body(adm);
 	}
 
 	@DeleteMapping(value = "/{id}")
+	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
+	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Adm> update(@PathVariable String id, @RequestBody Adm obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);

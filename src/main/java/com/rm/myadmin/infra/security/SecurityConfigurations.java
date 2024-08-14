@@ -26,10 +26,8 @@ public class SecurityConfigurations {
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity.csrf(csrf -> csrf.disable()).headers(headers -> headers.frameOptions().disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(authorize -> authorize.requestMatchers(
-						HttpMethod.POST, "/auth/login").permitAll()
-						.requestMatchers(HttpMethod.GET, "/residences").hasRole("ADM").requestMatchers("/h2-console/**")
-						.permitAll().anyRequest().authenticated())
+				.authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/auth/login")
+						.permitAll().requestMatchers("/h2-console/**").permitAll().anyRequest().authenticated())
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
 

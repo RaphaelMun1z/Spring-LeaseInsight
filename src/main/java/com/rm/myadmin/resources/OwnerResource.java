@@ -10,6 +10,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,9 +26,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.myadmin.dto.OwnerRegisterRequestDTO;
 import com.rm.myadmin.dto.ResidenceDTO;
 import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.Residence;
+import com.rm.myadmin.repositories.OwnerRepository;
 import com.rm.myadmin.services.OwnerService;
 import com.rm.myadmin.services.ResidenceService;
 
@@ -41,6 +45,9 @@ public class OwnerResource {
 	@Autowired
 	private ResidenceService residenceService;
 
+	@Autowired
+	private OwnerRepository repository;
+
 	@GetMapping
 	public ResponseEntity<List<Owner>> findAll() {
 		List<Owner> list = service.findAll();
@@ -54,10 +61,18 @@ public class OwnerResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Owner> createOwner(@RequestBody @Valid Owner obj) {
-		obj = service.create(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
+	public ResponseEntity<Owner> insert(@RequestBody @Valid OwnerRegisterRequestDTO obj) {
+		if (repository.findByEmail(obj.email()) != null)
+			return ResponseEntity.badRequest().build();
+
+		String encryptedPassword = new BCryptPasswordEncoder().encode(obj.password());
+		Owner user = new Owner(null, obj.name(), obj.phone(), obj.email(), encryptedPassword);
+
+		Owner owner = service.create(user);
+
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(owner.getId()).toUri();
+		return ResponseEntity.created(uri).body(owner);
 	}
 
 	@DeleteMapping(value = "/{id}")
