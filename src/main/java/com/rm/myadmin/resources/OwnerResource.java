@@ -49,12 +49,14 @@ public class OwnerResource {
 	private OwnerRepository repository;
 
 	@GetMapping
+	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<List<Owner>> findAll() {
 		List<Owner> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/{id}")
+	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<Owner> findById(@PathVariable String id) {
 		Owner obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
@@ -76,18 +78,21 @@ public class OwnerResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
+	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
+	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<Owner> update(@PathVariable String id, @RequestBody Owner obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@GetMapping(value = "/{id}/residences")
+	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<Set<ResidenceDTO>> getResidences(@PathVariable String id) {
 		Set<Residence> list = residenceService.findByOwner(id);
 		Set<ResidenceDTO> residences = new HashSet<>();
