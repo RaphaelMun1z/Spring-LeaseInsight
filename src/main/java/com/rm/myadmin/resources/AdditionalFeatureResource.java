@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -28,15 +30,22 @@ import com.rm.myadmin.services.AdditionalFeatureService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/additional_features")
+@RequestMapping(value = "/additional-features")
 public class AdditionalFeatureResource {
 	@Autowired
 	private AdditionalFeatureService service;
 
 	@GetMapping
+	@Cacheable("findAllAdditionalFeatures")
 	public ResponseEntity<List<AdditionalFeature>> findAll() {
 		List<AdditionalFeature> list = service.findAll();
 		return ResponseEntity.ok().body(list);
+	}
+	
+	@GetMapping(value = "/cancel")
+	@CacheEvict("findAllAdditionalFeatures")
+	public String cancelFindAll() {
+		return "Cache cancelado!";
 	}
 
 	@GetMapping(value = "/{id}")
