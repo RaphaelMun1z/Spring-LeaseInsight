@@ -10,7 +10,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -49,21 +48,18 @@ public class OwnerResource {
 	private OwnerRepository repository;
 
 	@GetMapping
-	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<List<Owner>> findAll() {
 		List<Owner> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/{id}")
-	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<Owner> findById(@PathVariable String id) {
 		Owner obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@PostMapping
-	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<Owner> insert(@RequestBody @Valid OwnerRegisterRequestDTO obj) {
 		if (repository.findByEmail(obj.email()) != null)
 			return ResponseEntity.badRequest().build();
@@ -78,21 +74,18 @@ public class OwnerResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<Owner> update(@PathVariable String id, @RequestBody Owner obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@GetMapping(value = "/{id}/residences")
-	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<Set<ResidenceDTO>> getResidences(@PathVariable String id) {
 		Set<Residence> list = residenceService.findByOwner(id);
 		Set<ResidenceDTO> residences = new HashSet<>();

@@ -8,7 +8,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,21 +40,18 @@ public class AdmResource {
 	private AdmRepository repository;
 
 	@GetMapping
-	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<List<Adm>> findAll() {
 		List<Adm> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/{id}")
-	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Adm> findById(@PathVariable String id) {
 		Adm obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@PostMapping
-	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Adm> insert(@RequestBody @Valid AdmRegisterRequestDTO obj) {
 		if (repository.findByEmail(obj.email()) != null)
 			return ResponseEntity.badRequest().build();
@@ -70,14 +66,12 @@ public class AdmResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Adm> update(@PathVariable String id, @RequestBody Adm obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);

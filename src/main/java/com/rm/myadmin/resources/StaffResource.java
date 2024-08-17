@@ -8,7 +8,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,14 +40,12 @@ public class StaffResource {
 	private StaffRepository repository;
 
 	@GetMapping
-	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<List<Staff>> findAll() {
 		List<Staff> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
 	@PostMapping
-	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Staff> insert(@RequestBody @Valid StaffRegisterRequestDTO obj) {
 		if (repository.findByEmail(obj.email()) != null)
 			return ResponseEntity.badRequest().build();
@@ -63,21 +60,18 @@ public class StaffResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Staff> findById(@PathVariable String id) {
 		Staff obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@DeleteMapping(value = "/{id}")
-	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<Staff> update(@PathVariable String id, @RequestBody Staff obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);

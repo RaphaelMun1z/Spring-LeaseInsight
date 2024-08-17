@@ -8,7 +8,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,7 +46,6 @@ public class AdditionalFeatureResource {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<AdditionalFeature> insert(@RequestBody @Valid AdditionalFeature obj) {
 		obj = service.create(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
@@ -55,14 +53,12 @@ public class AdditionalFeatureResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	@PreAuthorize("hasAnyRole('ADM', 'STAFF')")
 	public ResponseEntity<AdditionalFeature> update(@PathVariable Long id, @RequestBody AdditionalFeature obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
