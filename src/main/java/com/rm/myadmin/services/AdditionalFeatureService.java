@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,11 @@ import jakarta.persistence.EntityNotFoundException;
 public class AdditionalFeatureService {
 	@Autowired
 	private AdditionalFeatureRepository repository;
+
+	@Cacheable("findAllAdditionalFeatures")
+	public List<AdditionalFeature> findAllCached() {
+		return findAll();
+	}
 
 	public List<AdditionalFeature> findAll() {
 		return repository.findAll();
