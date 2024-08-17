@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.RentalHistory;
@@ -51,6 +52,7 @@ public class ContractService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
+	@Transactional
 	public Contract create(Contract obj) {
 		Residence r = residenceService.findById(obj.getResidence().getId());
 		obj.setResidence(r);
@@ -68,6 +70,7 @@ public class ContractService {
 		sendInvoiceByEmail(c, rental);
 	}
 
+	@Transactional
 	public void delete(Long id) {
 		try {
 			if (repository.existsById(id)) {
@@ -82,6 +85,7 @@ public class ContractService {
 		}
 	}
 
+	@Transactional
 	public Contract update(Long id, Contract obj) {
 		try {
 			Contract entity = repository.getReferenceById(id);

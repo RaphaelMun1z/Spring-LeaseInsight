@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.dto.ContractDTO;
 import com.rm.myadmin.dto.ResidenceFeatureDTO;
@@ -51,12 +52,14 @@ public class ResidenceService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
+	@Transactional
 	public Residence create(Residence obj) {
 		ResidenceAddress ra = residenceAddressService.findById(obj.getResidenceAddress().getId());
 		obj.setResidenceAddress(ra);
 		return repository.save(obj);
 	}
 
+	@Transactional
 	public void delete(Long id) {
 		try {
 			if (repository.existsById(id)) {
@@ -71,6 +74,7 @@ public class ResidenceService {
 		}
 	}
 
+	@Transactional
 	public Residence update(Long id, Residence obj) {
 		try {
 			Residence entity = repository.getReferenceById(id);
@@ -99,6 +103,7 @@ public class ResidenceService {
 		entity.setDateLastRenovation(obj.getDateLastRenovation());
 	}
 
+	@Transactional
 	public ResidenceFeature addFeature(ResidenceFeature obj) {
 		Residence r = this.findById(obj.getProperty().getId());
 		AdditionalFeature af = additionalFeatureService.findById(obj.getFeature().getId());

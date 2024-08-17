@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.entities.Tenant;
@@ -33,12 +34,14 @@ public class TenantService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
+	@Transactional
 	public Tenant create(Tenant obj) {
 		BillingAddress tba = billingAddressService.findById(obj.getTenantBillingAddress().getId());
 		obj.setTenantBillingAddress(tba);
 		return repository.save(obj);
 	}
 
+	@Transactional
 	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
@@ -53,6 +56,7 @@ public class TenantService {
 		}
 	}
 
+	@Transactional
 	public Tenant update(String id, Tenant obj) {
 		try {
 			Tenant entity = repository.getReferenceById(id);

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.repositories.ResidenceAddressRepository;
@@ -29,10 +30,12 @@ public class ResidenceAddressService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
+	@Transactional
 	public ResidenceAddress create(ResidenceAddress obj) {
 		return repository.save(obj);
 	}
 
+	@Transactional
 	public void delete(Long id) {
 		try {
 			if (repository.existsById(id)) {
@@ -47,6 +50,7 @@ public class ResidenceAddressService {
 		}
 	}
 
+	@Transactional
 	public ResidenceAddress update(Long id, ResidenceAddress obj) {
 		try {
 			ResidenceAddress entity = repository.getReferenceById(id);

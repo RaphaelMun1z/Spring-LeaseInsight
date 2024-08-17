@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.Adm;
 import com.rm.myadmin.repositories.AdmRepository;
@@ -29,10 +30,12 @@ public class AdmService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
+	@Transactional
 	public Adm create(Adm obj) {
 		return repository.save(obj);
 	}
 
+	@Transactional
 	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
@@ -47,6 +50,7 @@ public class AdmService {
 		}
 	}
 
+	@Transactional
 	public Adm update(String id, Adm obj) {
 		try {
 			Adm entity = repository.getReferenceById(id);

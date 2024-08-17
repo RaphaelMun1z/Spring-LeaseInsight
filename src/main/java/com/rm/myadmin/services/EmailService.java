@@ -9,6 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.enums.TemplatesEnum;
 
@@ -22,6 +23,7 @@ public class EmailService {
 	@Value("${spring.mail.username}")
 	private String sender;
 
+	@Transactional
 	public void sendEmail(TemplatesEnum type, String recipientName, String recipientEmail, String subject) {
 		try {
 			MimeMessage message = javaMailSender.createMimeMessage();

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.AdditionalFeature;
 import com.rm.myadmin.repositories.AdditionalFeatureRepository;
@@ -29,10 +30,12 @@ public class AdditionalFeatureService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
+	@Transactional
 	public AdditionalFeature create(AdditionalFeature obj) {
 		return repository.save(obj);
 	}
 
+	@Transactional
 	public void delete(Long id) {
 		try {
 			if (repository.existsById(id)) {
@@ -47,6 +50,7 @@ public class AdditionalFeatureService {
 		}
 	}
 
+	@Transactional
 	public AdditionalFeature update(Long id, AdditionalFeature obj) {
 		try {
 			AdditionalFeature entity = repository.getReferenceById(id);

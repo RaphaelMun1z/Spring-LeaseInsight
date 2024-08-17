@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.Staff;
 import com.rm.myadmin.repositories.StaffRepository;
@@ -29,10 +30,12 @@ public class StaffService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
+	@Transactional
 	public Staff create(Staff obj) {
 		return repository.save(obj);
 	}
 
+	@Transactional
 	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
@@ -47,6 +50,7 @@ public class StaffService {
 		}
 	}
 
+	@Transactional
 	public Staff update(String id, Staff obj) {
 		try {
 			Staff entity = repository.getReferenceById(id);

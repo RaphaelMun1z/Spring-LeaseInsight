@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.repositories.RentalHistoryRepository;
@@ -34,11 +35,13 @@ public class RentalHistoryService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
+	@Transactional
 	public RentalHistory create(RentalHistory obj) {
 		obj.setContract(contractService.findById(obj.getContract().getId()));
 		return repository.save(obj);
 	}
 
+	@Transactional
 	public void delete(Long id) {
 		try {
 			if (repository.existsById(id)) {
@@ -53,6 +56,7 @@ public class RentalHistoryService {
 		}
 	}
 
+	@Transactional
 	public RentalHistory update(Long id, RentalHistory obj) {
 		try {
 			RentalHistory entity = repository.getReferenceById(id);
