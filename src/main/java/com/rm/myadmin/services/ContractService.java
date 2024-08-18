@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -42,7 +43,15 @@ public class ContractService {
 
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private CacheService cacheService;
 
+	@Cacheable("findAllContract")
+	public List<Contract> findAllCached() {
+		return findAll();
+	}
+	
 	public List<Contract> findAll() {
 		return repository.findAll();
 	}
@@ -61,6 +70,7 @@ public class ContractService {
 		Contract contract = repository.save(obj);
 		sendContractBeginEmail(contract);
 		createFirstRental(obj);
+		cacheService.putContractCache();
 		return contract;
 	}
 

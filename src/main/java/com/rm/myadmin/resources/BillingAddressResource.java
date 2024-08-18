@@ -35,7 +35,7 @@ public class BillingAddressResource {
 
 	@GetMapping
 	public ResponseEntity<List<BillingAddress>> findAll() {
-		List<BillingAddress> list = service.findAll();
+		List<BillingAddress> list = service.findAllCached();
 		return ResponseEntity.ok().body(list);
 	}
 

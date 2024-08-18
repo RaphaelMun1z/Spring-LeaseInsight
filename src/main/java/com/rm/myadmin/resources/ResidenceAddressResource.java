@@ -35,7 +35,7 @@ public class ResidenceAddressResource {
 
 	@GetMapping
 	public ResponseEntity<List<ResidenceAddress>> findAll() {
-		List<ResidenceAddress> list = service.findAll();
+		List<ResidenceAddress> list = service.findAllCached();
 		return ResponseEntity.ok().body(list);
 	}
 

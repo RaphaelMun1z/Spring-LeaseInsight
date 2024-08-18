@@ -36,7 +36,7 @@ public class ContractResource {
 
 	@GetMapping
 	public ResponseEntity<List<Contract>> findAll() {
-		List<Contract> list = service.findAll();
+		List<Contract> list = service.findAllCached();
 		return ResponseEntity.ok().body(list);
 	}
 

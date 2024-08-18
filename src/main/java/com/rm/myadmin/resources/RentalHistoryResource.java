@@ -35,7 +35,7 @@ public class RentalHistoryResource {
 
 	@GetMapping
 	public ResponseEntity<List<RentalHistory>> findAll() {
-		List<RentalHistory> list = service.findAll();
+		List<RentalHistory> list = service.findAllCached();
 		return ResponseEntity.ok().body(list);
 	}
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,14 @@ public class TenantService {
 	@Autowired
 	private BillingAddressService billingAddressService;
 
+	@Autowired
+	private CacheService cacheService;
+
+	@Cacheable("findAllTenant")
+	public List<Tenant> findAllCached() {
+		return findAll();
+	}
+
 	public List<Tenant> findAll() {
 		return repository.findAll();
 	}
@@ -38,7 +47,10 @@ public class TenantService {
 	public Tenant create(Tenant obj) {
 		BillingAddress tba = billingAddressService.findById(obj.getTenantBillingAddress().getId());
 		obj.setTenantBillingAddress(tba);
-		return repository.save(obj);
+		Tenant tenant = repository.save(obj);
+		cacheService.putTenantCache();
+		cacheService.putUserCache();
+		return tenant;
 	}
 
 	@Transactional

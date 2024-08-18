@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,11 @@ import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 public class UserService {
 	@Autowired
 	private UserRepository<User> repository;
+
+	@Cacheable("findAllUser")
+	public List<User> findAllCached() {
+		return findAll();
+	}
 
 	public List<User> findAll() {
 		return repository.findAll();

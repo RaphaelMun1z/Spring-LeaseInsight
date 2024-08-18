@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,15 @@ import jakarta.persistence.EntityNotFoundException;
 public class AdmService {
 	@Autowired
 	private AdmRepository repository;
+	
+	@Autowired
+	private CacheService cacheService;
 
+	@Cacheable("findAllAdm")
+	public List<Adm> findAllCached() {
+		return findAll();
+	}
+	
 	public List<Adm> findAll() {
 		return repository.findAll();
 	}
@@ -32,7 +41,10 @@ public class AdmService {
 
 	@Transactional
 	public Adm create(Adm obj) {
-		return repository.save(obj);
+		Adm adm = repository.save(obj);
+		cacheService.putAdmCache();
+		cacheService.putUserCache();
+		return adm;
 	}
 
 	@Transactional

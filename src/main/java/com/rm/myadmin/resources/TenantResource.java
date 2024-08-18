@@ -43,7 +43,7 @@ public class TenantResource {
 
 	@GetMapping
 	public ResponseEntity<List<Tenant>> findAll() {
-		List<Tenant> list = service.findAll();
+		List<Tenant> list = service.findAllCached();
 		return ResponseEntity.ok().body(list);
 	}
 

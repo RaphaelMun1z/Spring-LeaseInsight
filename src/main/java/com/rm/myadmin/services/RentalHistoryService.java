@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -26,6 +27,14 @@ public class RentalHistoryService {
 	@Lazy
 	private ContractService contractService;
 
+	@Autowired
+	private CacheService cacheService;
+
+	@Cacheable("findAllRentalHistory")
+	public List<RentalHistory> findAllCached() {
+		return findAll();
+	}
+
 	public List<RentalHistory> findAll() {
 		return repository.findAll();
 	}
@@ -38,7 +47,9 @@ public class RentalHistoryService {
 	@Transactional
 	public RentalHistory create(RentalHistory obj) {
 		obj.setContract(contractService.findById(obj.getContract().getId()));
-		return repository.save(obj);
+		RentalHistory rh = repository.save(obj);
+		cacheService.putRentalHistoryCache();
+		return rh;
 	}
 
 	@Transactional

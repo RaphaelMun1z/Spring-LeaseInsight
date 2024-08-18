@@ -41,7 +41,7 @@ public class ResidenceResource {
 
 	@GetMapping
 	public ResponseEntity<List<Residence>> findAll() {
-		List<Residence> list = service.findAll();
+		List<Residence> list = service.findAllCached();
 		return ResponseEntity.ok().body(list);
 	}
 

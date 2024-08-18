@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -43,6 +44,14 @@ public class ResidenceService {
 	@Autowired
 	private OwnerService ownerService;
 
+	@Autowired
+	private CacheService cacheService;
+
+	@Cacheable("findAllResidence")
+	public List<Residence> findAllCached() {
+		return findAll();
+	}
+
 	public List<Residence> findAll() {
 		return repository.findAll();
 	}
@@ -56,7 +65,9 @@ public class ResidenceService {
 	public Residence create(Residence obj) {
 		ResidenceAddress ra = residenceAddressService.findById(obj.getResidenceAddress().getId());
 		obj.setResidenceAddress(ra);
-		return repository.save(obj);
+		Residence residence = repository.save(obj);
+		cacheService.putResidenceCache();
+		return residence;
 	}
 
 	@Transactional

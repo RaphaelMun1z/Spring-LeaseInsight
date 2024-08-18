@@ -41,7 +41,7 @@ public class AdmResource {
 
 	@GetMapping
 	public ResponseEntity<List<Adm>> findAll() {
-		List<Adm> list = service.findAll();
+		List<Adm> list = service.findAllCached();
 		return ResponseEntity.ok().body(list);
 	}
 

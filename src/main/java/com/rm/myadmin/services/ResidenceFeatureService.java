@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,14 @@ public class ResidenceFeatureService {
 	@Autowired
 	private ResidenceFeatureRepository repository;
 
+	@Autowired
+	private CacheService cacheService;
+
+	@Cacheable("findAllResidenceFeature")
+	public List<ResidenceFeature> findAllCached() {
+		return findAll();
+	}
+
 	public List<ResidenceFeature> findAll() {
 		return repository.findAll();
 	}
@@ -30,7 +39,9 @@ public class ResidenceFeatureService {
 
 	@Transactional
 	public ResidenceFeature create(ResidenceFeature obj) {
-		return repository.save(obj);
+		ResidenceFeature rf = repository.save(obj);
+		cacheService.putResidenceFeatureCache();
+		return rf;
 	}
 
 	@Transactional

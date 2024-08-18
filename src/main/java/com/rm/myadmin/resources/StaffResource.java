@@ -41,7 +41,7 @@ public class StaffResource {
 
 	@GetMapping
 	public ResponseEntity<List<Staff>> findAll() {
-		List<Staff> list = service.findAll();
+		List<Staff> list = service.findAllCached();
 		return ResponseEntity.ok().body(list);
 	}
 

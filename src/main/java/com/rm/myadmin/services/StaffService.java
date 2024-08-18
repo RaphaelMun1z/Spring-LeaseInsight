@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,14 @@ public class StaffService {
 	@Autowired
 	private StaffRepository repository;
 
+	@Autowired
+	private CacheService cacheService;
+
+	@Cacheable("findAllStaff")
+	public List<Staff> findAllCached() {
+		return findAll();
+	}
+
 	public List<Staff> findAll() {
 		return repository.findAll();
 	}
@@ -32,7 +41,10 @@ public class StaffService {
 
 	@Transactional
 	public Staff create(Staff obj) {
-		return repository.save(obj);
+		Staff staff = repository.save(obj);
+		cacheService.putStaffCache();
+		cacheService.putUserCache();
+		return staff;
 	}
 
 	@Transactional

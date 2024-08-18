@@ -49,7 +49,7 @@ public class OwnerResource {
 
 	@GetMapping
 	public ResponseEntity<List<Owner>> findAll() {
-		List<Owner> list = service.findAll();
+		List<Owner> list = service.findAllCached();
 		return ResponseEntity.ok().body(list);
 	}
 

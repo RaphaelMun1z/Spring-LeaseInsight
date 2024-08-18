@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,14 @@ public class OwnerService {
 	@Autowired
 	private ResidenceService residenceService;
 
+	@Autowired
+	private CacheService cacheService;
+
+	@Cacheable("findAllOwner")
+	public List<Owner> findAllCached() {
+		return findAll();
+	}
+
 	public List<Owner> findAll() {
 		return repository.findAll();
 	}
@@ -37,7 +46,10 @@ public class OwnerService {
 
 	@Transactional
 	public Owner create(Owner obj) {
-		return repository.save(obj);
+		Owner owner = repository.save(obj);
+		cacheService.putOwnerCache();
+		cacheService.putUserCache();
+		return owner;
 	}
 
 	@Transactional

@@ -28,7 +28,8 @@ public class SecurityConfigurations {
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-				.requestMatchers("/cache/**").permitAll()
+				.requestMatchers(HttpMethod.PUT, "/cache/**").hasAnyRole("ADM", "STAFF", "OWNER", "TENANT")
+				.requestMatchers(HttpMethod.DELETE, "/cache/clear/**").hasAnyRole("ADM")
 				.requestMatchers(HttpMethod.GET, "/additional-features/**").permitAll()
 				.requestMatchers(HttpMethod.POST, "/additional-features/**").hasAnyRole("ADM", "STAFF")
                 .requestMatchers(HttpMethod.PUT, "/additional-features/**").hasAnyRole("ADM", "STAFF")

@@ -22,6 +22,9 @@ public class AdditionalFeatureService {
 	@Autowired
 	private AdditionalFeatureRepository repository;
 
+	@Autowired
+	private CacheService cacheService;
+
 	@Cacheable("findAllAdditionalFeatures")
 	public List<AdditionalFeature> findAllCached() {
 		return findAll();
@@ -38,7 +41,9 @@ public class AdditionalFeatureService {
 
 	@Transactional
 	public AdditionalFeature create(AdditionalFeature obj) {
-		return repository.save(obj);
+		AdditionalFeature af = repository.save(obj);
+		cacheService.putAdditionalFeatureCache();
+		return af;
 	}
 
 	@Transactional
