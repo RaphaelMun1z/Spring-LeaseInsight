@@ -66,6 +66,7 @@ public class AdditionalFeatureService {
 		try {
 			AdditionalFeature entity = repository.getReferenceById(id);
 			updateData(entity, obj);
+			cacheService.putAdditionalFeatureCache();
 			return repository.save(entity);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
