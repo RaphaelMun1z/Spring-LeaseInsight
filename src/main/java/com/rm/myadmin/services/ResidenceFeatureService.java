@@ -49,6 +49,7 @@ public class ResidenceFeatureService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllResidenceFeature");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}

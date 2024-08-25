@@ -58,6 +58,7 @@ public class TenantService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllTenant");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}
@@ -73,7 +74,9 @@ public class TenantService {
 		try {
 			Tenant entity = repository.getReferenceById(id);
 			updateData(entity, obj);
-			return repository.save(entity);
+			Tenant t = repository.save(entity);
+			cacheService.putTenantCache();
+			return t;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}

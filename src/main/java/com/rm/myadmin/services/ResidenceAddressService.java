@@ -51,6 +51,7 @@ public class ResidenceAddressService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllResidenceAddress");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}
@@ -66,7 +67,9 @@ public class ResidenceAddressService {
 		try {
 			ResidenceAddress entity = repository.getReferenceById(id);
 			updateData(entity, obj);
-			return repository.save(entity);
+			ResidenceAddress ra = repository.save(entity);
+			cacheService.putResidenceAddressCache();
+			return ra;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}

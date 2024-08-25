@@ -57,6 +57,7 @@ public class RentalHistoryService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllRentalHistory");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}
@@ -72,7 +73,9 @@ public class RentalHistoryService {
 		try {
 			RentalHistory entity = repository.getReferenceById(id);
 			updateData(entity, obj);
-			return repository.save(entity);
+			RentalHistory rh = repository.save(entity);
+			cacheService.putRentalHistoryCache();
+			return rh;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}

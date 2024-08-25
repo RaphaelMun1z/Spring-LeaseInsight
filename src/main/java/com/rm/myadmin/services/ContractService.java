@@ -43,7 +43,7 @@ public class ContractService {
 
 	@Autowired
 	private EmailService emailService;
-	
+
 	@Autowired
 	private CacheService cacheService;
 
@@ -51,7 +51,7 @@ public class ContractService {
 	public List<Contract> findAllCached() {
 		return findAll();
 	}
-	
+
 	public List<Contract> findAll() {
 		return repository.findAll();
 	}
@@ -85,6 +85,7 @@ public class ContractService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllContract");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}
@@ -100,7 +101,9 @@ public class ContractService {
 		try {
 			Contract entity = repository.getReferenceById(id);
 			updateData(entity, obj);
-			return repository.save(entity);
+			Contract c = repository.save(entity);
+			cacheService.putContractCache();
+			return c;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}

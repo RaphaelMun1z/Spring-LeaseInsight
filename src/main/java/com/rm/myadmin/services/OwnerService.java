@@ -57,6 +57,7 @@ public class OwnerService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllOwner");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}
@@ -72,7 +73,9 @@ public class OwnerService {
 		try {
 			Owner entity = repository.getReferenceById(id);
 			updateData(entity, obj);
-			return repository.save(entity);
+			Owner o = repository.save(entity);
+			cacheService.putOwnerCache();
+			return o;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}

@@ -21,7 +21,7 @@ import jakarta.persistence.EntityNotFoundException;
 public class AdmService {
 	@Autowired
 	private AdmRepository repository;
-	
+
 	@Autowired
 	private CacheService cacheService;
 
@@ -29,7 +29,7 @@ public class AdmService {
 	public List<Adm> findAllCached() {
 		return findAll();
 	}
-	
+
 	public List<Adm> findAll() {
 		return repository.findAll();
 	}
@@ -52,6 +52,7 @@ public class AdmService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllAdm");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}
@@ -67,7 +68,9 @@ public class AdmService {
 		try {
 			Adm entity = repository.getReferenceById(id);
 			updateData(entity, obj);
-			return repository.save(entity);
+			Adm adm = repository.save(entity);
+			cacheService.putAdmCache();
+			return adm;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}

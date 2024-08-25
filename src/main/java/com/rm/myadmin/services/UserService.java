@@ -20,6 +20,9 @@ public class UserService {
 	@Autowired
 	private UserRepository<User> repository;
 
+	@Autowired
+	private CacheService cacheService;
+
 	@Cacheable("findAllUser")
 	public List<User> findAllCached() {
 		return findAll();
@@ -39,6 +42,7 @@ public class UserService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllUser");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}

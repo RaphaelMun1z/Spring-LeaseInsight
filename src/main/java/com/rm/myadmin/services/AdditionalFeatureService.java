@@ -51,6 +51,7 @@ public class AdditionalFeatureService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllAdditionalFeatures");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}

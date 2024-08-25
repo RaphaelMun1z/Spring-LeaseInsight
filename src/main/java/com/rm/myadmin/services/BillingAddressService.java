@@ -51,6 +51,7 @@ public class BillingAddressService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllBillingAddress");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}
@@ -66,7 +67,9 @@ public class BillingAddressService {
 		try {
 			BillingAddress entity = repository.getReferenceById(id);
 			updateData(entity, obj);
-			return repository.save(entity);
+			BillingAddress ba = repository.save(entity);
+			cacheService.putBillingAddressCache();
+			return ba;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}

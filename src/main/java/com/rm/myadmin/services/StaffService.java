@@ -52,6 +52,7 @@ public class StaffService {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
+				cacheService.evictAllCacheValues("findAllStaff");
 			} else {
 				throw new ResourceNotFoundException(id);
 			}
@@ -67,7 +68,9 @@ public class StaffService {
 		try {
 			Staff entity = repository.getReferenceById(id);
 			updateData(entity, obj);
-			return repository.save(entity);
+			Staff s = repository.save(entity);
+			cacheService.putStaffCache();
+			return s;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}
