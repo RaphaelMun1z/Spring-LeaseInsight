@@ -23,7 +23,6 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
@@ -52,7 +51,6 @@ public abstract class User implements UserDetails {
 	private String password;
 
 	@Enumerated(EnumType.STRING)
-	@NotNull(message = "Required field")
 	private UserRole role;
 
 	protected User() {
@@ -60,7 +58,6 @@ public abstract class User implements UserDetails {
 	}
 
 	protected User(String id, String name, String phone, String email, String password, UserRole role) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.phone = phone;

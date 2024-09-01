@@ -1,7 +1,5 @@
 package com.rm.myadmin.services;
 
-import java.time.LocalDate;
-import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -10,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +15,6 @@ import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.Tenant;
-import com.rm.myadmin.entities.enums.ContractStatus;
 import com.rm.myadmin.entities.enums.PaymentStatus;
 import com.rm.myadmin.entities.enums.TemplatesEnum;
 import com.rm.myadmin.repositories.ContractRepository;
@@ -131,37 +127,8 @@ public class ContractService {
 				"Bem-vindo(a) à LeaseInsight");
 	}
 
-	private void sendInvoiceByEmail(Contract c, RentalHistory rental) {
+	public void sendInvoiceByEmail(Contract c, RentalHistory rental) {
 		emailService.sendEmail(TemplatesEnum.INVOICE, c.getTenant().getName(), c.getTenant().getEmail(),
 				"[Fatura Disponível] Sua Fatura de Aluguel Já Está Disponível");
-	}
-
-	@Scheduled(cron = "0 50 20 * * *")
-	public void checkContracts() {
-		LocalDate today = LocalDate.now();
-		Set<Contract> contracts = this.findByContractStatus(1);
-
-		for (Contract c : contracts) {
-			try {
-				if (c.getContractEndDate().equals(today)) {
-					c.setContractStatus(ContractStatus.TERMINATED);
-				} else {
-					int dueDate = c.getInvoiceDueDate();
-					if ((int) dueDate > today.getMonth().length(Year.isLeap(today.getYear()))) {
-						dueDate = today.getMonth().length(Year.isLeap(today.getYear()));
-					}
-
-					if (dueDate == today.getDayOfMonth()) {
-						System.out.println("O contrato com ID " + c.getId() + " está vencido hoje.");
-						RentalHistory rental = new RentalHistory(null, today, PaymentStatus.PENDING, c);
-						rentalHistoryService.create(rental);
-						sendInvoiceByEmail(c, rental);
-					}
-				}
-			} catch (Exception e) {
-				System.err.println("Erro ao processar contrato com ID " + c.getId() + ": " + e.getMessage());
-			}
-		}
-		System.out.println("verificações do dia finalizadas.");
 	}
 }

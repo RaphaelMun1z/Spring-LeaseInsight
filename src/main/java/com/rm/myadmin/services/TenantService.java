@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.entities.Tenant;
+import com.rm.myadmin.entities.enums.TemplatesEnum;
 import com.rm.myadmin.repositories.TenantRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
@@ -25,6 +26,9 @@ public class TenantService {
 
 	@Autowired
 	private BillingAddressService billingAddressService;
+
+	@Autowired
+	private EmailService emailService;
 
 	@Autowired
 	private CacheService cacheService;
@@ -50,6 +54,7 @@ public class TenantService {
 		Tenant tenant = repository.save(obj);
 		cacheService.putTenantCache();
 		cacheService.putUserCache();
+		sendNewTenantEmail(tenant);
 		return tenant;
 	}
 
@@ -90,6 +95,10 @@ public class TenantService {
 		entity.setCpf(obj.getCpf());
 		entity.setRg(obj.getRg());
 		entity.setTenantStatus(obj.getTenantStatus());
+	}
+
+	private void sendNewTenantEmail(Tenant t) {
+		emailService.sendEmail(TemplatesEnum.WELCOME, t.getName(), t.getEmail(), "Bem-vindo(a) à LeaseInsight");
 	}
 
 }
