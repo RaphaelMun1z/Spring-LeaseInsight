@@ -52,8 +52,8 @@ public class TenantService {
 		BillingAddress tba = billingAddressService.findById(obj.getTenantBillingAddress().getId());
 		obj.setTenantBillingAddress(tba);
 		Tenant tenant = repository.save(obj);
-		cacheService.putTenantCache();
-		cacheService.putUserCache();
+		//cacheService.putTenantCache();
+		//cacheService.putUserCache();
 		sendNewTenantEmail(tenant);
 		return tenant;
 	}

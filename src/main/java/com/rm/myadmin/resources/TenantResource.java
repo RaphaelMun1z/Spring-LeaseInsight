@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.myadmin.dto.ContractDTO;
+import com.rm.myadmin.dto.TenantResponseDTO;
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.services.ContractService;
@@ -54,10 +55,11 @@ public class TenantResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Tenant> createTenant(@RequestBody @Valid Tenant obj) {
+	public ResponseEntity<TenantResponseDTO> createTenant(@RequestBody @Valid Tenant obj) {
 		obj = service.create(obj);
+		TenantResponseDTO tenant = new TenantResponseDTO(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+		return ResponseEntity.created(uri).body(tenant);
 	}
 
 	@DeleteMapping(value = "/{id}")
