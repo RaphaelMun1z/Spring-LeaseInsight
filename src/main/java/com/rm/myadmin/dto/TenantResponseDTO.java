@@ -7,6 +7,7 @@ import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.entities.enums.TenantStatus;
 
 public class TenantResponseDTO {
+	private String id;
 	private String name;
 	private String phone;
 	private String email;
@@ -22,6 +23,7 @@ public class TenantResponseDTO {
 
 	public TenantResponseDTO(Tenant tenant) {
 		super();
+		this.id = tenant.getId();
 		this.name = tenant.getName();
 		this.phone = tenant.getPhone();
 		this.email = tenant.getEmail();
@@ -31,6 +33,10 @@ public class TenantResponseDTO {
 		this.registrationDate = tenant.getRegistrationDate();
 		setTenantStatus(tenant.getTenantStatus());
 		this.tenantBillingAddress = tenant.getTenantBillingAddress();
+	}
+	
+	public String getId() {
+		return id;
 	}
 
 	public String getName() {

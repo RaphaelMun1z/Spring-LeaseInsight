@@ -7,17 +7,17 @@ public enum TenantStatus {
 	FORMER(4),
 	PROSPECTIVE(5);
 
-	private Integer code;
+	private int code;
 
-	private TenantStatus(Integer code) {
+	private TenantStatus(int code) {
 		this.code = code;
 	}
 
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
-	public static TenantStatus valueOf(Integer code) {
+	public static TenantStatus valueOf(int code) {
 		for (TenantStatus value : TenantStatus.values()) {
 			if (value.getCode() == code) {
 				return value;

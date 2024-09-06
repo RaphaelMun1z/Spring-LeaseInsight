@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.myadmin.dto.ContractResponseDTO;
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.services.ContractService;
 
@@ -47,10 +48,11 @@ public class ContractResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Contract> insert(@RequestBody @Valid Contract obj) {
+	public ResponseEntity<ContractResponseDTO> insert(@RequestBody @Valid Contract obj) {
 		obj = service.create(obj);
+		ContractResponseDTO contract = new ContractResponseDTO(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+		return ResponseEntity.created(uri).body(contract);
 	}
 
 	@DeleteMapping(value = "/{id}")
