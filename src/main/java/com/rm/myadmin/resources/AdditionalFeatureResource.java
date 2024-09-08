@@ -1,6 +1,7 @@
 package com.rm.myadmin.resources;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.myadmin.dto.AdditionalFeatureResponseDTO;
 import com.rm.myadmin.entities.AdditionalFeature;
 import com.rm.myadmin.services.AdditionalFeatureService;
 
@@ -34,9 +36,14 @@ public class AdditionalFeatureResource {
 	private AdditionalFeatureService service;
 
 	@GetMapping
-	public ResponseEntity<List<AdditionalFeature>> findAll() {
+	public ResponseEntity<List<AdditionalFeatureResponseDTO>> findAll() {
 		List<AdditionalFeature> list = service.findAllCached();
-		return ResponseEntity.ok().body(list);
+		List<AdditionalFeatureResponseDTO> additionalFeatures = new ArrayList<>();
+
+		for (AdditionalFeature additionalFeature : list) {
+			additionalFeatures.add(new AdditionalFeatureResponseDTO(additionalFeature));
+		}
+		return ResponseEntity.ok().body(additionalFeatures);
 	}
 
 	@GetMapping(value = "/{id}")

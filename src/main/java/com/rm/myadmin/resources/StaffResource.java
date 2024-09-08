@@ -1,6 +1,7 @@
 package com.rm.myadmin.resources;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.myadmin.dto.StaffRegisterRequestDTO;
+import com.rm.myadmin.dto.StaffResponseDTO;
 import com.rm.myadmin.entities.Staff;
 import com.rm.myadmin.repositories.StaffRepository;
 import com.rm.myadmin.services.StaffService;
@@ -40,9 +42,14 @@ public class StaffResource {
 	private StaffRepository repository;
 
 	@GetMapping
-	public ResponseEntity<List<Staff>> findAll() {
+	public ResponseEntity<List<StaffResponseDTO>> findAll() {
 		List<Staff> list = service.findAllCached();
-		return ResponseEntity.ok().body(list);
+		List<StaffResponseDTO> staffs = new ArrayList<>();
+
+		for (Staff staff : list) {
+			staffs.add(new StaffResponseDTO(staff));
+		}
+		return ResponseEntity.ok().body(staffs);
 	}
 
 	@PostMapping

@@ -1,6 +1,7 @@
 package com.rm.myadmin.resources;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.myadmin.dto.ContractDTO;
 import com.rm.myadmin.dto.ResidenceFeatureDTO;
+import com.rm.myadmin.dto.ResidenceResponseDTO;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceFeature;
 import com.rm.myadmin.entities.pk.ResidenceFeaturePK;
@@ -40,9 +42,14 @@ public class ResidenceResource {
 	private ResidenceService service;
 
 	@GetMapping
-	public ResponseEntity<List<Residence>> findAll() {
+	public ResponseEntity<List<ResidenceResponseDTO>> findAll() {
 		List<Residence> list = service.findAllCached();
-		return ResponseEntity.ok().body(list);
+		List<ResidenceResponseDTO> residences = new ArrayList<>();
+
+		for (Residence residence : list) {
+			residences.add(new ResidenceResponseDTO(residence));
+		}
+		return ResponseEntity.ok().body(residences);
 	}
 
 	@GetMapping(value = "/{id}")
@@ -52,11 +59,11 @@ public class ResidenceResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Residence> insert(@RequestBody @Valid Residence obj) {
+	public ResponseEntity<ResidenceResponseDTO> insert(@RequestBody @Valid Residence obj) {
 		obj = service.create(obj);
+		ResidenceResponseDTO residence = new ResidenceResponseDTO(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-
-		return ResponseEntity.created(uri).body(obj);
+		return ResponseEntity.created(uri).body(residence);
 	}
 
 	@DeleteMapping(value = "/{id}")

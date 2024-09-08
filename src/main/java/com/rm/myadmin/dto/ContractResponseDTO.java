@@ -1,12 +1,8 @@
 package com.rm.myadmin.dto;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.rm.myadmin.entities.Contract;
-import com.rm.myadmin.entities.RentalHistory;
-import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.enums.ContractStatus;
 
 public class ContractResponseDTO {
@@ -16,9 +12,8 @@ public class ContractResponseDTO {
 	private Double defaultRentalValue;
 	private int contractStatus;
 	private int invoiceDueDate;
-	private Residence residence;
+	private ResidenceResponseDTO residence;
 	private TenantResponseDTO tenant;
-	private Set<RentalHistory> rentals = new HashSet<>();
 
 	public ContractResponseDTO() {
 	}
@@ -31,9 +26,8 @@ public class ContractResponseDTO {
 		this.defaultRentalValue = contract.getDefaultRentalValue();
 		setContractStatus(contract.getContractStatus());
 		this.invoiceDueDate = contract.getInvoiceDueDate();
-		this.residence = contract.getResidence();
+		this.residence = new ResidenceResponseDTO(contract.getResidence());
 		this.tenant = new TenantResponseDTO(contract.getTenant());
-		this.rentals = contract.getRentals();
 	}
 
 	public Long getId() {
@@ -66,16 +60,12 @@ public class ContractResponseDTO {
 		return invoiceDueDate;
 	}
 
-	public Residence getResidence() {
+	public ResidenceResponseDTO getResidence() {
 		return residence;
 	}
 
 	public TenantResponseDTO getTenant() {
 		return tenant;
-	}
-
-	public Set<RentalHistory> getRentals() {
-		return rentals;
 	}
 
 }

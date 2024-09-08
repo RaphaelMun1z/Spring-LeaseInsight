@@ -1,6 +1,7 @@
 package com.rm.myadmin.resources;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +37,14 @@ public class ContractResource {
 	private ContractService service;
 
 	@GetMapping
-	public ResponseEntity<List<Contract>> findAll() {
+	public ResponseEntity<List<ContractResponseDTO>> findAll() {
 		List<Contract> list = service.findAllCached();
-		return ResponseEntity.ok().body(list);
+		List<ContractResponseDTO> contracts = new ArrayList<>();
+
+		for (Contract contract : list) {
+			contracts.add(new ContractResponseDTO(contract));
+		}
+		return ResponseEntity.ok().body(contracts);
 	}
 
 	@GetMapping(value = "/{id}")

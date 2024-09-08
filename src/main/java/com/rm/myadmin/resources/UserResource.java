@@ -1,5 +1,6 @@
 package com.rm.myadmin.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rm.myadmin.dto.UserResponseDTO;
 import com.rm.myadmin.entities.User;
 import com.rm.myadmin.services.UserService;
 
@@ -20,9 +22,14 @@ public class UserResource {
 	private UserService service;
 
 	@GetMapping
-	public ResponseEntity<List<User>> findAll() {
+	public ResponseEntity<List<UserResponseDTO>> findAll() {
 		List<User> list = service.findAllCached();
-		return ResponseEntity.ok().body(list);
+		List<UserResponseDTO> users = new ArrayList<>();
+
+		for (User user : list) {
+			users.add(new UserResponseDTO(user));
+		}
+		return ResponseEntity.ok().body(users);
 	}
 
 	@GetMapping(value = "/{id}")
