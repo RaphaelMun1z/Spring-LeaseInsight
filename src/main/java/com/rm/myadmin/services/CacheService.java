@@ -17,7 +17,6 @@ import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceAddress;
-import com.rm.myadmin.entities.ResidenceFeature;
 import com.rm.myadmin.entities.Staff;
 import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.entities.User;
@@ -112,11 +111,6 @@ public class CacheService {
 	@CachePut("findAllResidenceAddress")
 	public List<ResidenceAddress> putResidenceAddressCache() {
 		return residenceAddressService.findAll();
-	}
-
-	@CachePut("findAllResidenceFeature")
-	public List<ResidenceFeature> putResidenceFeatureCache() {
-		return residenceFeatureService.findAll();
 	}
 
 	@CachePut("findAllResidence")

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.myadmin.dto.OwnerRegisterRequestDTO;
+import com.rm.myadmin.dto.OwnerResponseDTO;
 import com.rm.myadmin.dto.ResidenceDTO;
 import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.Residence;
@@ -48,9 +50,10 @@ public class OwnerResource {
 	private OwnerRepository repository;
 
 	@GetMapping
-	public ResponseEntity<List<Owner>> findAll() {
-		List<Owner> list = service.findAllCached();
-		return ResponseEntity.ok().body(list);
+	public ResponseEntity<List<OwnerResponseDTO>> findAll() {
+		List<OwnerResponseDTO> owners = service.findAllCached().stream().map(OwnerResponseDTO::new)
+				.collect(Collectors.toList());
+		return ResponseEntity.ok().body(owners);
 	}
 
 	@GetMapping(value = "/{id}")

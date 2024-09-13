@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.myadmin.dto.ResidenceAddressResponseDTO;
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.services.ResidenceAddressService;
 
@@ -34,9 +36,10 @@ public class ResidenceAddressResource {
 	private ResidenceAddressService service;
 
 	@GetMapping
-	public ResponseEntity<List<ResidenceAddress>> findAll() {
-		List<ResidenceAddress> list = service.findAllCached();
-		return ResponseEntity.ok().body(list);
+	public ResponseEntity<List<ResidenceAddressResponseDTO>> findAll() {
+		List<ResidenceAddressResponseDTO> residenceAddresses = service.findAllCached().stream()
+				.map(ResidenceAddressResponseDTO::new).collect(Collectors.toList());
+		return ResponseEntity.ok().body(residenceAddresses);
 	}
 
 	@GetMapping(value = "/{id}")

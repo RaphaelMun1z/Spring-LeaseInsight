@@ -34,7 +34,7 @@ public class TenantResponseDTO {
 		setTenantStatus(tenant.getTenantStatus());
 		this.tenantBillingAddress = tenant.getTenantBillingAddress();
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -43,56 +43,28 @@ public class TenantResponseDTO {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getPhone() {
 		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(LocalDate dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
 	}
 
 	public String getCpf() {
 		return cpf;
 	}
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
 	public String getRg() {
 		return rg;
 	}
 
-	public void setRg(String rg) {
-		this.rg = rg;
-	}
-
 	public LocalDate getRegistrationDate() {
 		return registrationDate;
-	}
-
-	public void setRegistrationDate(LocalDate registrationDate) {
-		this.registrationDate = registrationDate;
 	}
 
 	public TenantStatus getTenantStatus() {
@@ -105,10 +77,6 @@ public class TenantResponseDTO {
 
 	public BillingAddress getTenantBillingAddress() {
 		return tenantBillingAddress;
-	}
-
-	public void setTenantBillingAddress(BillingAddress tenantBillingAddress) {
-		this.tenantBillingAddress = tenantBillingAddress;
 	}
 
 }
