@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.myadmin.dto.BillingAddressResponseDTO;
 import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.services.BillingAddressService;
 
@@ -34,9 +36,10 @@ public class BillingAddressResource {
 	private BillingAddressService service;
 
 	@GetMapping
-	public ResponseEntity<List<BillingAddress>> findAll() {
-		List<BillingAddress> list = service.findAllCached();
-		return ResponseEntity.ok().body(list);
+	public ResponseEntity<List<BillingAddressResponseDTO>> findAll() {
+		List<BillingAddressResponseDTO> billingAddresses = service.findAllCached().stream()
+				.map(BillingAddressResponseDTO::new).collect(Collectors.toList());
+		return ResponseEntity.ok().body(billingAddresses);
 	}
 
 	@GetMapping(value = "/{id}")

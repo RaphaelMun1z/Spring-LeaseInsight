@@ -1,6 +1,7 @@
 package com.rm.myadmin.resources;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.myadmin.dto.AdmRegisterRequestDTO;
+import com.rm.myadmin.dto.AdmResponseDTO;
 import com.rm.myadmin.entities.Adm;
 import com.rm.myadmin.repositories.AdmRepository;
 import com.rm.myadmin.services.AdmService;
@@ -40,9 +42,14 @@ public class AdmResource {
 	private AdmRepository repository;
 
 	@GetMapping
-	public ResponseEntity<List<Adm>> findAll() {
+	public ResponseEntity<List<AdmResponseDTO>> findAll() {
 		List<Adm> list = service.findAllCached();
-		return ResponseEntity.ok().body(list);
+		List<AdmResponseDTO> adms = new ArrayList<>();
+
+		for (Adm adm : list) {
+			adms.add(new AdmResponseDTO(adm));
+		}
+		return ResponseEntity.ok().body(adms);
 	}
 
 	@GetMapping(value = "/{id}")

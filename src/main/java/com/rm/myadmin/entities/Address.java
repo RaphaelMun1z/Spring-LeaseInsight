@@ -1,5 +1,6 @@
 package com.rm.myadmin.entities;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import com.rm.myadmin.entities.validation.constraints.CEP;
@@ -13,7 +14,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @MappedSuperclass
-public abstract class Address {
+public abstract class Address implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -43,7 +46,7 @@ public abstract class Address {
 
 	@CEP(message = "Invalid field value")
 	private String cep;
-	
+
 	private String complement;
 
 	protected Address() {
