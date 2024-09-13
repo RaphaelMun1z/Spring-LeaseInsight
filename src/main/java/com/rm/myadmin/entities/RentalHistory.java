@@ -34,11 +34,9 @@ public class RentalHistory implements Serializable {
 	private LocalDate rentalStartDate;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@NotNull(message = "Required field")
 	private LocalDate rentalEndDate;
 
 	@Min(value = 1)
-	@NotNull(message = "Required field")
 	private Double rentalValue;
 
 	@NotNull(message = "Invalid field value")
@@ -101,6 +99,7 @@ public class RentalHistory implements Serializable {
 
 		LocalDate dueDate = LocalDate.of(rentalStartDate.getYear(), rentalStartDate.getMonthValue(),
 				contract.getInvoiceDueDate());
+
 		if (dueDate.isAfter(rentalStartDate)) {
 			return date;
 		}

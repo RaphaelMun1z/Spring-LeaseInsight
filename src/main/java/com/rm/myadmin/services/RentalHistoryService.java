@@ -11,6 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.repositories.RentalHistoryRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
@@ -46,8 +47,9 @@ public class RentalHistoryService {
 
 	@Transactional
 	public RentalHistory create(RentalHistory obj) {
-		obj.setContract(contractService.findById(obj.getContract().getId()));
-		RentalHistory rh = repository.save(obj);
+		Contract contract = contractService.findById(obj.getContract().getId());
+		RentalHistory rh = new RentalHistory(null, obj.getRentalStartDate(), obj.getPaymentStatus(), contract);
+		repository.save(rh);
 		cacheService.putRentalHistoryCache();
 		return rh;
 	}

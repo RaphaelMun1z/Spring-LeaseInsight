@@ -17,6 +17,7 @@ import com.rm.myadmin.entities.Adm;
 import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.Owner;
+import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.entities.ResidenceFeature;
@@ -24,6 +25,7 @@ import com.rm.myadmin.entities.Staff;
 import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.entities.enums.ContractStatus;
 import com.rm.myadmin.entities.enums.OccupancyStatus;
+import com.rm.myadmin.entities.enums.PaymentStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
 import com.rm.myadmin.entities.enums.TenantStatus;
 import com.rm.myadmin.repositories.AdditionalFeatureRepository;
@@ -31,6 +33,7 @@ import com.rm.myadmin.repositories.AdmRepository;
 import com.rm.myadmin.repositories.BillingAddressRepository;
 import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.repositories.OwnerRepository;
+import com.rm.myadmin.repositories.RentalHistoryRepository;
 import com.rm.myadmin.repositories.ResidenceAddressRepository;
 import com.rm.myadmin.repositories.ResidenceFeatureRepository;
 import com.rm.myadmin.repositories.ResidenceRepository;
@@ -63,6 +66,9 @@ public class TestConfig implements CommandLineRunner {
 
 	@Autowired
 	private BillingAddressRepository billingAddressRepository;
+
+	@Autowired
+	private RentalHistoryRepository rentalHistoryRepository;
 
 	@Autowired
 	private AdmRepository admRepository;
@@ -117,10 +123,10 @@ public class TestConfig implements CommandLineRunner {
 		r1.setContract(c1);
 		r2.setContract(c2);
 
-//		RentalHistory rh1 = new RentalHistory(null, LocalDate.of(2024, 4, 20), PaymentStatus.PAID, c1);
-//		RentalHistory rh2 = new RentalHistory(null, LocalDate.of(2024, 5, 10), PaymentStatus.OVERDUE, c1);
-//		RentalHistory rh3 = new RentalHistory(null, LocalDate.of(2024, 6, 10), PaymentStatus.PENDING, c1);
-//		rentalHistoryRepository.saveAll(Arrays.asList(rh1, rh2, rh3));
+		RentalHistory rh1 = new RentalHistory(null, LocalDate.of(2024, 4, 20), PaymentStatus.PAID, c1);
+		RentalHistory rh2 = new RentalHistory(null, LocalDate.of(2024, 5, 10), PaymentStatus.OVERDUE, c1);
+		RentalHistory rh3 = new RentalHistory(null, LocalDate.of(2024, 6, 10), PaymentStatus.PENDING, c1);
+		rentalHistoryRepository.saveAll(Arrays.asList(rh1, rh2, rh3));
 
 		AdditionalFeature af1 = new AdditionalFeature(null, "Piscina");
 		AdditionalFeature af2 = new AdditionalFeature(null, "Churrasqueira");
