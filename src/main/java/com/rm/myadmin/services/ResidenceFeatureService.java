@@ -1,11 +1,14 @@
 package com.rm.myadmin.services;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceFeature;
 import com.rm.myadmin.repositories.ResidenceFeatureRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
@@ -16,6 +19,9 @@ public class ResidenceFeatureService {
 	@Autowired
 	private ResidenceFeatureRepository repository;
 
+	@Autowired
+	private ResidenceService residenceService;
+
 	@Transactional
 	public ResidenceFeature create(ResidenceFeature obj) {
 		ResidenceFeature rf = repository.save(obj);
@@ -23,15 +29,23 @@ public class ResidenceFeatureService {
 	}
 
 	@Transactional
-	public void delete(Long id) {
+	public void delete(Long residence_id, Long feature_id) {
 		try {
-			if (repository.existsById(id)) {
-				repository.deleteById(id);
+			Residence residence = residenceService.findById(residence_id);
+
+			if (residence != null) {
+				Set<ResidenceFeature> residenceFeatures = residence.getFeatures();
+
+				for (ResidenceFeature rf : residenceFeatures) {
+					if (rf.getFeature().getId() == feature_id) {
+						repository.delete(rf);
+					}
+				}
 			} else {
-				throw new ResourceNotFoundException(id);
+				throw new ResourceNotFoundException(residence_id);
 			}
 		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException(id);
+			throw new ResourceNotFoundException(residence_id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException(e.getMessage());
 		}

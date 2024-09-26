@@ -15,6 +15,7 @@ import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.RentalHistory;
+import com.rm.myadmin.entities.Report;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.entities.Staff;
@@ -74,6 +75,10 @@ public class CacheService {
 	@Lazy
 	private UserService userService;
 
+	@Autowired
+	@Lazy
+	private ReportService reportService;
+
 	public void evictAllCacheValues(String cacheName) {
 		Objects.requireNonNull(cacheManager.getCache(cacheName)).clear();
 	}
@@ -131,5 +136,10 @@ public class CacheService {
 	@CachePut("findAllUser")
 	public List<User> putUserCache() {
 		return userService.findAll();
+	}
+
+	@CachePut("findAllReport")
+	public List<Report> putReportCache() {
+		return reportService.findAll();
 	}
 }

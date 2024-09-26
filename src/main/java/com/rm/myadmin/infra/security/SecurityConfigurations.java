@@ -43,6 +43,7 @@ public class SecurityConfigurations {
 				.requestMatchers("/residence-addresses/**").hasAnyRole("ADM", "STAFF")
 				.requestMatchers("/residence-feature/**").hasAnyRole("ADM", "STAFF")
 				.requestMatchers("/residences/**").hasAnyRole("ADM", "STAFF")
+				.requestMatchers("/reports/**").hasAnyRole("ADM", "STAFF")
 				.requestMatchers("/staffs/**").hasAnyRole("ADM")
 				.requestMatchers("/tenants/**").hasAnyRole("ADM", "STAFF")
 				.requestMatchers("/users/**").hasAnyRole("ADM", "STAFF")

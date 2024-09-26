@@ -37,6 +37,7 @@ public class ResidenceService {
 	@Autowired
 	private AdditionalFeatureService additionalFeatureService;
 
+	@Lazy
 	@Autowired
 	private ResidenceFeatureService residenceFeatureService;
 

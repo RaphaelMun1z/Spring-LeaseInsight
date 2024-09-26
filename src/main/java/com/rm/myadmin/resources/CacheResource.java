@@ -96,17 +96,8 @@ public class CacheResource {
 		}
 	}
 
-	@PutMapping(value = "/residence-features")
-	public ResponseEntity<Void> updateResidenceFeatureCache() {
-		try {
-			service.putResidenceFeatureCache();
-			return ResponseEntity.ok().build();
-		} catch (Exception e) {
-			return ResponseEntity.status(500).build();
-		}
-	}
-
 	@PutMapping(value = "/residences")
+
 	public ResponseEntity<Void> updateResidenceCache() {
 		try {
 			service.putResidenceCache();

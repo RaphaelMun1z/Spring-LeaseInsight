@@ -99,6 +99,10 @@ public class Residence implements Serializable {
 	@OneToOne(mappedBy = "residence")
 	private Contract contract;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "residence")
+	private Set<Report> reports = new HashSet<>();
+
 	public Residence() {
 
 	}
@@ -287,6 +291,14 @@ public class Residence implements Serializable {
 
 	public void setResidenceAddress(ResidenceAddress residenceAddress) {
 		this.residenceAddress = residenceAddress;
+	}
+
+	public Set<Report> getReports() {
+		return reports;
+	}
+
+	public void addReport(Report report) {
+		reports.add(report);
 	}
 
 	@Override

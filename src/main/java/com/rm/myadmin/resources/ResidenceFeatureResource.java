@@ -15,9 +15,9 @@ public class ResidenceFeatureResource {
 	@Autowired
 	private ResidenceFeatureService service;
 
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		service.delete(id);
+	@DeleteMapping(value = "/{residence_id}/{feature_id}")
+	public ResponseEntity<Void> delete(@PathVariable Long residence_id, @PathVariable Long feature_id) {
+		service.delete(residence_id, feature_id);
 		return ResponseEntity.noContent().build();
 	}
 }
