@@ -51,6 +51,10 @@ public class Tenant extends User implements Serializable {
 	@OneToMany(mappedBy = "tenant")
 	Set<Contract> contracts = new HashSet<>();
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "tenant")
+	private Set<Report> reports = new HashSet<>();
+
 	public Tenant() {
 		super();
 	}
@@ -117,6 +121,10 @@ public class Tenant extends User implements Serializable {
 
 	public Set<Contract> getContracts() {
 		return contracts;
+	}
+
+	public Set<Report> getReports() {
+		return reports;
 	}
 
 }

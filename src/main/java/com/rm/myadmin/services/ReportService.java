@@ -62,7 +62,7 @@ public class ReportService {
 
 	@Transactional
 	public ReportResponseDTO create(ReportRequestDTO obj, List<UploadFileResponseDTO> uploadedFiles) {
-		Report report = new Report(null, obj.getDescription(), obj.getResidence());
+		Report report = new Report(null, obj.getDescription(), obj.getReportType(), obj.getResidence(), obj.getTenant());
 		for (UploadFileResponseDTO file : uploadedFiles) {
 			File f = new File(file.getFileName(), file.getFileDownloadUri(), file.getFileType(), file.getSize(),
 					report);

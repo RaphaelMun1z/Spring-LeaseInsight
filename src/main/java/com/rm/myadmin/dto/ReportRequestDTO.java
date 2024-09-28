@@ -6,12 +6,16 @@ import java.util.List;
 import com.rm.myadmin.entities.File;
 import com.rm.myadmin.entities.Report;
 import com.rm.myadmin.entities.Residence;
+import com.rm.myadmin.entities.Tenant;
+import com.rm.myadmin.entities.enums.ReportType;
 
 public class ReportRequestDTO {
 	private Long id;
 	private String description;
 	private LocalDate date;
+	private Integer reportType;
 	private Residence residence;
+	private Tenant tenant;
 	private List<File> files;
 
 	public ReportRequestDTO() {
@@ -22,7 +26,9 @@ public class ReportRequestDTO {
 		this.id = report.getId();
 		this.description = report.getDescription();
 		this.date = report.getDate();
-		this.setResidence(report.getResidence());
+		setReportType(report.getReportType());
+		this.residence = report.getResidence();
+		this.tenant = report.getTenant();
 		this.files = files;
 	}
 
@@ -50,6 +56,16 @@ public class ReportRequestDTO {
 		this.date = date;
 	}
 
+	public ReportType getReportType() {
+		return ReportType.valueOf(reportType);
+	}
+
+	public void setReportType(ReportType reportType) {
+		if (reportType != null) {
+			this.reportType = reportType.getCode();
+		}
+	}
+
 	public List<File> getFiles() {
 		return files;
 	}
@@ -64,6 +80,14 @@ public class ReportRequestDTO {
 
 	public void setResidence(Residence residence) {
 		this.residence = residence;
+	}
+
+	public Tenant getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(Tenant tenant) {
+		this.tenant = tenant;
 	}
 
 }
