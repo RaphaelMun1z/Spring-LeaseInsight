@@ -10,6 +10,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.myadmin.dto.ReportRequestDTO;
+import com.rm.myadmin.dto.ReportResponseDTO;
+import com.rm.myadmin.dto.UploadFileResponseDTO;
+import com.rm.myadmin.entities.File;
 import com.rm.myadmin.entities.Report;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.repositories.ReportRepository;
@@ -44,12 +48,17 @@ public class ReportService {
 	}
 
 	@Transactional
-	public Report create(Report obj) {
+	public ReportResponseDTO create(ReportRequestDTO obj, List<UploadFileResponseDTO> uploadedFiles) {
 		Residence r = residenceService.findById(obj.getResidence().getId());
 		obj.setResidence(r);
-		Report report = repository.save(obj);
+		Report report = new Report(obj.getId(), obj.getDescription(), obj.getResidence());
+		for (UploadFileResponseDTO file : uploadedFiles) {
+			File f = new File(file.getFileName(), file.getFileDownloadUri(), file.getFileType(), file.getSize());
+			report.addFile(f);
+		}
+		repository.save(report);
 		cacheService.putReportCache();
-		return report;
+		return new ReportResponseDTO(report);
 	}
 
 	@Transactional

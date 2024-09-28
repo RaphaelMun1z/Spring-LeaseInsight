@@ -2,7 +2,11 @@ package com.rm.myadmin.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -22,15 +27,21 @@ public class Report implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull(message = "Invalid field value")
+	@NotNull(message = "Required field")
 	private String description;
 
+	@NotNull(message = "Required field")
 	private LocalDate date;
 
 	@NotNull(message = "Required field")
 	@ManyToOne
 	@JoinColumn(name = "residence_id")
 	private Residence residence;
+
+	@JsonIgnore
+	@NotNull(message = "Required field")
+	@OneToMany(mappedBy = "report")
+	private Set<File> files = new HashSet<>();
 
 	public Report() {
 	}
@@ -73,6 +84,14 @@ public class Report implements Serializable {
 
 	public void setResidence(Residence residence) {
 		this.residence = residence;
+	}
+
+	public Set<File> getFiles() {
+		return files;
+	}
+
+	public void addFile(File file) {
+		files.add(file);
 	}
 
 	@Override

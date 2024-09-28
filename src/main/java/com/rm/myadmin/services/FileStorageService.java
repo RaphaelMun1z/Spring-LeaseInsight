@@ -11,8 +11,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.myadmin.config.FileStorageConfig;
+import com.rm.myadmin.dto.UploadFileResponseDTO;
 import com.rm.myadmin.services.exceptions.FileStorageException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -48,6 +50,18 @@ public class FileStorageService {
 		}
 	}
 
+	public UploadFileResponseDTO uploadFile(MultipartFile file) {
+		try {
+			String fileName = storeFile(file);
+			String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/file/downloadFile")
+					.path(fileName).toUriString();
+			return new UploadFileResponseDTO(fileName, fileDownloadUri, file.getContentType(), file.getSize());
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+
 	public Resource loadFileAsResource(String fileName) {
 		try {
 			Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
@@ -61,5 +75,4 @@ public class FileStorageService {
 			throw new ResourceNotFoundException(fileName);
 		}
 	}
-
 }

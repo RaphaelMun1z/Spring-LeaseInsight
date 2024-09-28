@@ -37,5 +37,4 @@ public class ReportResponseDTO {
 	public Residence getResidence() {
 		return residence;
 	}
-
 }
