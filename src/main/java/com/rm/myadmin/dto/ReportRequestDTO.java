@@ -22,7 +22,7 @@ public class ReportRequestDTO {
 		this.id = report.getId();
 		this.description = report.getDescription();
 		this.date = report.getDate();
-		this.residence = report.getResidence();
+		this.setResidence(report.getResidence());
 		this.files = files;
 	}
 
@@ -50,6 +50,14 @@ public class ReportRequestDTO {
 		this.date = date;
 	}
 
+	public List<File> getFiles() {
+		return files;
+	}
+
+	public void addFile(File file) {
+		files.add(file);
+	}
+
 	public Residence getResidence() {
 		return residence;
 	}
@@ -58,12 +66,10 @@ public class ReportRequestDTO {
 		this.residence = residence;
 	}
 
-	public List<File> getFiles() {
-		return files;
-	}
-
-	public void addFile(File file) {
-		files.add(file);
+	@Override
+	public String toString() {
+		return "ReportRequestDTO [id=" + id + ", description=" + description + ", date=" + date + ", residence="
+				+ residence + ", files=" + files + "]";
 	}
 
 }

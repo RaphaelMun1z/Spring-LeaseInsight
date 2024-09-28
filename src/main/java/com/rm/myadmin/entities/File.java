@@ -3,6 +3,8 @@ package com.rm.myadmin.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,16 +25,17 @@ public class File implements Serializable {
 
 	@NotNull(message = "Required field")
 	private String name;
-	
+
 	@NotNull(message = "Required field")
 	private String path;
-	
+
 	@NotNull(message = "Required field")
 	private String type;
-	
+
 	@NotNull(message = "Required field")
 	private Long size;
-	
+
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "report_id")
 	private Report report;
@@ -40,11 +43,20 @@ public class File implements Serializable {
 	public File() {
 	}
 
-	public File(String name, String path, String type, Long size) {
+	public File(String name, String path, String type, Long size, Report report) {
 		this.name = name;
 		this.path = path;
 		this.type = type;
 		this.size = size;
+		this.report = report;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -79,6 +91,18 @@ public class File implements Serializable {
 		this.size = size;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public Report getReport() {
+		return report;
+	}
+
+	public void setReport(Report report) {
+		this.report = report;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(name);
@@ -94,6 +118,12 @@ public class File implements Serializable {
 			return false;
 		File other = (File) obj;
 		return Objects.equals(name, other.name);
+	}
+
+	@Override
+	public String toString() {
+		return "File [id=" + id + ", name=" + name + ", path=" + path + ", type=" + type + ", size=" + size
+				+ ", report=" + report + "]";
 	}
 
 }

@@ -18,7 +18,6 @@ import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.RentalHistory;
-import com.rm.myadmin.entities.Report;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.entities.ResidenceFeature;
@@ -35,7 +34,6 @@ import com.rm.myadmin.repositories.BillingAddressRepository;
 import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.repositories.OwnerRepository;
 import com.rm.myadmin.repositories.RentalHistoryRepository;
-import com.rm.myadmin.repositories.ReportRepository;
 import com.rm.myadmin.repositories.ResidenceAddressRepository;
 import com.rm.myadmin.repositories.ResidenceFeatureRepository;
 import com.rm.myadmin.repositories.ResidenceRepository;
@@ -78,9 +76,6 @@ public class TestConfig implements CommandLineRunner {
 	@Autowired
 	private StaffRepository staffRepository;
 
-	@Autowired
-	private ReportRepository reportRepository;
-
 	@Override
 	public void run(String... args) throws Exception {
 		Adm adm = new Adm(null, "Irineu", "(11) 91234-5678", "irineu@gmail.com",
@@ -118,10 +113,6 @@ public class TestConfig implements CommandLineRunner {
 				Year.of(2022), OccupancyStatus.PENDING_MOVE_OUT, new BigDecimal("850000.00"), new BigDecimal("2000.00"),
 				Instant.parse("2024-06-15T08:30:00Z"), ra1);
 		residenceRepository.saveAll(Arrays.asList(r1, r2));
-
-		Report report = new Report(null, "descricao teste", r2);
-		r2.addReport(report);
-		reportRepository.save(report);
 
 		Contract c1 = new Contract(null, r1, t1, LocalDate.of(2024, 4, 20), LocalDate.of(2024, 10, 10), 950.00,
 				ContractStatus.ACTIVE, 5);

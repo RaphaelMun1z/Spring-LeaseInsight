@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.rm.myadmin.dto.ReportRequestDTO;
 import com.rm.myadmin.dto.ReportResponseDTO;
 import com.rm.myadmin.dto.UploadFileResponseDTO;
+import com.rm.myadmin.entities.File;
 import com.rm.myadmin.entities.Report;
 import com.rm.myadmin.services.FileStorageService;
 import com.rm.myadmin.services.ReportService;
@@ -43,10 +45,8 @@ public class ReportResource {
 	@Autowired
 	private ReportService service;
 
-	// =================================
 	@Autowired
 	private FileStorageService fileStorageService;
-	// =================================
 
 	@GetMapping
 	public ResponseEntity<List<ReportResponseDTO>> findAll() {
@@ -84,6 +84,12 @@ public class ReportResource {
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Report> update(@PathVariable Long id, @RequestBody Report obj) {
 		obj = service.update(id, obj);
+		return ResponseEntity.ok().body(obj);
+	}
+
+	@GetMapping(value = "/{id}/files")
+	public ResponseEntity<Set<File>> findFiles(@PathVariable Long id) {
+		Set<File> obj = service.findFiles(id);
 		return ResponseEntity.ok().body(obj);
 	}
 

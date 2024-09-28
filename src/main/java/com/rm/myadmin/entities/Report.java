@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,9 +39,8 @@ public class Report implements Serializable {
 	@JoinColumn(name = "residence_id")
 	private Residence residence;
 
-	@JsonIgnore
 	@NotNull(message = "Required field")
-	@OneToMany(mappedBy = "report")
+	@OneToMany(mappedBy = "report", cascade = CascadeType.ALL)
 	private Set<File> files = new HashSet<>();
 
 	public Report() {
@@ -110,4 +110,11 @@ public class Report implements Serializable {
 		Report other = (Report) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	@Override
+	public String toString() {
+		return "Report [id=" + id + ", description=" + description + ", date=" + date + ", residence=" + residence
+				+ ", files=" + files + "]";
+	}
+
 }

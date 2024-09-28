@@ -1,7 +1,9 @@
 package com.rm.myadmin.services;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,7 +17,6 @@ import com.rm.myadmin.dto.ReportResponseDTO;
 import com.rm.myadmin.dto.UploadFileResponseDTO;
 import com.rm.myadmin.entities.File;
 import com.rm.myadmin.entities.Report;
-import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.repositories.ReportRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
@@ -28,7 +29,7 @@ public class ReportService {
 	private ReportRepository repository;
 
 	@Autowired
-	private ResidenceService residenceService;
+	private FileService fileService;
 
 	@Autowired
 	private CacheService cacheService;
@@ -48,12 +49,22 @@ public class ReportService {
 	}
 
 	@Transactional
+	public Set<File> findFiles(Long id) {
+		Report r = this.findById(id);
+//		Set<File> files = new HashSet<>();
+//		for (File file : r.getFiles()) {
+//			files.add(file);
+//		}
+		return r.getFiles();
+	}
+
+	@Transactional
 	public ReportResponseDTO create(ReportRequestDTO obj, List<UploadFileResponseDTO> uploadedFiles) {
-		Residence r = residenceService.findById(obj.getResidence().getId());
-		obj.setResidence(r);
-		Report report = new Report(obj.getId(), obj.getDescription(), obj.getResidence());
+		Report report = new Report(null, obj.getDescription(), obj.getResidence());
 		for (UploadFileResponseDTO file : uploadedFiles) {
-			File f = new File(file.getFileName(), file.getFileDownloadUri(), file.getFileType(), file.getSize());
+			File f = new File(file.getFileName(), file.getFileDownloadUri(), file.getFileType(), file.getSize(),
+					report);
+			fileService.create(report, f);
 			report.addFile(f);
 		}
 		repository.save(report);
