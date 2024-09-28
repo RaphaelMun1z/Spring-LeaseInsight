@@ -66,10 +66,4 @@ public class ReportRequestDTO {
 		this.residence = residence;
 	}
 
-	@Override
-	public String toString() {
-		return "ReportRequestDTO [id=" + id + ", description=" + description + ", date=" + date + ", residence="
-				+ residence + ", files=" + files + "]";
-	}
-
 }

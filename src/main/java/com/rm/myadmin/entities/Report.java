@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -109,12 +107,6 @@ public class Report implements Serializable {
 			return false;
 		Report other = (Report) obj;
 		return Objects.equals(id, other.id);
-	}
-
-	@Override
-	public String toString() {
-		return "Report [id=" + id + ", description=" + description + ", date=" + date + ", residence=" + residence
-				+ ", files=" + files + "]";
 	}
 
 }

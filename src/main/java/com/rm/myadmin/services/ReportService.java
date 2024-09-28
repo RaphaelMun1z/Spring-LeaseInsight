@@ -1,6 +1,5 @@
 package com.rm.myadmin.services;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -48,14 +47,17 @@ public class ReportService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
-	@Transactional
 	public Set<File> findFiles(Long id) {
 		Report r = this.findById(id);
-//		Set<File> files = new HashSet<>();
-//		for (File file : r.getFiles()) {
-//			files.add(file);
-//		}
 		return r.getFiles();
+	}
+
+	public String fileName(Long reportId, Long fileId) {
+		Report report = this.findById(reportId);
+		File f = report.getFiles().stream().filter(file -> file.getId().equals(fileId)).findFirst()
+				.orElseThrow(() -> new ResourceNotFoundException(fileId));
+		String fileName = f.getName();
+		return fileName;
 	}
 
 	@Transactional

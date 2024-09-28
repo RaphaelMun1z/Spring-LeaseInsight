@@ -119,11 +119,4 @@ public class File implements Serializable {
 		File other = (File) obj;
 		return Objects.equals(name, other.name);
 	}
-
-	@Override
-	public String toString() {
-		return "File [id=" + id + ", name=" + name + ", path=" + path + ", type=" + type + ", size=" + size
-				+ ", report=" + report + "]";
-	}
-
 }
