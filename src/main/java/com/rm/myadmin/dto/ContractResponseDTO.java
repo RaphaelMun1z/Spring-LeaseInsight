@@ -12,6 +12,7 @@ public class ContractResponseDTO {
 	private Double defaultRentalValue;
 	private int contractStatus;
 	private int invoiceDueDate;
+	
 	private ResidenceResponseDTO residence;
 	private TenantResponseDTO tenant;
 

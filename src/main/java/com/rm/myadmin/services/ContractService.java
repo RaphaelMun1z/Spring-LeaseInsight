@@ -18,6 +18,7 @@ import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.entities.enums.PaymentStatus;
 import com.rm.myadmin.entities.enums.TemplatesEnum;
 import com.rm.myadmin.repositories.ContractRepository;
+import com.rm.myadmin.services.async.ContractAsyncService;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -41,6 +42,9 @@ public class ContractService {
 	private EmailService emailService;
 
 	@Autowired
+	private ContractAsyncService contractAsyncService;
+
+	@Autowired
 	private CacheService cacheService;
 
 	@Cacheable("findAllContract")
@@ -59,21 +63,29 @@ public class ContractService {
 
 	@Transactional
 	public Contract create(Contract obj) {
-		Residence r = residenceService.findById(obj.getResidence().getId());
-		obj.setResidence(r);
-		r.setContract(obj);
-		obj.setTenant(tenantService.findById(obj.getTenant().getId()));
-		Contract contract = repository.save(obj);
-		sendContractBeginEmail(contract);
-		createFirstRental(obj);
-		cacheService.putContractCache();
-		return contract;
+		try {
+			Residence r = residenceService.findById(obj.getResidence().getId());
+			obj.setResidence(r);
+			r.setContract(obj);
+			obj.setTenant(tenantService.findById(obj.getTenant().getId()));
+			Contract contract = repository.save(obj);
+			contractAsyncService.sendContractBeginEmail(contract);
+			contractAsyncService.createFirstRental(contract);
+			cacheService.putContractCache();
+			return contract;
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
 	}
 
-	private void createFirstRental(Contract c) {
-		RentalHistory rental = new RentalHistory(null, c.getContractStartDate(), PaymentStatus.PENDING, c);
-		rentalHistoryService.create(rental);
-		sendInvoiceByEmail(c, rental);
+	public void createFirstRental(Contract c) {
+		try {
+			RentalHistory rental = new RentalHistory(null, c.getContractStartDate(), PaymentStatus.PENDING, c);
+			rentalHistoryService.create(rental);
+			sendInvoiceByEmail(c, rental);
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(c.getId());
+		}
 	}
 
 	@Transactional
@@ -122,7 +134,7 @@ public class ContractService {
 		return repository.findByTenant(tenant);
 	}
 
-	private void sendContractBeginEmail(Contract c) {
+	public void sendContractBeginEmail(Contract c) {
 		emailService.sendEmail(TemplatesEnum.WELCOME, c.getTenant().getName(), c.getTenant().getEmail(),
 				"Bem-vindo(a) à LeaseInsight");
 	}

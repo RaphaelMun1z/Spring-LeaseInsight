@@ -64,11 +64,16 @@ public class ResidenceService {
 
 	@Transactional
 	public Residence create(Residence obj) {
-		ResidenceAddress ra = residenceAddressService.findById(obj.getResidenceAddress().getId());
-		obj.setResidenceAddress(ra);
-		Residence residence = repository.save(obj);
-		cacheService.putResidenceCache();
-		return residence;
+		try {
+			ResidenceAddress ra = residenceAddressService.findById(obj.getResidenceAddress().getId());
+			obj.setResidenceAddress(ra);
+			Residence residence = repository.save(obj);
+			cacheService.putResidenceCache();
+			return residence;
+		} catch (Exception e) {
+			System.out.println("Erro: " + e.getMessage());
+			return null;
+		}
 	}
 
 	@Transactional

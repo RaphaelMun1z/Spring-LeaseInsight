@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Year;
 
-import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.Residence;
-import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.entities.enums.OccupancyStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
 
@@ -27,8 +25,9 @@ public class ResidenceResponseDTO {
 	private BigDecimal marketValue;
 	private BigDecimal rentalValue;
 	private Instant dateLastRenovation;
-	private ResidenceAddress residenceAddress;
-	private Owner owner;
+
+	private ResidenceAddressResponseDTO residenceAddress;
+	private OwnerResponseDTO owner;
 
 	public ResidenceResponseDTO() {
 	}
@@ -51,8 +50,8 @@ public class ResidenceResponseDTO {
 		this.marketValue = residence.getMarketValue();
 		this.rentalValue = residence.getRentalValue();
 		this.dateLastRenovation = residence.getDateLastRenovation();
-		this.residenceAddress = residence.getResidenceAddress();
-		this.owner = residence.getOwner();
+		this.residenceAddress = new ResidenceAddressResponseDTO(residence.getResidenceAddress());
+		this.owner = new OwnerResponseDTO(residence.getOwner());
 	}
 
 	public Long getId() {
@@ -131,11 +130,11 @@ public class ResidenceResponseDTO {
 		return dateLastRenovation;
 	}
 
-	public ResidenceAddress getResidenceAddress() {
+	public ResidenceAddressResponseDTO getResidenceAddress() {
 		return residenceAddress;
 	}
 
-	public Owner getOwner() {
+	public OwnerResponseDTO getOwner() {
 		return owner;
 	}
 

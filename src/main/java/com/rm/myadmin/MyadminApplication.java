@@ -9,9 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import com.rm.myadmin.config.FileStorageConfig;
 
 @SpringBootApplication
-@EnableConfigurationProperties({
-	FileStorageConfig.class
-})
+@EnableConfigurationProperties({ FileStorageConfig.class })
 @EnableScheduling
 @EnableCaching
 public class MyadminApplication {
