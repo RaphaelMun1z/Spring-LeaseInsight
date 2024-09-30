@@ -14,6 +14,7 @@ import com.rm.myadmin.entities.enums.ContractStatus;
 import com.rm.myadmin.entities.enums.PaymentStatus;
 import com.rm.myadmin.services.ContractService;
 import com.rm.myadmin.services.RentalHistoryService;
+import com.rm.myadmin.services.async.ContractAsyncService;
 
 @Component
 public class ContractScheduler {
@@ -21,9 +22,12 @@ public class ContractScheduler {
 	private ContractService contractService;
 
 	@Autowired
+	private ContractAsyncService contractAsyncService;
+
+	@Autowired
 	private RentalHistoryService rentalHistoryService;
 
-	@Scheduled(cron = "0 50 20 * * *")
+	@Scheduled(cron = "0 33 19 * * *")
 	public void checkContracts() {
 		LocalDate today = LocalDate.now();
 		Set<Contract> contracts = contractService.findByContractStatus(1);
@@ -32,6 +36,7 @@ public class ContractScheduler {
 			try {
 				if (c.getContractEndDate().equals(today)) {
 					c.setContractStatus(ContractStatus.TERMINATED);
+					contractService.update(c.getId(), c);
 				} else {
 					int dueDate = c.getInvoiceDueDate();
 					if ((int) dueDate > today.getMonth().length(Year.isLeap(today.getYear()))) {
@@ -42,11 +47,12 @@ public class ContractScheduler {
 						System.out.println("O contrato com ID " + c.getId() + " está vencido hoje.");
 						RentalHistory rental = new RentalHistory(null, today, PaymentStatus.PENDING, c);
 						rentalHistoryService.create(rental);
-						contractService.sendInvoiceByEmail(c, rental);
+						contractAsyncService.sendInvoiceByEmail(c, rental);
 					}
 				}
 			} catch (Exception e) {
 				System.err.println("Erro ao processar contrato com ID " + c.getId() + ": " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		System.out.println("verificações do dia finalizadas.");

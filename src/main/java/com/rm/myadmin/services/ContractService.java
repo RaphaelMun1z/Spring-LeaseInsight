@@ -16,7 +16,6 @@ import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.entities.enums.PaymentStatus;
-import com.rm.myadmin.entities.enums.TemplatesEnum;
 import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.services.async.ContractAsyncService;
 import com.rm.myadmin.services.exceptions.DatabaseException;
@@ -37,9 +36,6 @@ public class ContractService {
 
 	@Autowired
 	private RentalHistoryService rentalHistoryService;
-
-	@Autowired
-	private EmailService emailService;
 
 	@Autowired
 	private ContractAsyncService contractAsyncService;
@@ -70,7 +66,7 @@ public class ContractService {
 			obj.setTenant(tenantService.findById(obj.getTenant().getId()));
 			Contract contract = repository.save(obj);
 			contractAsyncService.sendContractBeginEmail(contract);
-			contractAsyncService.createFirstRental(contract);
+			createFirstRental(contract);
 			cacheService.putContractCache();
 			return contract;
 		} catch (DataIntegrityViolationException e) {
@@ -78,13 +74,13 @@ public class ContractService {
 		}
 	}
 
-	public void createFirstRental(Contract c) {
+	private void createFirstRental(Contract c) {
 		try {
 			RentalHistory rental = new RentalHistory(null, c.getContractStartDate(), PaymentStatus.PENDING, c);
 			rentalHistoryService.create(rental);
-			sendInvoiceByEmail(c, rental);
-		} catch (ResourceNotFoundException e) {
-			throw new ResourceNotFoundException(c.getId());
+			contractAsyncService.sendInvoiceByEmail(c, rental);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -132,15 +128,5 @@ public class ContractService {
 	public Set<Contract> findByTenant(String id) {
 		Tenant tenant = tenantService.findById(id);
 		return repository.findByTenant(tenant);
-	}
-
-	public void sendContractBeginEmail(Contract c) {
-		emailService.sendEmail(TemplatesEnum.WELCOME, c.getTenant().getName(), c.getTenant().getEmail(),
-				"Bem-vindo(a) à LeaseInsight");
-	}
-
-	public void sendInvoiceByEmail(Contract c, RentalHistory rental) {
-		emailService.sendEmail(TemplatesEnum.INVOICE, c.getTenant().getName(), c.getTenant().getEmail(),
-				"[Fatura Disponível] Sua Fatura de Aluguel Já Está Disponível");
 	}
 }

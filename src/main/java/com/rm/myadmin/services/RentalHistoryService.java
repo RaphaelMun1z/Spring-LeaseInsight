@@ -47,11 +47,15 @@ public class RentalHistoryService {
 
 	@Transactional
 	public RentalHistory create(RentalHistory obj) {
-		Contract contract = contractService.findById(obj.getContract().getId());
-		RentalHistory rh = new RentalHistory(null, obj.getRentalStartDate(), obj.getPaymentStatus(), contract);
-		repository.save(rh);
-		cacheService.putRentalHistoryCache();
-		return rh;
+		try {
+			Contract contract = contractService.findById(obj.getContract().getId());
+			RentalHistory rh = new RentalHistory(null, obj.getRentalStartDate(), obj.getPaymentStatus(), contract);
+			repository.save(rh);
+			cacheService.putRentalHistoryCache();
+			return rh;
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
 	@Transactional
