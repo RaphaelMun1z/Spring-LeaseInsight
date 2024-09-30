@@ -10,12 +10,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.rm.myadmin.dto.ReportRequestDTO;
 import com.rm.myadmin.dto.ReportResponseDTO;
 import com.rm.myadmin.dto.UploadFileResponseDTO;
 import com.rm.myadmin.entities.File;
 import com.rm.myadmin.entities.Report;
+import com.rm.myadmin.entities.Residence;
+import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.repositories.ReportRepository;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
@@ -28,7 +31,16 @@ public class ReportService {
 	private ReportRepository repository;
 
 	@Autowired
+	private TenantService tenantService;
+
+	@Autowired
+	private ResidenceService residenceService;
+
+	@Autowired
 	private FileService fileService;
+
+	@Autowired
+	private FileStorageService fileStorageService;
 
 	@Autowired
 	private CacheService cacheService;
@@ -60,18 +72,26 @@ public class ReportService {
 		return fileName;
 	}
 
-	@Transactional
-	public ReportResponseDTO create(ReportRequestDTO obj, List<UploadFileResponseDTO> uploadedFiles) {
-		Report report = new Report(null, obj.getDescription(), obj.getReportType(), obj.getResidence(), obj.getTenant());
-		for (UploadFileResponseDTO file : uploadedFiles) {
-			File f = new File(file.getFileName(), file.getFileDownloadUri(), file.getFileType(), file.getSize(),
-					report);
-			fileService.create(report, f);
-			report.addFile(f);
+	@Transactional(rollbackFor = { Exception.class, ResourceNotFoundException.class })
+	public ReportResponseDTO create(ReportRequestDTO obj, MultipartFile[] files) {
+		try {
+			Tenant tenant = tenantService.findById(obj.getTenant());
+			Residence residence = residenceService.findById(obj.getResidence());
+			Report report = new Report(null, obj.getDescription(), obj.getReportType(), residence, tenant);
+			repository.save(report);
+
+			List<UploadFileResponseDTO> uploadedFiles = fileStorageService.uploadFiles(files);
+			for (UploadFileResponseDTO file : uploadedFiles) {
+				File f = new File(file.getFileName(), file.getFileDownloadUri(), file.getFileType(), file.getSize(),
+						report);
+				fileService.create(report, f);
+			}
+
+			cacheService.putReportCache();
+			return new ReportResponseDTO(report);
+		} catch (ResourceNotFoundException e) {
+			throw e;
 		}
-		repository.save(report);
-		cacheService.putReportCache();
-		return new ReportResponseDTO(report);
 	}
 
 	@Transactional

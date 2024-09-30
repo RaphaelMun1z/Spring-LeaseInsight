@@ -2,12 +2,10 @@ package com.rm.myadmin.resources;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +34,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.myadmin.dto.ReportRequestDTO;
 import com.rm.myadmin.dto.ReportResponseDTO;
-import com.rm.myadmin.dto.UploadFileResponseDTO;
 import com.rm.myadmin.entities.File;
 import com.rm.myadmin.entities.Report;
 import com.rm.myadmin.services.FileStorageService;
@@ -53,7 +50,7 @@ public class ReportResource {
 
 	@Autowired
 	private FileStorageService fileStorageService;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ReportResource.class);
 
 	@GetMapping
@@ -76,9 +73,7 @@ public class ReportResource {
 	@PostMapping
 	public ResponseEntity<ReportResponseDTO> insert(@ModelAttribute @Valid ReportRequestDTO obj,
 			@RequestParam("files") MultipartFile[] files) {
-		List<UploadFileResponseDTO> uploadedFiles = Arrays.asList(files).stream()
-				.map(file -> fileStorageService.uploadFile(file)).collect(Collectors.toList());
-		ReportResponseDTO report = service.create(obj, uploadedFiles);
+		ReportResponseDTO report = service.create(obj, files);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(report);
 	}
@@ -102,7 +97,8 @@ public class ReportResource {
 	}
 
 	@GetMapping(value = "/{id}/files/{fileId}")
-	public ResponseEntity<Resource> showFile(@PathVariable Long id, @PathVariable Long fileId, HttpServletRequest request) {
+	public ResponseEntity<Resource> showFile(@PathVariable Long id, @PathVariable Long fileId,
+			HttpServletRequest request) {
 		String fileName = service.fileName(id, fileId);
 		Resource resource = fileStorageService.loadFileAsResource(fileName);
 		String contentType = null;
