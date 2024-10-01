@@ -48,7 +48,7 @@ public class ContractResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Contract> findById(@PathVariable Long id) {
+	public ResponseEntity<Contract> findById(@PathVariable String id) {
 		Contract obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -62,13 +62,13 @@ public class ContractResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Contract> update(@PathVariable Long id, @RequestBody Contract obj) {
+	public ResponseEntity<Contract> update(@PathVariable String id, @RequestBody Contract obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}

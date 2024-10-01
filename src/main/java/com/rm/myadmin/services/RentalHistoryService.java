@@ -40,7 +40,7 @@ public class RentalHistoryService {
 		return repository.findAll();
 	}
 
-	public RentalHistory findById(Long id) {
+	public RentalHistory findById(String id) {
 		Optional<RentalHistory> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
@@ -59,7 +59,7 @@ public class RentalHistoryService {
 	}
 
 	@Transactional
-	public void delete(Long id) {
+	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
@@ -75,7 +75,7 @@ public class RentalHistoryService {
 	}
 
 	@Transactional
-	public RentalHistory update(Long id, RentalHistory obj) {
+	public RentalHistory update(String id, RentalHistory obj) {
 		try {
 			RentalHistory entity = repository.getReferenceById(id);
 			updateData(entity, obj);

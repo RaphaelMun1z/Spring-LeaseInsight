@@ -17,8 +17,8 @@ public class AdditionalFeature implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
 
 	@NotBlank(message = "Invalid field value")
 	@Pattern(regexp = "^[A-Z]+(.)*")
@@ -28,17 +28,17 @@ public class AdditionalFeature implements Serializable {
 
 	}
 
-	public AdditionalFeature(Long id, String feature) {
+	public AdditionalFeature(String id, String feature) {
 		super();
 		this.id = id;
 		this.feature = feature;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

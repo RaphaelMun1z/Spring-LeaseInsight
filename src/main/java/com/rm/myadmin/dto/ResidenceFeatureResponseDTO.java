@@ -3,7 +3,7 @@ package com.rm.myadmin.dto;
 import com.rm.myadmin.entities.ResidenceFeature;
 
 public class ResidenceFeatureResponseDTO {
-	private Long id;
+	private String id;
 	private String feature;
 
 	public ResidenceFeatureResponseDTO() {
@@ -15,7 +15,7 @@ public class ResidenceFeatureResponseDTO {
 		this.feature = residenceFeature.getId().getAdditionalFeature().getFeature();
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 

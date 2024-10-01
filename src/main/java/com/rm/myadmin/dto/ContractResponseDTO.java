@@ -6,7 +6,7 @@ import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.enums.ContractStatus;
 
 public class ContractResponseDTO {
-	private Long id;
+	private String id;
 	private LocalDate contractStartDate;
 	private LocalDate contractEndDate;
 	private Double defaultRentalValue;
@@ -31,7 +31,7 @@ public class ContractResponseDTO {
 		this.tenant = new TenantResponseDTO(contract.getTenant());
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 

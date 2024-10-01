@@ -29,7 +29,7 @@ public class ResidenceFeatureService {
 	}
 
 	@Transactional
-	public void delete(Long residence_id, Long feature_id) {
+	public void delete(String residence_id, String feature_id) {
 		try {
 			Residence residence = residenceService.findById(residence_id);
 

@@ -34,7 +34,7 @@ public class BillingAddressService {
 		return repository.findAll();
 	}
 
-	public BillingAddress findById(Long id) {
+	public BillingAddress findById(String id) {
 		Optional<BillingAddress> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
@@ -47,7 +47,7 @@ public class BillingAddressService {
 	}
 
 	@Transactional
-	public void delete(Long id) {
+	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
@@ -63,7 +63,7 @@ public class BillingAddressService {
 	}
 
 	@Transactional
-	public BillingAddress update(Long id, BillingAddress obj) {
+	public BillingAddress update(String id, BillingAddress obj) {
 		try {
 			BillingAddress entity = repository.getReferenceById(id);
 			updateData(entity, obj);

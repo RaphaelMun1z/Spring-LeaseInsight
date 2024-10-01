@@ -18,8 +18,8 @@ public abstract class Address implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
 
 	@NotNull(message = "Required field")
 	private int number;
@@ -53,7 +53,7 @@ public abstract class Address implements Serializable {
 
 	}
 
-	protected Address(Long id, int number, String street, String district, String city, String state, String country,
+	protected Address(String id, int number, String street, String district, String city, String state, String country,
 			String cep, String complement) {
 		this.id = id;
 		this.number = number;
@@ -66,11 +66,11 @@ public abstract class Address implements Serializable {
 		this.complement = complement;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

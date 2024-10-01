@@ -23,7 +23,7 @@ public class BillingAddress extends Address implements Serializable {
 		super();
 	}
 
-	public BillingAddress(Long id, int number, String street, String district, String city, String state,
+	public BillingAddress(String id, int number, String street, String district, String city, String state,
 			String country, String cep, String complement) {
 		super(id, number, street, district, city, state, country, cep, complement);
 	}

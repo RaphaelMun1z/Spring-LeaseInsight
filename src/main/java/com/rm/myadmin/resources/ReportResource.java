@@ -65,7 +65,7 @@ public class ReportResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Report> findById(@PathVariable Long id) {
+	public ResponseEntity<Report> findById(@PathVariable String id) {
 		Report obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -79,25 +79,25 @@ public class ReportResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Report> update(@PathVariable Long id, @RequestBody Report obj) {
+	public ResponseEntity<Report> update(@PathVariable String id, @RequestBody Report obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@GetMapping(value = "/{id}/files")
-	public ResponseEntity<Set<File>> findFiles(@PathVariable Long id) {
+	public ResponseEntity<Set<File>> findFiles(@PathVariable String id) {
 		Set<File> obj = service.findFiles(id);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@GetMapping(value = "/{id}/files/{fileId}")
-	public ResponseEntity<Resource> showFile(@PathVariable Long id, @PathVariable Long fileId,
+	public ResponseEntity<Resource> showFile(@PathVariable String id, @PathVariable String fileId,
 			HttpServletRequest request) {
 		String fileName = service.fileName(id, fileId);
 		Resource resource = fileStorageService.loadFileAsResource(fileName);

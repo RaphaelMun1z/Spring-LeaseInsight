@@ -26,8 +26,8 @@ public class RentalHistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@NotNull(message = "Required field")
@@ -50,7 +50,7 @@ public class RentalHistory implements Serializable {
 	public RentalHistory() {
 	}
 
-	public RentalHistory(Long id, LocalDate rentalStartDate, PaymentStatus paymentStatus, Contract contract) {
+	public RentalHistory(String id, LocalDate rentalStartDate, PaymentStatus paymentStatus, Contract contract) {
 		super();
 		this.id = id;
 		this.contract = contract;
@@ -60,11 +60,11 @@ public class RentalHistory implements Serializable {
 		setRentalValue();
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

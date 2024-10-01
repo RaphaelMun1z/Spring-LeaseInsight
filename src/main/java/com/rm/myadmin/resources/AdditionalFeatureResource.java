@@ -47,7 +47,7 @@ public class AdditionalFeatureResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<AdditionalFeature> findById(@PathVariable Long id) {
+	public ResponseEntity<AdditionalFeature> findById(@PathVariable String id) {
 		AdditionalFeature obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -60,13 +60,13 @@ public class AdditionalFeatureResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<AdditionalFeature> update(@PathVariable Long id, @RequestBody AdditionalFeature obj) {
+	public ResponseEntity<AdditionalFeature> update(@PathVariable String id, @RequestBody AdditionalFeature obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}

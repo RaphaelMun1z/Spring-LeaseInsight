@@ -8,7 +8,7 @@ import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.entities.enums.ReportType;
 
 public class ReportResponseDTO {
-	private Long id;
+	private String id;
 	private String description;
 	private LocalDate date;
 	private Integer reportType;
@@ -28,7 +28,7 @@ public class ReportResponseDTO {
 		this.tenant = report.getTenant();
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 

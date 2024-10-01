@@ -32,8 +32,8 @@ public class Residence implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
 
 	@NotNull(message = "Invalid field value")
 	private Integer propertyType;
@@ -107,7 +107,7 @@ public class Residence implements Serializable {
 
 	}
 
-	public Residence(Long id, Owner owner, PropertyType propertyType, String description, Integer aptNumber,
+	public Residence(String id, Owner owner, PropertyType propertyType, String description, Integer aptNumber,
 			String complement, int numberBedrooms, int numberBathrooms, int numberSuites, float totalArea,
 			float builtArea, int garageSpaces, Year yearConstruction, OccupancyStatus occupancyStatus,
 			BigDecimal marketValue, BigDecimal rentalValue, Instant dateLastRenovation,
@@ -133,11 +133,11 @@ public class Residence implements Serializable {
 		this.residenceAddress = residenceAddress;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

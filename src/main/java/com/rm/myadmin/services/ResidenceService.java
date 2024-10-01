@@ -57,7 +57,7 @@ public class ResidenceService {
 		return repository.findAll();
 	}
 
-	public Residence findById(Long id) {
+	public Residence findById(String id) {
 		Optional<Residence> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
@@ -77,7 +77,7 @@ public class ResidenceService {
 	}
 
 	@Transactional
-	public void delete(Long id) {
+	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
@@ -93,7 +93,7 @@ public class ResidenceService {
 	}
 
 	@Transactional
-	public Residence update(Long id, Residence obj) {
+	public Residence update(String id, Residence obj) {
 		try {
 			Residence entity = repository.getReferenceById(id);
 			updateData(entity, obj);
@@ -132,7 +132,7 @@ public class ResidenceService {
 		return residenceFeatureService.create(obj);
 	}
 
-	public Set<ResidenceFeatureDTO> getFeatures(Long id) {
+	public Set<ResidenceFeatureDTO> getFeatures(String id) {
 		Residence r = this.findById(id);
 		Set<ResidenceFeatureDTO> fDTO = new HashSet<>();
 		for (ResidenceFeature residenceFeature : r.getFeatures()) {
@@ -141,7 +141,7 @@ public class ResidenceService {
 		return fDTO;
 	}
 
-	public ContractDTO getCurrentContract(Long id) {
+	public ContractDTO getCurrentContract(String id) {
 		Residence r = this.findById(id);
 		ContractDTO cDTO = new ContractDTO(r.getContract());
 		return cDTO;

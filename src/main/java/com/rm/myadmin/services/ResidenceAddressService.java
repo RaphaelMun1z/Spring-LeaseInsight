@@ -34,7 +34,7 @@ public class ResidenceAddressService {
 		return repository.findAll();
 	}
 
-	public ResidenceAddress findById(Long id) {
+	public ResidenceAddress findById(String id) {
 		Optional<ResidenceAddress> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
@@ -47,7 +47,7 @@ public class ResidenceAddressService {
 	}
 
 	@Transactional
-	public void delete(Long id) {
+	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
@@ -63,7 +63,7 @@ public class ResidenceAddressService {
 	}
 
 	@Transactional
-	public ResidenceAddress update(Long id, ResidenceAddress obj) {
+	public ResidenceAddress update(String id, ResidenceAddress obj) {
 		try {
 			ResidenceAddress entity = repository.getReferenceById(id);
 			updateData(entity, obj);

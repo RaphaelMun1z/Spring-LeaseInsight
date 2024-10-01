@@ -53,7 +53,7 @@ public class ResidenceResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Residence> findById(@PathVariable Long id) {
+	public ResponseEntity<Residence> findById(@PathVariable String id) {
 		Residence obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -67,13 +67,13 @@ public class ResidenceResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Residence> update(@PathVariable Long id, @RequestBody Residence obj) {
+	public ResponseEntity<Residence> update(@PathVariable String id, @RequestBody Residence obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -86,14 +86,14 @@ public class ResidenceResource {
 	}
 
 	@GetMapping(value = "/{id}/features")
-	public ResponseEntity<Set<ResidenceFeatureDTO>> getFeatures(@PathVariable Long id) {
+	public ResponseEntity<Set<ResidenceFeatureDTO>> getFeatures(@PathVariable String id) {
 		Set<ResidenceFeatureDTO> features = service.getFeatures(id);
 		return ResponseEntity.ok().body(features);
 	}
 
 	@Transactional(readOnly = true)
 	@GetMapping(value = "/{id}/contract")
-	public ResponseEntity<ContractDTO> getContract(@PathVariable Long id) {
+	public ResponseEntity<ContractDTO> getContract(@PathVariable String id) {
 		ContractDTO contractDTO = service.getCurrentContract(id);
 		return ResponseEntity.ok().body(contractDTO);
 	}

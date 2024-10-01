@@ -25,8 +25,8 @@ public class Report implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
 
 	@NotNull(message = "Required field")
 	private String description;
@@ -54,7 +54,7 @@ public class Report implements Serializable {
 	public Report() {
 	}
 
-	public Report(Long id, String description, ReportType reportType, Residence residence, Tenant tenant) {
+	public Report(String id, String description, ReportType reportType, Residence residence, Tenant tenant) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -64,11 +64,11 @@ public class Report implements Serializable {
 		this.tenant = tenant;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

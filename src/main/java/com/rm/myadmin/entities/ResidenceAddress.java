@@ -23,7 +23,7 @@ public class ResidenceAddress extends Address implements Serializable {
 		super();
 	}
 
-	public ResidenceAddress(Long id, int number, String street, String district, String city, String state,
+	public ResidenceAddress(String id, int number, String street, String district, String city, String state,
 			String country, String cep, String complement) {
 		super(id, number, street, district, city, state, country, cep, complement);
 	}

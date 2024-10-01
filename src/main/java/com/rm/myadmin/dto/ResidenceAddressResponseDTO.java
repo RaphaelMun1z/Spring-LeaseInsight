@@ -3,7 +3,7 @@ package com.rm.myadmin.dto;
 import com.rm.myadmin.entities.ResidenceAddress;
 
 public class ResidenceAddressResponseDTO {
-	private Long id;
+	private String id;
 	private int number;
 	private String street;
 	private String district;
@@ -29,7 +29,7 @@ public class ResidenceAddressResponseDTO {
 		this.complement = residenceAddress.getComplement();
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 

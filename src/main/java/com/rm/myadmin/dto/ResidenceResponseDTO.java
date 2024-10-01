@@ -9,7 +9,7 @@ import com.rm.myadmin.entities.enums.OccupancyStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
 
 public class ResidenceResponseDTO {
-	private Long id;
+	private String id;
 	private Integer propertyType;
 	private String description;
 	private Integer aptNumber;
@@ -54,7 +54,7 @@ public class ResidenceResponseDTO {
 		this.owner = new OwnerResponseDTO(residence.getOwner());
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 

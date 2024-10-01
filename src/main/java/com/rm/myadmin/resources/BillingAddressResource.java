@@ -43,7 +43,7 @@ public class BillingAddressResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<BillingAddress> findById(@PathVariable Long id) {
+	public ResponseEntity<BillingAddress> findById(@PathVariable String id) {
 		BillingAddress obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -56,13 +56,13 @@ public class BillingAddressResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<BillingAddress> update(@PathVariable Long id, @RequestBody BillingAddress obj) {
+	public ResponseEntity<BillingAddress> update(@PathVariable String id, @RequestBody BillingAddress obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}

@@ -43,7 +43,7 @@ public class ResidenceAddressResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ResidenceAddress> findById(@PathVariable Long id) {
+	public ResponseEntity<ResidenceAddress> findById(@PathVariable String id) {
 		ResidenceAddress obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -56,13 +56,13 @@ public class ResidenceAddressResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<ResidenceAddress> update(@PathVariable Long id, @RequestBody ResidenceAddress obj) {
+	public ResponseEntity<ResidenceAddress> update(@PathVariable String id, @RequestBody ResidenceAddress obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}

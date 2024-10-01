@@ -8,11 +8,11 @@ import com.rm.myadmin.entities.Report;
 import com.rm.myadmin.entities.enums.ReportType;
 
 public class ReportRequestDTO {
-	private Long id;
+	private String id;
 	private String description;
 	private LocalDate date;
 	private Integer reportType;
-	private Long residence;
+	private String residenceId;
 	private String tenant;
 	private List<File> files;
 
@@ -25,16 +25,16 @@ public class ReportRequestDTO {
 		this.description = report.getDescription();
 		this.date = report.getDate();
 		setReportType(report.getReportType());
-		this.residence = report.getResidence().getId();
+		this.residenceId = report.getResidence().getId();
 		this.tenant = report.getTenant().getId();
 		this.files = files;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -72,12 +72,12 @@ public class ReportRequestDTO {
 		files.add(file);
 	}
 
-	public Long getResidence() {
-		return residence;
+	public String getResidence() {
+		return residenceId;
 	}
 
-	public void setResidence(Long residence) {
-		this.residence = residence;
+	public void setResidence(String residenceId) {
+		this.residenceId = residenceId;
 	}
 
 	public String getTenant() {

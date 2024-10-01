@@ -20,8 +20,8 @@ public class File implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
 
 	@NotNull(message = "Required field")
 	private String name;
@@ -43,7 +43,8 @@ public class File implements Serializable {
 	public File() {
 	}
 
-	public File(String name, String path, String type, Long size, Report report) {
+	public File(String id, String name, String path, String type, Long size, Report report) {
+		this.id = id;
 		this.name = name;
 		this.path = path;
 		this.type = type;
@@ -51,11 +52,11 @@ public class File implements Serializable {
 		this.report = report;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

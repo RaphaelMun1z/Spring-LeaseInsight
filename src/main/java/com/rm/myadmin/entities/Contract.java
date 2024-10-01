@@ -30,8 +30,8 @@ public class Contract implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@NotNull(message = "Required field")
@@ -70,7 +70,7 @@ public class Contract implements Serializable {
 
 	}
 
-	public Contract(Long id, Residence residence, Tenant tenant, LocalDate contractStartDate, LocalDate contractEndDate,
+	public Contract(String id, Residence residence, Tenant tenant, LocalDate contractStartDate, LocalDate contractEndDate,
 			Double defaultRentalValue, ContractStatus contractStatus, int invoiceDueDate) {
 		super();
 		this.id = id;
@@ -83,11 +83,11 @@ public class Contract implements Serializable {
 		setInvoiceDueDate(invoiceDueDate);
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

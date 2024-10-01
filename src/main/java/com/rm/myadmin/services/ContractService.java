@@ -52,7 +52,7 @@ public class ContractService {
 		return repository.findAll();
 	}
 
-	public Contract findById(Long id) {
+	public Contract findById(String id) {
 		Optional<Contract> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
@@ -85,7 +85,7 @@ public class ContractService {
 	}
 
 	@Transactional
-	public void delete(Long id) {
+	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
@@ -101,7 +101,7 @@ public class ContractService {
 	}
 
 	@Transactional
-	public Contract update(Long id, Contract obj) {
+	public Contract update(String id, Contract obj) {
 		try {
 			Contract entity = repository.getReferenceById(id);
 			updateData(entity, obj);

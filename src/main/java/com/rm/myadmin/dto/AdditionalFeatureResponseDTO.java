@@ -3,7 +3,7 @@ package com.rm.myadmin.dto;
 import com.rm.myadmin.entities.AdditionalFeature;
 
 public class AdditionalFeatureResponseDTO {
-	private Long id;
+	private String id;
 	private String feature;
 
 	public AdditionalFeatureResponseDTO() {
@@ -14,7 +14,7 @@ public class AdditionalFeatureResponseDTO {
 		this.feature = af.getFeature();
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 

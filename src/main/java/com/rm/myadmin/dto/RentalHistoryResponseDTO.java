@@ -7,7 +7,7 @@ import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.entities.enums.PaymentStatus;
 
 public class RentalHistoryResponseDTO {
-	private Long id;
+	private String id;
 	private LocalDate rentalStartDate;
 	private LocalDate rentalEndDate;
 	private Double rentalValue;
@@ -27,7 +27,7 @@ public class RentalHistoryResponseDTO {
 		this.contract = rentalHistory.getContract();
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 

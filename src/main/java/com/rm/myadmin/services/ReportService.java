@@ -54,17 +54,17 @@ public class ReportService {
 		return repository.findAll();
 	}
 
-	public Report findById(Long id) {
+	public Report findById(String id) {
 		Optional<Report> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
-	public Set<File> findFiles(Long id) {
+	public Set<File> findFiles(String id) {
 		Report r = this.findById(id);
 		return r.getFiles();
 	}
 
-	public String fileName(Long reportId, Long fileId) {
+	public String fileName(String reportId, String fileId) {
 		Report report = this.findById(reportId);
 		File f = report.getFiles().stream().filter(file -> file.getId().equals(fileId)).findFirst()
 				.orElseThrow(() -> new ResourceNotFoundException(fileId));
@@ -82,7 +82,7 @@ public class ReportService {
 
 			List<UploadFileResponseDTO> uploadedFiles = fileStorageService.uploadFiles(files);
 			for (UploadFileResponseDTO file : uploadedFiles) {
-				File f = new File(file.getFileName(), file.getFileDownloadUri(), file.getFileType(), file.getSize(),
+				File f = new File(null, file.getFileName(), file.getFileDownloadUri(), file.getFileType(), file.getSize(),
 						report);
 				fileService.create(report, f);
 			}
@@ -95,7 +95,7 @@ public class ReportService {
 	}
 
 	@Transactional
-	public void delete(Long id) {
+	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
@@ -111,7 +111,7 @@ public class ReportService {
 	}
 
 	@Transactional
-	public Report update(Long id, Report obj) {
+	public Report update(String id, Report obj) {
 		try {
 			Report entity = repository.getReferenceById(id);
 			updateData(entity, obj);

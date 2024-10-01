@@ -34,7 +34,7 @@ public class AdditionalFeatureService {
 		return repository.findAll();
 	}
 
-	public AdditionalFeature findById(Long id) {
+	public AdditionalFeature findById(String id) {
 		Optional<AdditionalFeature> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
@@ -47,7 +47,7 @@ public class AdditionalFeatureService {
 	}
 
 	@Transactional
-	public void delete(Long id) {
+	public void delete(String id) {
 		try {
 			if (repository.existsById(id)) {
 				repository.deleteById(id);
@@ -63,7 +63,7 @@ public class AdditionalFeatureService {
 	}
 
 	@Transactional
-	public AdditionalFeature update(Long id, AdditionalFeature obj) {
+	public AdditionalFeature update(String id, AdditionalFeature obj) {
 		try {
 			AdditionalFeature entity = repository.getReferenceById(id);
 			updateData(entity, obj);
