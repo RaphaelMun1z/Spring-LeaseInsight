@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.Adm;
 import com.rm.myadmin.repositories.AdmRepository;
+import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -41,10 +42,14 @@ public class AdmService {
 
 	@Transactional
 	public Adm create(Adm obj) {
-		Adm adm = repository.save(obj);
-		cacheService.putAdmCache();
-		cacheService.putUserCache();
-		return adm;
+		try {
+			Adm adm = repository.save(obj);
+			cacheService.putAdmCache();
+			cacheService.putUserCache();
+			return adm;
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		}
 	}
 
 	@Transactional

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.repositories.ResidenceAddressRepository;
+import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -36,14 +37,18 @@ public class ResidenceAddressService {
 
 	public ResidenceAddress findById(String id) {
 		Optional<ResidenceAddress> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		return obj.orElseThrow(() -> new ResourceNotFoundException("Residence Address", id));
 	}
 
 	@Transactional
 	public ResidenceAddress create(ResidenceAddress obj) {
-		ResidenceAddress ra = repository.save(obj);
-		cacheService.putResidenceAddressCache();
-		return ra;
+		try {
+			ResidenceAddress ra = repository.save(obj);
+			cacheService.putResidenceAddressCache();
+			return ra;
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		}
 	}
 
 	@Transactional
@@ -76,7 +81,6 @@ public class ResidenceAddressService {
 	}
 
 	private void updateData(ResidenceAddress entity, ResidenceAddress obj) {
-		entity.setNumber(obj.getNumber());
 		entity.setStreet(obj.getStreet());
 		entity.setDistrict(obj.getDistrict());
 		entity.setCity(obj.getCity());

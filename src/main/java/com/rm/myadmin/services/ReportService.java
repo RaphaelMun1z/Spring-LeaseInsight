@@ -56,7 +56,7 @@ public class ReportService {
 
 	public Report findById(String id) {
 		Optional<Report> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		return obj.orElseThrow(() -> new ResourceNotFoundException("Report", id));
 	}
 
 	public Set<File> findFiles(String id) {

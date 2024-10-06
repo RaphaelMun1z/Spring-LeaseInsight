@@ -9,9 +9,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "tb_residence_address")
+@Table(name = "tb_residence_address", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "number", "street", "district", "city", "state", "cep" }) })
 public class ResidenceAddress extends Address implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -23,9 +25,9 @@ public class ResidenceAddress extends Address implements Serializable {
 		super();
 	}
 
-	public ResidenceAddress(String id, int number, String street, String district, String city, String state,
-			String country, String cep, String complement) {
-		super(id, number, street, district, city, state, country, cep, complement);
+	public ResidenceAddress(String id, String street, String district, String city, String state, String country,
+			String cep, String complement) {
+		super(id, street, district, city, state, country, cep, complement);
 	}
 
 	public Set<Residence> getResidences() {

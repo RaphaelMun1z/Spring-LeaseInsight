@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceFeature;
 import com.rm.myadmin.repositories.ResidenceFeatureRepository;
+import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -24,8 +25,12 @@ public class ResidenceFeatureService {
 
 	@Transactional
 	public ResidenceFeature create(ResidenceFeature obj) {
-		ResidenceFeature rf = repository.save(obj);
-		return rf;
+		try {
+			ResidenceFeature rf = repository.save(obj);
+			return rf;
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		}
 	}
 
 	@Transactional

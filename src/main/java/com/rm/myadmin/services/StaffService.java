@@ -36,7 +36,7 @@ public class StaffService {
 
 	public Staff findById(String id) {
 		Optional<Staff> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		return obj.orElseThrow(() -> new ResourceNotFoundException("Staff", id));
 	}
 
 	@Transactional

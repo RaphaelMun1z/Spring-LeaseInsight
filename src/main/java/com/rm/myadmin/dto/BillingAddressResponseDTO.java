@@ -4,7 +4,7 @@ import com.rm.myadmin.entities.BillingAddress;
 
 public class BillingAddressResponseDTO {
 	private String id;
-	private int number;
+	private Integer number;
 	private String street;
 	private String district;
 	private String city;
@@ -27,13 +27,13 @@ public class BillingAddressResponseDTO {
 		this.country = billingAddress.getCountry();
 		this.cep = billingAddress.getCep();
 		this.complement = billingAddress.getComplement();
-	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+	}
 
 	public String getId() {
 		return id;
 	}
 
-	public int getNumber() {
+	public Integer getNumber() {
 		return number;
 	}
 

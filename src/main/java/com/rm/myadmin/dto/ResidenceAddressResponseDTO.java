@@ -4,7 +4,6 @@ import com.rm.myadmin.entities.ResidenceAddress;
 
 public class ResidenceAddressResponseDTO {
 	private String id;
-	private int number;
 	private String street;
 	private String district;
 	private String city;
@@ -19,7 +18,6 @@ public class ResidenceAddressResponseDTO {
 	public ResidenceAddressResponseDTO(ResidenceAddress residenceAddress) {
 		super();
 		this.id = residenceAddress.getId();
-		this.number = residenceAddress.getNumber();
 		this.street = residenceAddress.getStreet();
 		this.district = residenceAddress.getDistrict();
 		this.city = residenceAddress.getCity();
@@ -31,10 +29,6 @@ public class ResidenceAddressResponseDTO {
 
 	public String getId() {
 		return id;
-	}
-
-	public int getNumber() {
-		return number;
 	}
 
 	public String getStreet() {

@@ -17,11 +17,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "tb_rental_history")
+@Table(name = "tb_rental_history", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "rental_start_date", "contract_id" }) })
 public class RentalHistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.repositories.BillingAddressRepository;
+import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -36,14 +37,18 @@ public class BillingAddressService {
 
 	public BillingAddress findById(String id) {
 		Optional<BillingAddress> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		return obj.orElseThrow(() -> new ResourceNotFoundException("Billing Address", id));
 	}
 
 	@Transactional
 	public BillingAddress create(BillingAddress obj) {
-		BillingAddress ba = repository.save(obj);
-		cacheService.putBillingAddressCache();
-		return ba;
+		try {
+			BillingAddress ba = repository.save(obj);
+			cacheService.putBillingAddressCache();
+			return ba;
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		}
 	}
 
 	@Transactional

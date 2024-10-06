@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.repositories.RentalHistoryRepository;
+import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -42,7 +43,7 @@ public class RentalHistoryService {
 
 	public RentalHistory findById(String id) {
 		Optional<RentalHistory> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		return obj.orElseThrow(() -> new ResourceNotFoundException("Rental History", id));
 	}
 
 	@Transactional
@@ -53,8 +54,10 @@ public class RentalHistoryService {
 			repository.save(rh);
 			cacheService.putRentalHistoryCache();
 			return rh;
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
 		}
 	}
 

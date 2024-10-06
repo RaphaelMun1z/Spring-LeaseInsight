@@ -3,16 +3,19 @@ package com.rm.myadmin.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
-@Table(name = "tb_additional_feature")
+@Table(name = "tb_additional_feature", uniqueConstraints = { @UniqueConstraint(columnNames = { "feature" }) })
+
 public class AdditionalFeature implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -20,8 +23,9 @@ public class AdditionalFeature implements Serializable {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 
-	@NotBlank(message = "Invalid field value")
+	@NotNull(message = "Required field")
 	@Pattern(regexp = "^[A-Z]+(.)*")
+	@Column(unique = true)
 	private String feature;
 
 	public AdditionalFeature() {

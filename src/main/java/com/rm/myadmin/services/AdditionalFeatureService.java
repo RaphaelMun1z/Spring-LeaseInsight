@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.AdditionalFeature;
 import com.rm.myadmin.repositories.AdditionalFeatureRepository;
+import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -41,9 +42,13 @@ public class AdditionalFeatureService {
 
 	@Transactional
 	public AdditionalFeature create(AdditionalFeature obj) {
-		AdditionalFeature af = repository.save(obj);
-		cacheService.putAdditionalFeatureCache();
-		return af;
+		try {
+			AdditionalFeature af = repository.save(obj);
+			cacheService.putAdditionalFeatureCache();
+			return af;
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		}
 	}
 
 	@Transactional

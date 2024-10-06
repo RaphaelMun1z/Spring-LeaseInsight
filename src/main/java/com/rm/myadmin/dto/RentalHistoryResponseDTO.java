@@ -2,7 +2,6 @@ package com.rm.myadmin.dto;
 
 import java.time.LocalDate;
 
-import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.RentalHistory;
 import com.rm.myadmin.entities.enums.PaymentStatus;
 
@@ -12,7 +11,7 @@ public class RentalHistoryResponseDTO {
 	private LocalDate rentalEndDate;
 	private Double rentalValue;
 	private Integer paymentStatus;
-	private Contract contract;
+	private ContractResponseDTO contract;
 
 	public RentalHistoryResponseDTO() {
 	}
@@ -24,7 +23,7 @@ public class RentalHistoryResponseDTO {
 		this.rentalEndDate = rentalHistory.getRentalEndDate();
 		this.rentalValue = rentalHistory.getRentalValue();
 		setPaymentStatus(rentalHistory.getPaymentStatus());
-		this.contract = rentalHistory.getContract();
+		this.contract = new ContractResponseDTO(rentalHistory.getContract());
 	}
 
 	public String getId() {
@@ -53,8 +52,15 @@ public class RentalHistoryResponseDTO {
 		}
 	}
 
-	public Contract getContract() {
+	public ContractResponseDTO getContract() {
 		return contract;
+	}
+
+	@Override
+	public String toString() {
+		return "RentalHistoryResponseDTO [id=" + id + ", rentalStartDate=" + rentalStartDate + ", rentalEndDate="
+				+ rentalEndDate + ", rentalValue=" + rentalValue + ", paymentStatus=" + paymentStatus + ", contract="
+				+ contract + "]";
 	}
 
 }

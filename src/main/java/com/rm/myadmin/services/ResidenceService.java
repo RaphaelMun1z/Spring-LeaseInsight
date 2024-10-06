@@ -21,6 +21,7 @@ import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceAddress;
 import com.rm.myadmin.entities.ResidenceFeature;
 import com.rm.myadmin.repositories.ResidenceRepository;
+import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -59,7 +60,7 @@ public class ResidenceService {
 
 	public Residence findById(String id) {
 		Optional<Residence> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		return obj.orElseThrow(() -> new ResourceNotFoundException("Residence", id));
 	}
 
 	@Transactional
@@ -67,12 +68,17 @@ public class ResidenceService {
 		try {
 			ResidenceAddress ra = residenceAddressService.findById(obj.getResidenceAddress().getId());
 			obj.setResidenceAddress(ra);
+
+			Owner o = ownerService.findById(obj.getOwner().getId());
+			obj.setOwner(o);
+
 			Residence residence = repository.save(obj);
 			cacheService.putResidenceCache();
 			return residence;
-		} catch (Exception e) {
-			System.out.println("Erro: " + e.getMessage());
-			return null;
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
 		}
 	}
 

@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
@@ -22,25 +21,22 @@ public abstract class Address implements Serializable {
 	private String id;
 
 	@NotNull(message = "Required field")
-	private int number;
-
-	@NotBlank(message = "Invalid field value")
 	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String street;
 
-	@NotBlank(message = "Invalid field value")
+	@NotNull(message = "Required field")
 	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String district;
 
-	@NotBlank(message = "Invalid field value")
+	@NotNull(message = "Required field")
 	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String city;
 
-	@NotBlank(message = "Invalid field value")
+	@NotNull(message = "Required field")
 	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String state;
 
-	@NotBlank(message = "Invalid field value")
+	@NotNull(message = "Required field")
 	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String country;
 
@@ -53,10 +49,9 @@ public abstract class Address implements Serializable {
 
 	}
 
-	protected Address(String id, int number, String street, String district, String city, String state, String country,
-			String cep, String complement) {
+	protected Address(String id, String street, String district, String city, String state, String country, String cep,
+			String complement) {
 		this.id = id;
-		this.number = number;
 		this.street = street;
 		this.district = district;
 		this.city = city;
@@ -72,14 +67,6 @@ public abstract class Address implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public int getNumber() {
-		return number;
-	}
-
-	public void setNumber(int number) {
-		this.number = number;
 	}
 
 	public String getStreet() {

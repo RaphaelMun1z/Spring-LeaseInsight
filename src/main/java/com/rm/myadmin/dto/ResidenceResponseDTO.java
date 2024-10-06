@@ -11,6 +11,7 @@ import com.rm.myadmin.entities.enums.PropertyType;
 public class ResidenceResponseDTO {
 	private String id;
 	private Integer propertyType;
+	private Integer number;
 	private String description;
 	private Integer aptNumber;
 	private String complement;
@@ -37,6 +38,7 @@ public class ResidenceResponseDTO {
 		this.id = residence.getId();
 		setPropertyType(residence.getPropertyType());
 		this.description = residence.getDescription();
+		this.number = residence.getNumber();
 		this.aptNumber = residence.getAptNumber();
 		this.complement = residence.getComplement();
 		this.numberBedrooms = residence.getNumberBedrooms();
@@ -60,6 +62,10 @@ public class ResidenceResponseDTO {
 
 	public Integer getPropertyType() {
 		return propertyType;
+	}
+
+	public Integer getNumber() {
+		return number;
 	}
 
 	public void setPropertyType(PropertyType propertyType) {

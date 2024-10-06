@@ -55,9 +55,10 @@ public class TenantResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Tenant> findById(@PathVariable String id) {
+	public ResponseEntity<TenantResponseDTO> findById(@PathVariable String id) {
 		Tenant obj = service.findById(id);
-		return ResponseEntity.ok().body(obj);
+		TenantResponseDTO tenant = new TenantResponseDTO(obj); 
+		return ResponseEntity.ok().body(tenant);
 	}
 
 	@PostMapping

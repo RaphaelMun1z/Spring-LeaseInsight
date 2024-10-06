@@ -18,6 +18,7 @@ import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.entities.enums.PaymentStatus;
 import com.rm.myadmin.repositories.ContractRepository;
 import com.rm.myadmin.services.async.ContractAsyncService;
+import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
@@ -54,7 +55,7 @@ public class ContractService {
 
 	public Contract findById(String id) {
 		Optional<Contract> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		return obj.orElseThrow(() -> new ResourceNotFoundException("Contract", id));
 	}
 
 	@Transactional
@@ -69,8 +70,8 @@ public class ContractService {
 			createFirstRental(contract);
 			cacheService.putContractCache();
 			return contract;
-		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException(e.getMessage());
+		} catch (RuntimeException e) {
+			throw new DataViolationException("Already exists a contract to this Residence.");
 		}
 	}
 

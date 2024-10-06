@@ -23,11 +23,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "tb_residence")
+@Table(name = "tb_residence", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "number", "residence_address_id" }) })
 public class Residence implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -40,6 +42,9 @@ public class Residence implements Serializable {
 
 	@NotNull(message = "Required field")
 	private String description;
+
+	@NotNull(message = "Required field")
+	private Integer number;
 
 	private Integer aptNumber;
 
@@ -107,9 +112,9 @@ public class Residence implements Serializable {
 
 	}
 
-	public Residence(String id, Owner owner, PropertyType propertyType, String description, Integer aptNumber,
-			String complement, int numberBedrooms, int numberBathrooms, int numberSuites, float totalArea,
-			float builtArea, int garageSpaces, Year yearConstruction, OccupancyStatus occupancyStatus,
+	public Residence(String id, Owner owner, PropertyType propertyType, String description, Integer number,
+			Integer aptNumber, String complement, int numberBedrooms, int numberBathrooms, int numberSuites,
+			float totalArea, float builtArea, int garageSpaces, Year yearConstruction, OccupancyStatus occupancyStatus,
 			BigDecimal marketValue, BigDecimal rentalValue, Instant dateLastRenovation,
 			ResidenceAddress residenceAddress) {
 		super();
@@ -117,6 +122,7 @@ public class Residence implements Serializable {
 		this.owner = owner;
 		setPropertyType(propertyType);
 		this.description = description;
+		this.number = number;
 		this.aptNumber = aptNumber;
 		this.complement = complement;
 		this.numberBedrooms = numberBedrooms;
@@ -173,6 +179,14 @@ public class Residence implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Integer getNumber() {
+		return number;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
 	}
 
 	public Integer getAptNumber() {

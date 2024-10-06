@@ -43,16 +43,18 @@ public class RentalHistoryResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<RentalHistory> findById(@PathVariable String id) {
+	public ResponseEntity<RentalHistoryResponseDTO> findById(@PathVariable String id) {
 		RentalHistory obj = service.findById(id);
-		return ResponseEntity.ok().body(obj);
+		RentalHistoryResponseDTO rentalHistory = new RentalHistoryResponseDTO(obj);
+		return ResponseEntity.ok().body(rentalHistory);
 	}
 
 	@PostMapping
-	public ResponseEntity<RentalHistory> insert(@RequestBody @Valid RentalHistory obj) {
+	public ResponseEntity<RentalHistoryResponseDTO> insert(@RequestBody @Valid RentalHistory obj) {
 		obj = service.create(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+		RentalHistoryResponseDTO rentalHistory = new RentalHistoryResponseDTO(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(rentalHistory.getId()).toUri();
+		return ResponseEntity.created(uri).body(rentalHistory);
 	}
 
 	@DeleteMapping(value = "/{id}")

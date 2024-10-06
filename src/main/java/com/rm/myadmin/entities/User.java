@@ -22,7 +22,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
@@ -35,7 +35,7 @@ public abstract class User implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 
-	@NotBlank(message = "Invalid field value")
+	@NotNull(message = "Required field")
 	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String name;
 
@@ -47,7 +47,7 @@ public abstract class User implements UserDetails {
 	@Column(unique = true)
 	private String email;
 
-	@NotBlank(message = "Required field")
+	@NotNull(message = "Required field")
 	private String password;
 
 	@Enumerated(EnumType.STRING)
