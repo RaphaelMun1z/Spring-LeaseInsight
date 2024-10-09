@@ -19,6 +19,7 @@ import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class RentalHistoryService {
@@ -55,7 +56,8 @@ public class RentalHistoryService {
 			cacheService.putRentalHistoryCache();
 			return rh;
 		} catch (DataIntegrityViolationException e) {
-			throw new DataViolationException();
+			System.out.println("Erro: " + e.getMessage());
+			throw new DataViolationException("Rental History");
 		} catch (ResourceNotFoundException e) {
 			throw new ResourceNotFoundException(e.getMessage());
 		}
@@ -78,19 +80,24 @@ public class RentalHistoryService {
 	}
 
 	@Transactional
-	public RentalHistory update(String id, RentalHistory obj) {
+	public RentalHistory patch(String id, RentalHistory obj) {
 		try {
 			RentalHistory entity = repository.getReferenceById(id);
-			updateData(entity, obj);
+			patchData(entity, obj);
 			RentalHistory rh = repository.save(entity);
 			cacheService.putRentalHistoryCache();
 			return rh;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
 		}
 	}
 
-	private void updateData(RentalHistory entity, RentalHistory obj) {
-		entity.setPaymentStatus(obj.getPaymentStatus());
+	private void patchData(RentalHistory entity, RentalHistory obj) {
+		if (obj.getPaymentStatus() != null)
+			entity.setPaymentStatus(obj.getPaymentStatus());
 	}
 }

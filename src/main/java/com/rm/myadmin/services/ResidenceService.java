@@ -26,6 +26,7 @@ import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class ResidenceService {
@@ -99,34 +100,56 @@ public class ResidenceService {
 	}
 
 	@Transactional
-	public Residence update(String id, Residence obj) {
+	public Residence patch(String id, Residence obj) {
 		try {
 			Residence entity = repository.getReferenceById(id);
-			updateData(entity, obj);
+			patchData(entity, obj);
 			Residence r = repository.save(entity);
 			cacheService.putResidenceCache();
 			return r;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		} catch (Exception e) {
+			System.out.println("Erro: " + e.getClass());
+			return null;
 		}
 	}
 
-	private void updateData(Residence entity, Residence obj) {
-		entity.setPropertyType(obj.getPropertyType());
-		entity.setDescription(obj.getDescription());
-		entity.setAptNumber(obj.getAptNumber());
-		entity.setComplement(obj.getComplement());
-		entity.setNumberBedrooms(obj.getNumberBedrooms());
-		entity.setNumberBathrooms(obj.getNumberBathrooms());
-		entity.setNumberSuites(obj.getNumberSuites());
-		entity.setTotalArea(obj.getTotalArea());
-		entity.setBuiltArea(obj.getBuiltArea());
-		entity.setGarageSpaces(obj.getGarageSpaces());
-		entity.setYearConstruction(obj.getYearConstruction());
-		entity.setOccupancyStatus(obj.getOccupancyStatus());
-		entity.setMarketValue(obj.getMarketValue());
-		entity.setRentalValue(obj.getRentalValue());
-		entity.setDateLastRenovation(obj.getDateLastRenovation());
+	private void patchData(Residence entity, Residence obj) {
+		if (obj.getPropertyType() != null)
+			entity.setPropertyType(obj.getPropertyType());
+		if (obj.getDescription() != null)
+			entity.setDescription(obj.getDescription());
+		if (obj.getAptNumber() != null)
+			entity.setAptNumber(obj.getAptNumber());
+		if (obj.getComplement() != null)
+			entity.setComplement(obj.getComplement());
+		if (obj.getNumberBedrooms() != 0)
+			entity.setNumberBedrooms(obj.getNumberBedrooms());
+		if (obj.getNumberBathrooms() != 0)
+			entity.setNumberBathrooms(obj.getNumberBathrooms());
+		if (obj.getNumberSuites() != 0)
+			entity.setNumberSuites(obj.getNumberSuites());
+		if (obj.getTotalArea() != 0)
+			entity.setTotalArea(obj.getTotalArea());
+		if (obj.getBuiltArea() != 0)
+			entity.setBuiltArea(obj.getBuiltArea());
+		if (obj.getGarageSpaces() != 0)
+			entity.setGarageSpaces(obj.getGarageSpaces());
+		if (obj.getYearConstruction() != null)
+			entity.setYearConstruction(obj.getYearConstruction());
+		if (obj.getOccupancyStatus() != null)
+			entity.setOccupancyStatus(obj.getOccupancyStatus());
+		if (obj.getMarketValue() != null)
+			entity.setMarketValue(obj.getMarketValue());
+		if (obj.getRentalValue() != null)
+			entity.setRentalValue(obj.getRentalValue());
+		if (obj.getDateLastRenovation() != null)
+			entity.setDateLastRenovation(obj.getDateLastRenovation());
 	}
 
 	@Transactional

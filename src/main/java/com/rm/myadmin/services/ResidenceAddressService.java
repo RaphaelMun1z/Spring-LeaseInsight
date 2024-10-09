@@ -17,6 +17,7 @@ import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class ResidenceAddressService {
@@ -42,6 +43,7 @@ public class ResidenceAddressService {
 
 	@Transactional
 	public ResidenceAddress create(ResidenceAddress obj) {
+		System.out.println("R: " + obj);
 		try {
 			ResidenceAddress ra = repository.save(obj);
 			cacheService.putResidenceAddressCache();
@@ -68,25 +70,36 @@ public class ResidenceAddressService {
 	}
 
 	@Transactional
-	public ResidenceAddress update(String id, ResidenceAddress obj) {
+	public ResidenceAddress patch(String id, ResidenceAddress obj) {
 		try {
 			ResidenceAddress entity = repository.getReferenceById(id);
-			updateData(entity, obj);
+			patchData(entity, obj);
 			ResidenceAddress ra = repository.save(entity);
 			cacheService.putResidenceAddressCache();
 			return ra;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
 		}
 	}
 
-	private void updateData(ResidenceAddress entity, ResidenceAddress obj) {
-		entity.setStreet(obj.getStreet());
-		entity.setDistrict(obj.getDistrict());
-		entity.setCity(obj.getCity());
-		entity.setState(obj.getState());
-		entity.setCountry(obj.getCountry());
-		entity.setCep(obj.getCep());
-		entity.setComplement(obj.getComplement());
+	private void patchData(ResidenceAddress entity, ResidenceAddress obj) {
+		if (obj.getStreet() != null)
+			entity.setStreet(obj.getStreet());
+		if (obj.getDistrict() != null)
+			entity.setDistrict(obj.getDistrict());
+		if (obj.getCity() != null)
+			entity.setCity(obj.getCity());
+		if (obj.getState() != null)
+			entity.setState(obj.getState());
+		if (obj.getCountry() != null)
+			entity.setCountry(obj.getCountry());
+		if (obj.getCep() != null)
+			entity.setCep(obj.getCep());
+		if (obj.getComplement() != null)
+			entity.setComplement(obj.getComplement());
 	}
 }

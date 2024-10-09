@@ -141,5 +141,4 @@ public abstract class Address implements Serializable {
 		Address other = (Address) obj;
 		return Objects.equals(id, other.id);
 	}
-
 }

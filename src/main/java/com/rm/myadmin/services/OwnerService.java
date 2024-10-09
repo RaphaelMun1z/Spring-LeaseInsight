@@ -20,6 +20,7 @@ import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class OwnerService {
@@ -79,22 +80,29 @@ public class OwnerService {
 	}
 
 	@Transactional
-	public Owner update(String id, Owner obj) {
+	public Owner patch(String id, Owner obj) {
 		try {
 			Owner entity = repository.getReferenceById(id);
-			updateData(entity, obj);
+			patchData(entity, obj);
 			Owner o = repository.save(entity);
 			cacheService.putOwnerCache();
 			return o;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
 		}
 	}
 
-	private void updateData(Owner entity, Owner obj) {
-		entity.setName(obj.getName());
-		entity.setEmail(obj.getEmail());
-		entity.setPhone(obj.getPhone());
+	private void patchData(Owner entity, Owner obj) {
+		if (obj.getName() != null)
+			entity.setName(obj.getName());
+		if (obj.getEmail() != null)
+			entity.setEmail(obj.getEmail());
+		if (obj.getPhone() != null)
+			entity.setPhone(obj.getPhone());
 	}
 
 	public Set<Residence> findResidences(String id) {

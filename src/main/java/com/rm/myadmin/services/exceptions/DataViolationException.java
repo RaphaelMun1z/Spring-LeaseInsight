@@ -6,8 +6,8 @@ public class DataViolationException extends RuntimeException {
 	public DataViolationException() {
 		super("Resource already exists.");
 	}
-	
+
 	public DataViolationException(String msg) {
-		super(msg);
+		super("Resource already exists. " + msg + ".");
 	}
 }

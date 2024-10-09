@@ -23,6 +23,7 @@ import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class ContractService {
@@ -62,16 +63,23 @@ public class ContractService {
 	public Contract create(Contract obj) {
 		try {
 			Residence r = residenceService.findById(obj.getResidence().getId());
+			if (r.getContract() != null)
+				new DataViolationException("Residence already has a Contract");
+
 			obj.setResidence(r);
-			r.setContract(obj);
-			obj.setTenant(tenantService.findById(obj.getTenant().getId()));
+			Tenant t = tenantService.findById(obj.getTenant().getId());
+			obj.setTenant(t);
 			Contract contract = repository.save(obj);
+			cacheService.putContractCache();
 			contractAsyncService.sendContractBeginEmail(contract);
 			createFirstRental(contract);
-			cacheService.putContractCache();
 			return contract;
-		} catch (RuntimeException e) {
-			throw new DataViolationException("Already exists a contract to this Residence.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
+		} catch (DataViolationException e) {
+			throw e;
 		}
 	}
 
@@ -80,8 +88,10 @@ public class ContractService {
 			RentalHistory rental = new RentalHistory(null, c.getContractStartDate(), PaymentStatus.PENDING, c);
 			rentalHistoryService.create(rental);
 			contractAsyncService.sendInvoiceByEmail(c, rental);
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
 		}
 	}
 
@@ -102,24 +112,33 @@ public class ContractService {
 	}
 
 	@Transactional
-	public Contract update(String id, Contract obj) {
+	public Contract patch(String id, Contract obj) {
 		try {
 			Contract entity = repository.getReferenceById(id);
-			updateData(entity, obj);
+			patchData(entity, obj);
 			Contract c = repository.save(entity);
 			cacheService.putContractCache();
 			return c;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
 		}
 	}
 
-	private void updateData(Contract entity, Contract obj) {
-		entity.setContractStartDate(obj.getContractStartDate());
-		entity.setContractEndDate(obj.getContractEndDate());
-		entity.setDefaultRentalValue(obj.getDefaultRentalValue());
-		entity.setContractStatus(obj.getContractStatus());
-		entity.setInvoiceDueDate(obj.getInvoiceDueDate());
+	private void patchData(Contract entity, Contract obj) {
+		if (obj.getContractStartDate() != null)
+			entity.setContractStartDate(obj.getContractStartDate());
+		if (obj.getContractEndDate() != null)
+			entity.setContractEndDate(obj.getContractEndDate());
+		if (obj.getDefaultRentalValue() != null)
+			entity.setDefaultRentalValue(obj.getDefaultRentalValue());
+		if (obj.getContractStatus() != null)
+			entity.setContractStatus(obj.getContractStatus());
+		if (obj.getInvoiceDueDate() != 0)
+			entity.setInvoiceDueDate(obj.getInvoiceDueDate());
 	}
 
 	public Set<Contract> findByContractStatus(Integer code) {

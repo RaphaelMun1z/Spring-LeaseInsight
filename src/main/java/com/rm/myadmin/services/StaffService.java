@@ -7,15 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.Staff;
 import com.rm.myadmin.repositories.StaffRepository;
+import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class StaffService {
@@ -41,10 +44,16 @@ public class StaffService {
 
 	@Transactional
 	public Staff create(Staff obj) {
-		Staff staff = repository.save(obj);
-		cacheService.putStaffCache();
-		cacheService.putUserCache();
-		return staff;
+		try {
+			String encryptedPassword = new BCryptPasswordEncoder().encode(obj.getPassword());
+			Staff staff = new Staff(null, obj.getName(), obj.getPhone(), obj.getEmail(), encryptedPassword);
+			repository.save(staff);
+			cacheService.putStaffCache();
+			cacheService.putUserCache();
+			return staff;
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		}
 	}
 
 	@Transactional
@@ -64,21 +73,28 @@ public class StaffService {
 	}
 
 	@Transactional
-	public Staff update(String id, Staff obj) {
+	public Staff patch(String id, Staff obj) {
 		try {
 			Staff entity = repository.getReferenceById(id);
-			updateData(entity, obj);
+			patchData(entity, obj);
 			Staff s = repository.save(entity);
 			cacheService.putStaffCache();
 			return s;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
 		}
 	}
 
-	private void updateData(Staff entity, Staff obj) {
-		entity.setName(obj.getName());
-		entity.setEmail(obj.getEmail());
-		entity.setPhone(obj.getPhone());
+	private void patchData(Staff entity, Staff obj) {
+		if (obj.getName() != null)
+			entity.setName(obj.getName());
+		if (obj.getEmail() != null)
+			entity.setEmail(obj.getEmail());
+		if (obj.getPhone() != null)
+			entity.setPhone(obj.getPhone());
 	}
 }

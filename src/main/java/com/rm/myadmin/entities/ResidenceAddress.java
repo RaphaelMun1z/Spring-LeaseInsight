@@ -13,7 +13,7 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "tb_residence_address", uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "number", "street", "district", "city", "state", "cep" }) })
+		@UniqueConstraint(columnNames = { "street", "district", "city", "state", "cep" }) })
 public class ResidenceAddress extends Address implements Serializable {
 	private static final long serialVersionUID = 1L;
 

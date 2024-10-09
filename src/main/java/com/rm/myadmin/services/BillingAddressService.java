@@ -17,6 +17,7 @@ import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class BillingAddressService {
@@ -68,26 +69,38 @@ public class BillingAddressService {
 	}
 
 	@Transactional
-	public BillingAddress update(String id, BillingAddress obj) {
+	public BillingAddress patch(String id, BillingAddress obj) {
 		try {
 			BillingAddress entity = repository.getReferenceById(id);
-			updateData(entity, obj);
+			patchData(entity, obj);
 			BillingAddress ba = repository.save(entity);
 			cacheService.putBillingAddressCache();
 			return ba;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
 		}
 	}
 
-	private void updateData(BillingAddress entity, BillingAddress obj) {
-		entity.setNumber(obj.getNumber());
-		entity.setStreet(obj.getStreet());
-		entity.setDistrict(obj.getDistrict());
-		entity.setCity(obj.getCity());
-		entity.setState(obj.getState());
-		entity.setCountry(obj.getCountry());
-		entity.setCep(obj.getCep());
-		entity.setComplement(obj.getComplement());
+	private void patchData(BillingAddress entity, BillingAddress obj) {
+		if (obj.getNumber() != null)
+			entity.setNumber(obj.getNumber());
+		if (obj.getStreet() != null)
+			entity.setStreet(obj.getStreet());
+		if (obj.getDistrict() != null)
+			entity.setDistrict(obj.getDistrict());
+		if (obj.getCity() != null)
+			entity.setCity(obj.getCity());
+		if (obj.getState() != null)
+			entity.setState(obj.getState());
+		if (obj.getCountry() != null)
+			entity.setCountry(obj.getCountry());
+		if (obj.getCep() != null)
+			entity.setCep(obj.getCep());
+		if (obj.getComplement() != null)
+			entity.setComplement(obj.getComplement());
 	}
 }

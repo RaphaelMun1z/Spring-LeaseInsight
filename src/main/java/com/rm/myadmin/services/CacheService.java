@@ -1,5 +1,6 @@
 package com.rm.myadmin.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -135,7 +136,11 @@ public class CacheService {
 
 	@CachePut("findAllUser")
 	public List<User> putUserCache() {
-		return userService.findAll();
+		List<User> users = new ArrayList<>();
+		users.addAll(putAdmCache());
+		users.addAll(putStaffCache());
+		users.addAll(putTenantCache());
+		return users;
 	}
 
 	@CachePut("findAllReport")

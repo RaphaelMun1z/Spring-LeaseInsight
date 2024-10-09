@@ -20,10 +20,12 @@ import com.rm.myadmin.entities.Report;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.Tenant;
 import com.rm.myadmin.repositories.ReportRepository;
+import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class ReportService {
@@ -82,8 +84,8 @@ public class ReportService {
 
 			List<UploadFileResponseDTO> uploadedFiles = fileStorageService.uploadFiles(files);
 			for (UploadFileResponseDTO file : uploadedFiles) {
-				File f = new File(null, file.getFileName(), file.getFileDownloadUri(), file.getFileType(), file.getSize(),
-						report);
+				File f = new File(null, file.getFileName(), file.getFileDownloadUri(), file.getFileType(),
+						file.getSize(), report);
 				fileService.create(report, f);
 			}
 
@@ -91,6 +93,10 @@ public class ReportService {
 			return new ReportResponseDTO(report);
 		} catch (ResourceNotFoundException e) {
 			throw e;
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
 		}
 	}
 
@@ -111,19 +117,24 @@ public class ReportService {
 	}
 
 	@Transactional
-	public Report update(String id, Report obj) {
+	public Report patch(String id, Report obj) {
 		try {
 			Report entity = repository.getReferenceById(id);
-			updateData(entity, obj);
+			patchData(entity, obj);
 			Report r = repository.save(entity);
 			cacheService.putReportCache();
 			return r;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
 		}
 	}
 
-	private void updateData(Report entity, Report obj) {
-		entity.setDescription(obj.getDescription());
+	private void patchData(Report entity, Report obj) {
+		if (obj.getDescription() != null)
+			entity.setDescription(obj.getDescription());
 	}
 }

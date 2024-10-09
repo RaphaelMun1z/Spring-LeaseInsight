@@ -36,7 +36,7 @@ public class ContractScheduler {
 			try {
 				if (c.getContractEndDate().equals(today)) {
 					c.setContractStatus(ContractStatus.TERMINATED);
-					contractService.update(c.getId(), c);
+					contractService.patch(c.getId(), c);
 				} else {
 					int dueDate = c.getInvoiceDueDate();
 					if ((int) dueDate > today.getMonth().length(Year.isLeap(today.getYear()))) {

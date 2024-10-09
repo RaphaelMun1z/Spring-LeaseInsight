@@ -13,13 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.myadmin.entities.BillingAddress;
 import com.rm.myadmin.entities.Tenant;
-import com.rm.myadmin.entities.enums.TemplatesEnum;
 import com.rm.myadmin.repositories.TenantRepository;
+import com.rm.myadmin.services.async.TenantAsyncService;
 import com.rm.myadmin.services.exceptions.DataViolationException;
 import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class TenantService {
@@ -30,7 +31,7 @@ public class TenantService {
 	private BillingAddressService billingAddressService;
 
 	@Autowired
-	private EmailService emailService;
+	private TenantAsyncService tenantAsyncService;
 
 	@Autowired
 	private CacheService cacheService;
@@ -60,7 +61,7 @@ public class TenantService {
 			repository.save(tenant);
 			cacheService.putTenantCache();
 			cacheService.putUserCache();
-			sendNewTenantEmail(tenant);
+			tenantAsyncService.sendNewTenantEmail(obj);
 			return tenant;
 		} catch (DataIntegrityViolationException e) {
 			throw new DataViolationException();
@@ -84,30 +85,40 @@ public class TenantService {
 	}
 
 	@Transactional
-	public Tenant update(String id, Tenant obj) {
+	public Tenant patch(String id, Tenant obj) {
 		try {
 			Tenant entity = repository.getReferenceById(id);
-			updateData(entity, obj);
+			patchData(entity, obj);
 			Tenant t = repository.save(entity);
 			cacheService.putTenantCache();
 			return t;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		} catch (Exception e) {
+			System.out.println("Erro: " + e.getClass());
+			return null;
 		}
 	}
 
-	private void updateData(Tenant entity, Tenant obj) {
-		entity.setName(obj.getName());
-		entity.setEmail(obj.getEmail());
-		entity.setPhone(obj.getPhone());
-		entity.setDateOfBirth(obj.getDateOfBirth());
-		entity.setCpf(obj.getCpf());
-		entity.setRg(obj.getRg());
-		entity.setTenantStatus(obj.getTenantStatus());
-	}
-
-	private void sendNewTenantEmail(Tenant t) {
-		emailService.sendEmail(TemplatesEnum.WELCOME, t.getName(), t.getEmail(), "Bem-vindo(a) à LeaseInsight");
+	private void patchData(Tenant entity, Tenant obj) {
+		if (obj.getName() != null)
+			entity.setName(obj.getName());
+		if (obj.getEmail() != null)
+			entity.setEmail(obj.getEmail());
+		if (obj.getPhone() != null)
+			entity.setPhone(obj.getPhone());
+		if (obj.getDateOfBirth() != null)
+			entity.setDateOfBirth(obj.getDateOfBirth());
+		if (obj.getCpf() != null)
+			entity.setCpf(obj.getCpf());
+		if (obj.getRg() != null)
+			entity.setRg(obj.getRg());
+		if (obj.getTenantStatus() != null)
+			entity.setTenantStatus(obj.getTenantStatus());
 	}
 
 }

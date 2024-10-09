@@ -14,9 +14,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -53,7 +53,8 @@ public class RentalHistoryResource {
 	public ResponseEntity<RentalHistoryResponseDTO> insert(@RequestBody @Valid RentalHistory obj) {
 		obj = service.create(obj);
 		RentalHistoryResponseDTO rentalHistory = new RentalHistoryResponseDTO(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(rentalHistory.getId()).toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(rentalHistory.getId())
+				.toUri();
 		return ResponseEntity.created(uri).body(rentalHistory);
 	}
 
@@ -63,9 +64,9 @@ public class RentalHistoryResource {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<RentalHistory> update(@PathVariable String id, @RequestBody RentalHistory obj) {
-		obj = service.update(id, obj);
+	@PatchMapping(value = "/{id}")
+	public ResponseEntity<RentalHistory> patch(@PathVariable String id, @RequestBody RentalHistory obj) {
+		obj = service.patch(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
 

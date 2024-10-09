@@ -15,9 +15,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -67,9 +67,9 @@ public class ContractResource {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<Contract> update(@PathVariable String id, @RequestBody Contract obj) {
-		obj = service.update(id, obj);
+	@PatchMapping(value = "/{id}")
+	public ResponseEntity<Contract> patch(@PathVariable String id, @RequestBody Contract obj) {
+		obj = service.patch(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
 

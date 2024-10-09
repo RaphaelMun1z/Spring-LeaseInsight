@@ -17,10 +17,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "tb_reports")
+@Table(name = "tb_reports", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "description", "residence_id", "tenant_id" }) })
 public class Report implements Serializable {
 	private static final long serialVersionUID = 1L;
 

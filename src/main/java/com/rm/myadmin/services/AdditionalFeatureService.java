@@ -17,6 +17,7 @@ import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class AdditionalFeatureService {
@@ -68,19 +69,24 @@ public class AdditionalFeatureService {
 	}
 
 	@Transactional
-	public AdditionalFeature update(String id, AdditionalFeature obj) {
+	public AdditionalFeature patch(String id, AdditionalFeature obj) {
 		try {
 			AdditionalFeature entity = repository.getReferenceById(id);
-			updateData(entity, obj);
+			patchData(entity, obj);
 			AdditionalFeature af = repository.save(entity);
 			cacheService.putAdditionalFeatureCache();
 			return af;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
 		}
 	}
 
-	private void updateData(AdditionalFeature entity, AdditionalFeature obj) {
-		entity.setFeature(obj.getFeature());
+	private void patchData(AdditionalFeature entity, AdditionalFeature obj) {
+		if (obj.getFeature() != null)
+			entity.setFeature(obj.getFeature());
 	}
 }

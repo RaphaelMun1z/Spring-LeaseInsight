@@ -43,6 +43,7 @@ public abstract class User implements UserDetails {
 	@Column(unique = true)
 	private String phone;
 
+	@NotNull(message = "Required field")
 	@Email(message = "Invalid field value")
 	@Column(unique = true)
 	private String email;

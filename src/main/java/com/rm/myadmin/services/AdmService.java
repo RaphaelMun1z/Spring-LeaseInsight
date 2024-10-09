@@ -17,6 +17,7 @@ import com.rm.myadmin.services.exceptions.DatabaseException;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class AdmService {
@@ -69,7 +70,7 @@ public class AdmService {
 	}
 
 	@Transactional
-	public Adm update(String id, Adm obj) {
+	public Adm patch(String id, Adm obj) {
 		try {
 			Adm entity = repository.getReferenceById(id);
 			updateData(entity, obj);
@@ -78,12 +79,19 @@ public class AdmService {
 			return adm;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		} catch (ConstraintViolationException e) {
+			throw new DatabaseException("Some invalid field.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
 		}
 	}
 
 	private void updateData(Adm entity, Adm obj) {
-		entity.setName(obj.getName());
-		entity.setEmail(obj.getEmail());
-		entity.setPhone(obj.getPhone());
+		if (obj.getName() != null)
+			entity.setName(obj.getName());
+		if (obj.getEmail() != null)
+			entity.setEmail(obj.getEmail());
+		if (obj.getPhone() != null)
+			entity.setPhone(obj.getPhone());
 	}
 }
