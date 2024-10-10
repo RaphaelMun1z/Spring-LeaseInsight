@@ -21,8 +21,8 @@ import com.rm.myadmin.entities.enums.TenantStatus;
 import com.rm.myadmin.repositories.TenantRepository;
 import com.rm.myadmin.services.BillingAddressService;
 import com.rm.myadmin.services.CacheService;
-import com.rm.myadmin.services.EmailService;
 import com.rm.myadmin.services.TenantService;
+import com.rm.myadmin.services.async.TenantAsyncService;
 import com.rm.myadmin.services.exceptions.ResourceNotFoundException;
 
 @DataJpaTest
@@ -33,13 +33,13 @@ class TenantServiceTests {
 	private TenantService tenantService;
 
 	@Mock
+	private TenantAsyncService tenantAsyncService;
+
+	@Mock
 	private TenantRepository tenantRepository;
 
 	@Mock
 	private BillingAddressService billingAddressService;
-
-	@Mock
-	private EmailService emailService;
 
 	@Mock
 	private CacheService cacheService;
@@ -51,7 +51,7 @@ class TenantServiceTests {
 				"São Paulo", "Brasil", "33444-111", "Próximo ao Extra");
 		Mockito.when(billingAddressService.findById("def")).thenReturn(ba);
 
-		Tenant tenant = new Tenant("abc", "Nautilus", "(13) 91212-1212", "raphaelmunizvarela@gmail.com",
+		Tenant tenant = new Tenant(null, "Nautilus", "(13) 91212-1212", "raphaelmunizvarela@gmail.com",
 				"$2a$10$0P9rooXJBsWKpHufu19Xwei7JC3QSw8C1KqfBRxB5zfMVS4RNZkEu", LocalDate.of(2000, 6, 15),
 				"507.205.280-03", "22.222.222-2", LocalDate.now(), TenantStatus.PENDING, ba);
 		Mockito.when(tenantRepository.save(Mockito.any(Tenant.class))).thenReturn(tenant);
@@ -63,18 +63,17 @@ class TenantServiceTests {
 		Mockito.verify(tenantRepository).save(tenant);
 		Mockito.verify(cacheService).putTenantCache();
 		Mockito.verify(cacheService).putUserCache();
-		Mockito.verify(emailService).sendEmail(Mockito.any(), Mockito.eq(tenant.getName()),
-				Mockito.eq(tenant.getEmail()), Mockito.anyString());
 	}
 
 	@Test
 	@DisplayName("Should not create Tenant, invalid Billing Address ID")
-	void createCase2() {
+	void createTenantFail() {
 		Mockito.when(billingAddressService.findById("def")).thenThrow(new ResourceNotFoundException("def"));
 
 		Tenant tenant = new Tenant("abc", "Nautilus", "(13) 91212-1212", "raphaelmunizvarela@gmail.com",
 				"$2a$10$0P9rooXJBsWKpHufu19Xwei7JC3QSw8C1KqfBRxB5zfMVS4RNZkEu", LocalDate.of(2000, 6, 15),
-				"507.205.280-03", "22.222.222-2", LocalDate.now(), TenantStatus.PENDING, new BillingAddress("def", 0, null, null, null, null, null, null, null));
+				"507.205.280-03", "22.222.222-2", LocalDate.now(), TenantStatus.PENDING,
+				new BillingAddress("def", 0, null, null, null, null, null, null, null));
 
 		assertThrows(ResourceNotFoundException.class, () -> {
 			tenantService.create(tenant);
@@ -84,7 +83,5 @@ class TenantServiceTests {
 		Mockito.verify(tenantRepository, Mockito.never()).save(Mockito.any(Tenant.class));
 		Mockito.verify(cacheService, Mockito.never()).putTenantCache();
 		Mockito.verify(cacheService, Mockito.never()).putUserCache();
-		Mockito.verify(emailService, Mockito.never()).sendEmail(Mockito.any(), Mockito.eq(tenant.getName()),
-				Mockito.eq(tenant.getEmail()), Mockito.anyString());
 	}
 }

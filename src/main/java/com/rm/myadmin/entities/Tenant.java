@@ -127,4 +127,11 @@ public class Tenant extends User implements Serializable {
 		return reports;
 	}
 
+	@Override
+	public String toString() {
+		return "Tenant [dateOfBirth=" + dateOfBirth + ", cpf=" + cpf + ", rg=" + rg + ", registrationDate="
+				+ registrationDate + ", tenantStatus=" + tenantStatus + ", tenantBillingAddress=" + tenantBillingAddress
+				+ ", contracts=" + contracts + ", reports=" + reports + "]";
+	}
+
 }
