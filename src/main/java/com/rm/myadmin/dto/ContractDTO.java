@@ -5,21 +5,22 @@ import java.time.LocalDate;
 import org.springframework.beans.BeanUtils;
 
 import com.rm.myadmin.entities.Contract;
+import com.rm.myadmin.entities.enums.ContractStatus;
 
 public class ContractDTO {
-	private Long id;
+	private String id;
 	private LocalDate contractStartDate;
 	private LocalDate contractEndDate;
 	private Double defaultRentalValue;
-	private int contractStatus;
-	private int invoiceDueDate;
+	private ContractStatus contractStatus;
+	private Integer invoiceDueDate;
 
 	public ContractDTO() {
 
 	}
 
-	public ContractDTO(Long id, LocalDate contractStartDate, LocalDate contractEndDate, Double defaultRentalValue,
-			Integer contractStatus, int invoiceDueDate) {
+	public ContractDTO(String id, LocalDate contractStartDate, LocalDate contractEndDate, Double defaultRentalValue,
+			ContractStatus contractStatus, Integer invoiceDueDate) {
 		this.id = id;
 		this.contractStartDate = contractStartDate;
 		this.contractEndDate = contractEndDate;
@@ -32,11 +33,11 @@ public class ContractDTO {
 		BeanUtils.copyProperties(contract, this);
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -64,11 +65,11 @@ public class ContractDTO {
 		this.defaultRentalValue = defaultRentalValue;
 	}
 
-	public Integer getContractStatus() {
+	public ContractStatus getContractStatus() {
 		return contractStatus;
 	}
 
-	public void setContractStatus(Integer contractStatus) {
+	public void setContractStatus(ContractStatus contractStatus) {
 		this.contractStatus = contractStatus;
 	}
 
@@ -76,7 +77,7 @@ public class ContractDTO {
 		return invoiceDueDate;
 	}
 
-	public void setInvoiceDueDate(int invoiceDueDate) {
+	public void setInvoiceDueDate(Integer invoiceDueDate) {
 		this.invoiceDueDate = invoiceDueDate;
 	}
 

@@ -3,6 +3,7 @@ package com.rm.myadmin.resources;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.rm.myadmin.dto.ContractDTO;
 import com.rm.myadmin.dto.ResidenceFeatureDTO;
 import com.rm.myadmin.dto.ResidenceResponseDTO;
+import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceFeature;
 import com.rm.myadmin.entities.pk.ResidenceFeaturePK;
@@ -92,10 +94,21 @@ public class ResidenceResource {
 	}
 
 	@Transactional(readOnly = true)
-	@GetMapping(value = "/{id}/contract")
+	@GetMapping(value = "/{id}/current-contract")
 	public ResponseEntity<ContractDTO> getContract(@PathVariable String id) {
-		ContractDTO contractDTO = service.getCurrentContract(id);
+		ContractDTO contractDTO = new ContractDTO(service.getCurrentContract(id));
 		return ResponseEntity.ok().body(contractDTO);
+	}
+
+	@Transactional(readOnly = true)
+	@GetMapping(value = "/{id}/contracts")
+	public ResponseEntity<Set<ContractDTO>> getAllContracts(@PathVariable String id) {
+		Set<Contract> contracts = service.getAllContracts(id);
+		Set<ContractDTO> contractsDTO = new HashSet<>();
+		for (Contract contract : contracts) {
+			contractsDTO.add(new ContractDTO(contract));
+		}
+		return ResponseEntity.ok().body(contractsDTO);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

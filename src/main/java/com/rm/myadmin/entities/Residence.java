@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rm.myadmin.entities.enums.ContractStatus;
 import com.rm.myadmin.entities.enums.OccupancyStatus;
 import com.rm.myadmin.entities.enums.PropertyType;
 
@@ -21,7 +22,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Min;
@@ -101,8 +101,8 @@ public class Residence implements Serializable {
 	private Set<ResidenceFeature> features = new HashSet<>();
 
 	@JsonIgnore
-	@OneToOne(mappedBy = "residence")
-	private Contract contract;
+	@OneToMany(mappedBy = "residence")
+	private Set<Contract> contracts = new HashSet<>();
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "residence")
@@ -147,12 +147,17 @@ public class Residence implements Serializable {
 		this.id = id;
 	}
 
-	public Contract getContract() {
-		return contract;
+	public Set<Contract> getContracts() {
+		return contracts;
 	}
 
-	public void setContract(Contract contract) {
-		this.contract = contract;
+	public Contract getActiveContract() {
+		for (Contract contract : contracts) {
+			if (contract.getContractStatus() == ContractStatus.ACTIVE) {
+				return contract;
+			}
+		}
+		return null;
 	}
 
 	public Owner getOwner() {

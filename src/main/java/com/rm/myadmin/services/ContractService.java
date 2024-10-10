@@ -63,7 +63,7 @@ public class ContractService {
 	public Contract create(Contract obj) {
 		try {
 			Residence r = residenceService.findById(obj.getResidence().getId());
-			if (r.getContract() != null)
+			if (r.getActiveContract() != null)
 				new DataViolationException("Residence already has a Contract");
 
 			obj.setResidence(r);

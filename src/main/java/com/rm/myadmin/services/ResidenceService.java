@@ -13,9 +13,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rm.myadmin.dto.ContractDTO;
 import com.rm.myadmin.dto.ResidenceFeatureDTO;
 import com.rm.myadmin.entities.AdditionalFeature;
+import com.rm.myadmin.entities.Contract;
 import com.rm.myadmin.entities.Owner;
 import com.rm.myadmin.entities.Residence;
 import com.rm.myadmin.entities.ResidenceAddress;
@@ -170,10 +170,27 @@ public class ResidenceService {
 		return fDTO;
 	}
 
-	public ContractDTO getCurrentContract(String id) {
-		Residence r = this.findById(id);
-		ContractDTO cDTO = new ContractDTO(r.getContract());
-		return cDTO;
+	public Contract getCurrentContract(String id) {
+		try {
+			Residence r = this.findById(id);
+			Contract contract = r.getActiveContract();
+			if (contract != null)
+				return contract;
+
+			throw new ResourceNotFoundException("Current Contract", id);
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
+		}
+	}
+
+	public Set<Contract> getAllContracts(String id) {
+		try {
+			Residence r = this.findById(id);
+			Set<Contract> contracts = r.getContracts();
+			return contracts;
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
+		}
 	}
 
 	public Set<Residence> findByOwner(String id) {
