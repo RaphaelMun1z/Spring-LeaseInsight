@@ -1,8 +1,8 @@
-<h1>MyAdmin</h1>
-<p>MyAdmin é um software desenvolvido em Java Spring Boot para a administração de locação de imóveis. Este projeto visa simplificar a gestão de propriedades, inquilinos, contratos de aluguel e pagamentos, proporcionando uma solução eficiente e organizada para a administração imobiliária.</p>
+<h1>LeaseInsight</h1>
+<p>LeaseInsight é um software desenvolvido em Java Spring Boot para a administração de locação de imóveis. Este projeto visa simplificar a gestão de propriedades, inquilinos, contratos de aluguel e pagamentos, proporcionando uma solução eficiente e organizada para a administração imobiliária.</p>
 
 <h2>Arquitetura</h2>
-<p>O projeto MyAdmin utiliza a Arquitetura em Camadas (Layered Architecture), promovendo a separação de responsabilidades e a modularidade do código. A estrutura do projeto é organizada em três camadas principais:</p>
+<p>O projeto LeaseInsight utiliza a Arquitetura em Camadas (Layered Architecture), promovendo a separação de responsabilidades e a modularidade do código. A estrutura do projeto é organizada em três camadas principais:</p>
 <ol>
   <li>
     <p>Camada de Apresentação (Presentation Layer):</p>
