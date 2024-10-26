@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.rm.leaseinsight.dto.ReportRequestDTO;
 import com.rm.leaseinsight.dto.ReportResponseDTO;
 import com.rm.leaseinsight.dto.UploadFileResponseDTO;
-import com.rm.leaseinsight.entities.File;
 import com.rm.leaseinsight.entities.Report;
 import com.rm.leaseinsight.entities.ReportFile;
 import com.rm.leaseinsight.entities.Residence;
@@ -69,7 +68,7 @@ public class ReportService {
 
 	public String fileName(String reportId, String fileId) {
 		Report report = this.findById(reportId);
-		File f = report.getFiles().stream().filter(file -> file.getId().equals(fileId)).findFirst()
+		ReportFile f = report.getFiles().stream().filter(file -> file.getId().equals(fileId)).findFirst()
 				.orElseThrow(() -> new ResourceNotFoundException(fileId));
 		String fileName = f.getName();
 		return fileName;

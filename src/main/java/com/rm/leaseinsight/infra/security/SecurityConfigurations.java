@@ -26,8 +26,14 @@ public class SecurityConfigurations {
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/auth/login")
-						.permitAll().requestMatchers(HttpMethod.PUT, "/cache/**").hasAnyRole("ADM", "STAFF", "OWNER", "TENANT")
+				.authorizeHttpRequests(authorize -> authorize
+						.requestMatchers(
+			                    "/swagger-ui.html",
+			                    "/swagger-ui/*",
+			                    "/v3/api-docs/**",
+			                    "/swagger-resources/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+						.requestMatchers(HttpMethod.PUT, "/cache/**").hasAnyRole("ADM", "STAFF", "OWNER", "TENANT")
 						.requestMatchers(HttpMethod.DELETE, "/cache/clear/**").hasAnyRole("ADM")
 						.requestMatchers(HttpMethod.GET, "/additional-features/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/additional-features/**").hasAnyRole("ADM", "STAFF")

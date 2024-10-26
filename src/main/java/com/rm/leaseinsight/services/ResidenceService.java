@@ -73,6 +73,19 @@ public class ResidenceService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException("Residence", id));
 	}
 
+	public Set<ResidenceImageFile> findImages(String id) {
+		Residence r = this.findById(id);
+		return r.getFiles();
+	}
+
+	public String fileName(String residenceId, String fileId) {
+		Residence residence = this.findById(residenceId);
+		ResidenceImageFile f = residence.getFiles().stream().filter(file -> file.getId().equals(fileId)).findFirst()
+				.orElseThrow(() -> new ResourceNotFoundException(fileId));
+		String fileName = f.getName();
+		return fileName;
+	}
+
 	@Transactional(rollbackFor = { Exception.class, ResourceNotFoundException.class })
 	public Residence create(Residence obj, MultipartFile[] files) {
 		try {
@@ -84,11 +97,13 @@ public class ResidenceService {
 
 			Residence residence = repository.save(obj);
 
-			List<UploadFileResponseDTO> uploadedFiles = fileStorageService.uploadFiles(files);
-			for (UploadFileResponseDTO file : uploadedFiles) {
-				ResidenceImageFile f = new ResidenceImageFile(null, file.getFileName(), file.getFileDownloadUri(),
-						file.getFileType(), file.getSize(), residence);
-				fileService.createResidenceImageFile(residence, f);
+			if (files != null) {
+				List<UploadFileResponseDTO> uploadedFiles = fileStorageService.uploadFiles(files);
+				for (UploadFileResponseDTO file : uploadedFiles) {
+					ResidenceImageFile f = new ResidenceImageFile(null, file.getFileName(), file.getFileDownloadUri(),
+							file.getFileType(), file.getSize(), residence);
+					fileService.createResidenceImageFile(residence, f);
+				}
 			}
 
 			cacheService.putResidenceCache();

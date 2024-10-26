@@ -69,7 +69,7 @@ public class FileStorageService {
 	public UploadFileResponseDTO uploadFile(MultipartFile file) {
 		try {
 			String fileName = storeFile(file);
-			String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/file/downloadFile")
+			String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/file/downloadFile/")
 					.path(fileName).toUriString();
 			return new UploadFileResponseDTO(fileName, fileDownloadUri, file.getContentType(), file.getSize());
 		} catch (Exception e) {
