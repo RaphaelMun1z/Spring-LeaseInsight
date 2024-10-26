@@ -51,7 +51,7 @@ public class Report implements Serializable {
 
 	@NotNull(message = "Required field")
 	@OneToMany(mappedBy = "report", cascade = CascadeType.ALL)
-	private Set<File> files = new HashSet<>();
+	private Set<ReportFile> files = new HashSet<>();
 
 	public Report() {
 	}
@@ -108,11 +108,11 @@ public class Report implements Serializable {
 		this.residence = residence;
 	}
 
-	public Set<File> getFiles() {
+	public Set<ReportFile> getFiles() {
 		return files;
 	}
 
-	public void addFile(File file) {
+	public void addFile(ReportFile file) {
 		files.add(file);
 	}
 

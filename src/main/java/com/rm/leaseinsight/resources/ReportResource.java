@@ -34,8 +34,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.leaseinsight.dto.ReportRequestDTO;
 import com.rm.leaseinsight.dto.ReportResponseDTO;
-import com.rm.leaseinsight.entities.File;
 import com.rm.leaseinsight.entities.Report;
+import com.rm.leaseinsight.entities.ReportFile;
 import com.rm.leaseinsight.services.FileStorageService;
 import com.rm.leaseinsight.services.ReportService;
 
@@ -91,8 +91,8 @@ public class ReportResource {
 	}
 
 	@GetMapping(value = "/{id}/files")
-	public ResponseEntity<Set<File>> findFiles(@PathVariable String id) {
-		Set<File> obj = service.findFiles(id);
+	public ResponseEntity<Set<ReportFile>> findFiles(@PathVariable String id) {
+		Set<ReportFile> obj = service.findFiles(id);
 		return ResponseEntity.ok().body(obj);
 	}
 

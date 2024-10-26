@@ -9,7 +9,7 @@ import com.rm.leaseinsight.entities.Adm;
 import com.rm.leaseinsight.repositories.AdmRepository;
 
 @Configuration
-@Profile("dev")
+@Profile("dev2")
 public class TestConfig implements CommandLineRunner {
 	@Autowired
 	private AdmRepository admRepository;

@@ -108,6 +108,9 @@ public class Residence implements Serializable {
 	@OneToMany(mappedBy = "residence")
 	private Set<Report> reports = new HashSet<>();
 
+	@OneToMany(mappedBy = "residence", cascade = CascadeType.ALL)
+	private Set<ResidenceImageFile> images = new HashSet<>();
+
 	public Residence() {
 
 	}
@@ -318,6 +321,14 @@ public class Residence implements Serializable {
 
 	public void addReport(Report report) {
 		reports.add(report);
+	}
+
+	public Set<ResidenceImageFile> getFiles() {
+		return images;
+	}
+
+	public void addFile(ResidenceImageFile file) {
+		images.add(file);
 	}
 
 	@Override

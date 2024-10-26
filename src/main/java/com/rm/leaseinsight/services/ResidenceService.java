@@ -12,14 +12,17 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.rm.leaseinsight.dto.ResidenceFeatureDTO;
+import com.rm.leaseinsight.dto.UploadFileResponseDTO;
 import com.rm.leaseinsight.entities.AdditionalFeature;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.Owner;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.entities.ResidenceAddress;
 import com.rm.leaseinsight.entities.ResidenceFeature;
+import com.rm.leaseinsight.entities.ResidenceImageFile;
 import com.rm.leaseinsight.repositories.ResidenceRepository;
 import com.rm.leaseinsight.services.exceptions.DataViolationException;
 import com.rm.leaseinsight.services.exceptions.DatabaseException;
@@ -48,6 +51,12 @@ public class ResidenceService {
 	private OwnerService ownerService;
 
 	@Autowired
+	private FileService fileService;
+
+	@Autowired
+	private FileStorageService fileStorageService;
+
+	@Autowired
 	private CacheService cacheService;
 
 	@Cacheable("findAllResidence")
@@ -64,8 +73,8 @@ public class ResidenceService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException("Residence", id));
 	}
 
-	@Transactional
-	public Residence create(Residence obj) {
+	@Transactional(rollbackFor = { Exception.class, ResourceNotFoundException.class })
+	public Residence create(Residence obj, MultipartFile[] files) {
 		try {
 			ResidenceAddress ra = residenceAddressService.findById(obj.getResidenceAddress().getId());
 			obj.setResidenceAddress(ra);
@@ -74,6 +83,14 @@ public class ResidenceService {
 			obj.setOwner(o);
 
 			Residence residence = repository.save(obj);
+
+			List<UploadFileResponseDTO> uploadedFiles = fileStorageService.uploadFiles(files);
+			for (UploadFileResponseDTO file : uploadedFiles) {
+				ResidenceImageFile f = new ResidenceImageFile(null, file.getFileName(), file.getFileDownloadUri(),
+						file.getFileType(), file.getSize(), residence);
+				fileService.createResidenceImageFile(residence, f);
+			}
+
 			cacheService.putResidenceCache();
 			return residence;
 		} catch (DataIntegrityViolationException e) {

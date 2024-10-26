@@ -3,20 +3,19 @@ package com.rm.leaseinsight.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "tb_file")
-public class File implements Serializable {
+public abstract class File implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -35,21 +34,15 @@ public class File implements Serializable {
 	@NotNull(message = "Required field")
 	private Long size;
 
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "report_id")
-	private Report report;
-
 	public File() {
 	}
 
-	public File(String id, String name, String path, String type, Long size, Report report) {
+	public File(String id, String name, String path, String type, Long size) {
 		this.id = id;
 		this.name = name;
 		this.path = path;
 		this.type = type;
 		this.size = size;
-		this.report = report;
 	}
 
 	public String getId() {
@@ -94,14 +87,6 @@ public class File implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	public Report getReport() {
-		return report;
-	}
-
-	public void setReport(Report report) {
-		this.report = report;
 	}
 
 	@Override

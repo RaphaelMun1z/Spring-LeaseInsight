@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.rm.leaseinsight.entities.Owner;
 import com.rm.leaseinsight.entities.Residence;
@@ -66,8 +67,9 @@ class ResidenceServiceTests {
 				new BigDecimal("2500"), Instant.parse("2024-12-02T10:15:30Z"), ra);
 
 		Mockito.when(residenceRepository.save(Mockito.any(Residence.class))).thenReturn(residence);
-
-		Residence createdResidence = residenceService.create(residence);
+		MultipartFile[] images = null;
+		
+		Residence createdResidence = residenceService.create(residence, images);
 
 		assertEquals(residence, createdResidence);
 		Mockito.verify(residenceRepository).save(residence);
@@ -82,7 +84,8 @@ class ResidenceServiceTests {
 		Residence residence = new Residence(null, owner, PropertyType.HOUSE, "Casa moderna 1", 126, null, "Bloco 10", 4,
 				1, 2, 162.13f, 110.49f, 4, Year.of(2023), OccupancyStatus.VACANT, new BigDecimal("2140000"),
 				new BigDecimal("2500"), Instant.parse("2024-12-02T10:15:30Z"), ra);
-		residenceService.create(residence);
+		MultipartFile[] images = null;
+		residenceService.create(residence, images);
 		
 		assertThrows(ResourceNotFoundException.class, () -> {
 			residenceService.findById(residence.getId());

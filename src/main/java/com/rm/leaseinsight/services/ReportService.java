@@ -17,6 +17,7 @@ import com.rm.leaseinsight.dto.ReportResponseDTO;
 import com.rm.leaseinsight.dto.UploadFileResponseDTO;
 import com.rm.leaseinsight.entities.File;
 import com.rm.leaseinsight.entities.Report;
+import com.rm.leaseinsight.entities.ReportFile;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.repositories.ReportRepository;
@@ -61,7 +62,7 @@ public class ReportService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException("Report", id));
 	}
 
-	public Set<File> findFiles(String id) {
+	public Set<ReportFile> findFiles(String id) {
 		Report r = this.findById(id);
 		return r.getFiles();
 	}
@@ -84,9 +85,9 @@ public class ReportService {
 
 			List<UploadFileResponseDTO> uploadedFiles = fileStorageService.uploadFiles(files);
 			for (UploadFileResponseDTO file : uploadedFiles) {
-				File f = new File(null, file.getFileName(), file.getFileDownloadUri(), file.getFileType(),
+				ReportFile f = new ReportFile(null, file.getFileName(), file.getFileDownloadUri(), file.getFileType(),
 						file.getSize(), report);
-				fileService.create(report, f);
+				fileService.createReportFile(report, f);
 			}
 
 			cacheService.putReportCache();

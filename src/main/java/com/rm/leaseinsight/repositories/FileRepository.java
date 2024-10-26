@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.rm.leaseinsight.entities.File;
 
-public interface FileRepository extends JpaRepository<File, String> {
+public interface FileRepository<T extends File> extends JpaRepository<T, String> {
 }
