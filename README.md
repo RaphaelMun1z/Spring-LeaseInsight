@@ -35,6 +35,9 @@
 <ul>
   <li>Java 21</li>
   <li>Spring Boot 3</li>
+  <li>PostgreSQL</li>
+  <li>Redis</li>
+  <li>Multithreading</li>
   <li>JPA/Hibernate</li>
   <li>H2 Database</li>
   <li>Maven</li>
