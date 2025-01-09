@@ -1,6 +1,6 @@
 ## 📌 LeaseInsight
 
-<img src="./readme-assets/banner-github-portfolio.png"/>
+<img src="./Banner LeaseInsight.png"/>
 
 ##
 
