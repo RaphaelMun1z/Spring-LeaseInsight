@@ -37,7 +37,7 @@
 ##
 
 ### 💡 Proposta
-<p>&emsp;...</p>
+<p>&emsp;A motivação para criar o "LeaseInsight" surgiu de experiências pessoais envolvendo um proprietário que enfrentava dificuldades na administração de um grande volume de imóveis de forma autônoma, devido à falta de ferramentas adequadas para controle eficiente. Diante disso, o sistema foi concebido para oferecer uma solução moderna que simplifica a gestão de contratos, pagamentos e relações com inquilinos, centralizando informações e automatizando processos de maneira intuitiva. Com foco em organização e eficácia, o "LeaseInsight" busca reduzir erros manuais, economizar tempo e proporcionar maior tranquilidade para administradores e proprietários, estabelecendo um novo padrão de gestão imobiliária.</p>
 
 ##
 
