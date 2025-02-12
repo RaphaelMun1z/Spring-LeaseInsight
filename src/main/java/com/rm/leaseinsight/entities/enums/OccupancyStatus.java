@@ -1,13 +1,7 @@
 package com.rm.leaseinsight.entities.enums;
 
 public enum OccupancyStatus {
-	OCCUPIED(1),
-	VACANT(2),
-	PENDING_MOVE_IN(3),
-	PENDING_MOVE_OUT(4),
-	UNDER_MAINTENANCE(5),
-	LEASED(6),
-	AVAILABLE(7),
+	OCCUPIED(1), VACANT(2), PENDING_MOVE_IN(3), PENDING_MOVE_OUT(4), UNDER_MAINTENANCE(5), LEASED(6), AVAILABLE(7),
 	RESERVED(8);
 
 	private int code;

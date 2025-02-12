@@ -36,6 +36,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.leaseinsight.dto.ContractDTO;
 import com.rm.leaseinsight.dto.ResidenceFeatureDTO;
+import com.rm.leaseinsight.dto.ResidenceMinimalResponseDTO;
 import com.rm.leaseinsight.dto.ResidenceResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.Residence;
@@ -76,9 +77,21 @@ public class ResidenceResource {
 		return ResponseEntity.ok().body(obj);
 	}
 
+	@GetMapping(value = "/occupancy-status/{status}")
+	public ResponseEntity<List<ResidenceMinimalResponseDTO>> findByOccupancyStatus(@PathVariable String status) {
+		Set<Residence> list = service.findByOccupancyStatus(status);
+		List<ResidenceMinimalResponseDTO> residences = new ArrayList<>();
+
+		for (Residence residence : list) {
+			residences.add(new ResidenceMinimalResponseDTO(residence));
+		}
+
+		return ResponseEntity.ok().body(residences);
+	}
+
 	@PostMapping
 	public ResponseEntity<ResidenceResponseDTO> insert(@ModelAttribute @Valid Residence obj,
-			@RequestParam(name = "images", required = false) MultipartFile[] images) {
+			@RequestParam(name = "images", required = true) MultipartFile[] images) {
 		obj = service.create(obj, images);
 		ResidenceResponseDTO residence = new ResidenceResponseDTO(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.leaseinsight.dto.RentalHistoryMinimalResponseDTO;
 import com.rm.leaseinsight.dto.RentalHistoryResponseDTO;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.services.RentalHistoryService;
@@ -47,6 +48,12 @@ public class RentalHistoryResource {
 		RentalHistory obj = service.findById(id);
 		RentalHistoryResponseDTO rentalHistory = new RentalHistoryResponseDTO(obj);
 		return ResponseEntity.ok().body(rentalHistory);
+	}
+
+	@GetMapping(value = "/minimal")
+	public ResponseEntity<List<RentalHistoryMinimalResponseDTO>> findRentalHistoryMinimal() {
+		List<RentalHistoryMinimalResponseDTO> rentalHistories = service.findAllMinimal();
+		return ResponseEntity.ok().body(rentalHistories);
 	}
 
 	@PostMapping

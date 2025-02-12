@@ -9,4 +9,6 @@ import com.rm.leaseinsight.entities.Residence;
 
 public interface ResidenceRepository extends JpaRepository<Residence, String> {
 	Set<Residence> findByOwner(Owner owner);
+
+	Set<Residence> findByOccupancyStatus(Integer occupancyStatus);
 }

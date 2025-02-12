@@ -11,7 +11,7 @@ public class CEPValidator implements ConstraintValidator<CEP, String> {
 	public boolean isValid(String value, ConstraintValidatorContext context) {
 		String cep = value == null ? "" : value;
 
-		return cep.matches("^\\d{2}\\d{3}[-]\\d{3}$");
+		return cep.matches("^\\d{2}\\.\\d{3}[-]\\d{3}$");
 	}
 
 }

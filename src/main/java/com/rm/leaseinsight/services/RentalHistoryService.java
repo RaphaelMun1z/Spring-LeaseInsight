@@ -1,5 +1,6 @@
 package com.rm.leaseinsight.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.leaseinsight.dto.RentalHistoryMinimalResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.repositories.RentalHistoryRepository;
@@ -45,6 +47,17 @@ public class RentalHistoryService {
 	public RentalHistory findById(String id) {
 		Optional<RentalHistory> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException("Rental History", id));
+	}
+
+	public List<RentalHistoryMinimalResponseDTO> findAllMinimal() {
+		List<RentalHistory> list = this.findAll();
+		List<RentalHistoryMinimalResponseDTO> rentalHistories = new ArrayList<>();
+
+		for (RentalHistory rentalHistory : list) {
+			rentalHistories.add(new RentalHistoryMinimalResponseDTO(rentalHistory));
+		}
+
+		return rentalHistories;
 	}
 
 	@Transactional

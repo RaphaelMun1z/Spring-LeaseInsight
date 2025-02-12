@@ -23,6 +23,7 @@ import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.entities.ResidenceAddress;
 import com.rm.leaseinsight.entities.ResidenceFeature;
 import com.rm.leaseinsight.entities.ResidenceImageFile;
+import com.rm.leaseinsight.entities.enums.OccupancyStatus;
 import com.rm.leaseinsight.repositories.ResidenceRepository;
 import com.rm.leaseinsight.services.exceptions.DataViolationException;
 import com.rm.leaseinsight.services.exceptions.DatabaseException;
@@ -66,6 +67,14 @@ public class ResidenceService {
 
 	public List<Residence> findAll() {
 		return repository.findAll();
+	}
+
+	public Set<Residence> findByOccupancyStatus(String status) {
+		try {
+			return repository.findByOccupancyStatus(OccupancyStatus.valueOf(status.toUpperCase()).getCode());
+		} catch (IllegalArgumentException e) {
+			throw new ResourceNotFoundException();
+		}
 	}
 
 	public Residence findById(String id) {
@@ -186,11 +195,21 @@ public class ResidenceService {
 
 	@Transactional
 	public ResidenceFeature addFeature(ResidenceFeature obj) {
-		Residence r = this.findById(obj.getProperty().getId());
-		AdditionalFeature af = additionalFeatureService.findById(obj.getFeature().getId());
-		obj.setProperty(r);
-		obj.setFeature(af);
-		return residenceFeatureService.create(obj);
+		try {
+			Residence r = this.findById(obj.getProperty().getId());
+			AdditionalFeature af = additionalFeatureService.findById(obj.getFeature().getId());
+			
+			obj.setProperty(r);
+			obj.setFeature(af);
+			
+			return residenceFeatureService.create(obj);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataViolationException();
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
 	public Set<ResidenceFeatureDTO> getFeatures(String id) {

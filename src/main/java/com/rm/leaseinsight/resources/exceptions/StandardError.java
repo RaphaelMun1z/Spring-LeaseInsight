@@ -2,24 +2,26 @@ package com.rm.leaseinsight.resources.exceptions;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StandardError implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Instant timestamp;
 	private Integer status;
-	private String error;
+	private Map<String, String> errors = new HashMap<>();
 	private String message;
 	private String path;
 
 	public StandardError() {
 	}
 
-	public StandardError(Instant timestamp, Integer status, String error, String message, String path) {
+	public StandardError(Instant timestamp, Integer status, Map<String, String> errors, String message, String path) {
 		super();
 		this.timestamp = timestamp;
 		this.status = status;
-		this.error = error;
+		this.errors = errors;
 		this.message = message;
 		this.path = path;
 	}
@@ -40,12 +42,12 @@ public class StandardError implements Serializable {
 		this.status = status;
 	}
 
-	public String getError() {
-		return error;
+	public Map<String, String> getErrors() {
+		return errors;
 	}
 
-	public void setError(String error) {
-		this.error = error;
+	public void setErrors(Map<String, String> errors) {
+		this.errors = errors;
 	}
 
 	public String getMessage() {

@@ -63,9 +63,10 @@ public class ContractService {
 	public Contract create(Contract obj) {
 		try {
 			Residence r = residenceService.findById(obj.getResidence().getId());
-			if (r.getActiveContract() != null)
-				new DataViolationException("Residence already has a Contract");
-
+			if (r.getActiveContract() != null) {
+				throw new DataViolationException("Residence already has a Contract");
+			}
+			
 			obj.setResidence(r);
 			Tenant t = tenantService.findById(obj.getTenant().getId());
 			obj.setTenant(t);

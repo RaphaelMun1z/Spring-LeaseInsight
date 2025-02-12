@@ -60,18 +60,18 @@ public class ResidenceResponseDTO {
 		return id;
 	}
 
-	public Integer getPropertyType() {
-		return propertyType;
-	}
-
-	public Integer getNumber() {
-		return number;
+	public PropertyType getPropertyType() {
+		return PropertyType.valueOf(propertyType);
 	}
 
 	public void setPropertyType(PropertyType propertyType) {
 		if (propertyType != null) {
 			this.propertyType = propertyType.getCode();
 		}
+	}
+
+	public Integer getNumber() {
+		return number;
 	}
 
 	public String getDescription() {

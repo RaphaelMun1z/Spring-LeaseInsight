@@ -36,7 +36,6 @@ public abstract class User implements UserDetails {
 	private String id;
 
 	@NotNull(message = "Required field")
-	@Pattern(regexp = "^[A-Z]+(.)*")
 	private String name;
 
 	@PhoneNumber(message = "Invalid field value")
@@ -105,6 +104,10 @@ public abstract class User implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getRole() {
+		return role.getRole();
 	}
 
 	private void setRole(UserRole role) {

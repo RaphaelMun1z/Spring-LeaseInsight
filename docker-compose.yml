@@ -1,0 +1,42 @@
+services:
+  api:
+    container_name: api
+    environment:
+      MAIL_HOST: sandbox.smtp.mailtrap.io
+      MAIL_PORT: 587
+      MAIL_USERNAME: 1c3dd26c8cdee3
+      MAIL_PASSWORD: 9d0a3fc4036e40
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      REDIS_TTL: 60
+    image: raphaelmuniz/leaseinsight
+    ports:
+      - "8889:8889"
+    depends_on:
+      - db
+      - redis
+    restart: always
+    command: mvn spring-boot:run
+    build:
+      context: .
+    networks:
+      - postgres-compose-network
+  redis:
+    container_name: redis
+    image: redis:7.0.5-alpine
+  db:
+    container_name: db
+    image: postgres:16.3
+    environment:
+      TZ: America/Sao_Paulo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: leaseinsight_database
+    ports:
+      - "5000:5432"
+    restart: always
+    networks:
+      - postgres-compose-network
+networks:
+  postgres-compose-network:
+    driver: bridge

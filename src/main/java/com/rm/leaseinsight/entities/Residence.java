@@ -15,6 +15,7 @@ import com.rm.leaseinsight.entities.enums.OccupancyStatus;
 import com.rm.leaseinsight.entities.enums.PropertyType;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,6 +42,7 @@ public class Residence implements Serializable {
 	private Integer propertyType;
 
 	@NotNull(message = "Required field")
+	@Column(length = 2048)
 	private String description;
 
 	@NotNull(message = "Required field")
@@ -154,8 +156,10 @@ public class Residence implements Serializable {
 		return contracts;
 	}
 
+	@JsonIgnore
 	public Contract getActiveContract() {
 		for (Contract contract : contracts) {
+			System.out.println("Status do contrato: " + contract.getContractStatus());
 			if (contract.getContractStatus() == ContractStatus.ACTIVE) {
 				return contract;
 			}
