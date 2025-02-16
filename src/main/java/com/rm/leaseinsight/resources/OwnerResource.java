@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.leaseinsight.dto.OwnerResponseDTO;
-import com.rm.leaseinsight.dto.ResidenceDTO;
+import com.rm.leaseinsight.dto.ResidenceResponseDTO;
 import com.rm.leaseinsight.entities.Owner;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.services.OwnerService;
@@ -77,11 +77,11 @@ public class OwnerResource {
 	}
 
 	@GetMapping(value = "/{id}/residences")
-	public ResponseEntity<Set<ResidenceDTO>> getResidences(@PathVariable String id) {
+	public ResponseEntity<Set<ResidenceResponseDTO>> getResidences(@PathVariable String id) {
 		Set<Residence> list = residenceService.findByOwner(id);
-		Set<ResidenceDTO> residences = new HashSet<>();
+		Set<ResidenceResponseDTO> residences = new HashSet<>();
 		for (Residence residence : list) {
-			residences.add(new ResidenceDTO(residence));
+			residences.add(new ResidenceResponseDTO(residence));
 		}
 		return ResponseEntity.ok().body(residences);
 	}

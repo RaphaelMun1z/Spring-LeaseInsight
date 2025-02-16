@@ -23,7 +23,6 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -105,7 +104,7 @@ public abstract class User implements UserDetails {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getRole() {
 		return role.getRole();
 	}

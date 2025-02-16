@@ -137,4 +137,15 @@ public class ReportService {
 		if (obj.getDescription() != null)
 			entity.setDescription(obj.getDescription());
 	}
+	
+	public Set<Report> findByTenant(String id) {
+		try {
+			Tenant tenant = tenantService.findById(id);
+			return repository.findByTenant(tenant);
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rm.leaseinsight.dto.UserResponseDTO;
+import com.rm.leaseinsight.dto.res.UserDetailsResponseDTO;
 import com.rm.leaseinsight.entities.User;
 import com.rm.leaseinsight.services.UserService;
 
@@ -35,6 +36,12 @@ public class UserResource {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<User> findById(@PathVariable String id) {
 		User obj = service.findById(id);
+		return ResponseEntity.ok().body(obj);
+	}
+
+	@GetMapping(value = "/me")
+	public ResponseEntity<UserDetailsResponseDTO> getMe() {
+		UserDetailsResponseDTO obj = service.getAuthenticatedUser();
 		return ResponseEntity.ok().body(obj);
 	}
 

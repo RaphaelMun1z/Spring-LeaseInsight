@@ -3,6 +3,7 @@ package com.rm.leaseinsight.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rm.leaseinsight.dto.RentalHistoryMinimalResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.RentalHistory;
+import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.repositories.RentalHistoryRepository;
 import com.rm.leaseinsight.services.exceptions.DataViolationException;
 import com.rm.leaseinsight.services.exceptions.DatabaseException;
@@ -31,6 +33,9 @@ public class RentalHistoryService {
 	@Autowired
 	@Lazy
 	private ContractService contractService;
+
+	@Autowired
+	private TenantService tenantService;
 
 	@Autowired
 	private CacheService cacheService;
@@ -112,5 +117,16 @@ public class RentalHistoryService {
 	private void patchData(RentalHistory entity, RentalHistory obj) {
 		if (obj.getPaymentStatus() != null)
 			entity.setPaymentStatus(obj.getPaymentStatus());
+	}
+
+	public Set<RentalHistory> findByTenant(String id) {
+		try {
+			Tenant tenant = tenantService.findById(id);
+			return repository.findByContractTenant(tenant);
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

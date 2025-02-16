@@ -26,10 +26,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.leaseinsight.dto.ContractDTO;
+import com.rm.leaseinsight.dto.RentalHistoryResponseDTO;
+import com.rm.leaseinsight.dto.ReportResponseDTO;
 import com.rm.leaseinsight.dto.TenantResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
+import com.rm.leaseinsight.entities.RentalHistory;
+import com.rm.leaseinsight.entities.Report;
 import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.services.ContractService;
+import com.rm.leaseinsight.services.RentalHistoryService;
+import com.rm.leaseinsight.services.ReportService;
 import com.rm.leaseinsight.services.TenantService;
 
 import jakarta.validation.Valid;
@@ -42,6 +48,12 @@ public class TenantResource {
 
 	@Autowired
 	private ContractService contractService;
+
+	@Autowired
+	private RentalHistoryService rentalHistoryService;
+
+	@Autowired
+	private ReportService reportService;
 
 	@GetMapping
 	public ResponseEntity<List<TenantResponseDTO>> findAll() {
@@ -87,6 +99,26 @@ public class TenantResource {
 		Set<ContractDTO> list = new HashSet<>();
 		for (Contract c : contracts) {
 			list.add(new ContractDTO(c));
+		}
+		return ResponseEntity.ok().body(list);
+	}
+
+	@GetMapping(value = "/{id}/invoices")
+	public ResponseEntity<Set<RentalHistoryResponseDTO>> getInvoices(@PathVariable String id) {
+		Set<RentalHistory> rentalHistories = rentalHistoryService.findByTenant(id);
+		Set<RentalHistoryResponseDTO> list = new HashSet<>();
+		for (RentalHistory c : rentalHistories) {
+			list.add(new RentalHistoryResponseDTO(c));
+		}
+		return ResponseEntity.ok().body(list);
+	}
+
+	@GetMapping(value = "/{id}/reports")
+	public ResponseEntity<Set<ReportResponseDTO>> getReports(@PathVariable String id) {
+		Set<Report> reports = reportService.findByTenant(id);
+		Set<ReportResponseDTO> list = new HashSet<>();
+		for (Report c : reports) {
+			list.add(new ReportResponseDTO(c));
 		}
 		return ResponseEntity.ok().body(list);
 	}
