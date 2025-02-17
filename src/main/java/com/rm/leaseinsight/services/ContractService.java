@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,7 +67,7 @@ public class ContractService {
 			if (r.getActiveContract() != null) {
 				throw new DataViolationException("Residence already has a Contract");
 			}
-			
+
 			obj.setResidence(r);
 			Tenant t = tenantService.findById(obj.getTenant().getId());
 			obj.setTenant(t);
@@ -146,6 +147,7 @@ public class ContractService {
 		return repository.findByContractStatus(code);
 	}
 
+	@PreAuthorize("@authenticatedUserService.hasId(#id)")
 	public Set<Contract> findByTenant(String id) {
 		Tenant tenant = tenantService.findById(id);
 		return repository.findByTenant(tenant);

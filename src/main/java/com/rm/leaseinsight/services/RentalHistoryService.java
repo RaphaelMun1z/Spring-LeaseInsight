@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -119,6 +120,7 @@ public class RentalHistoryService {
 			entity.setPaymentStatus(obj.getPaymentStatus());
 	}
 
+	@PreAuthorize("@authenticatedUserService.hasId(#id)")
 	public Set<RentalHistory> findByTenant(String id) {
 		try {
 			Tenant tenant = tenantService.findById(id);

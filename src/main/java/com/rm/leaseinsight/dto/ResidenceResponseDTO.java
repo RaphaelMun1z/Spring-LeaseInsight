@@ -3,8 +3,10 @@ package com.rm.leaseinsight.dto;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Year;
+import java.util.Set;
 
 import com.rm.leaseinsight.entities.Residence;
+import com.rm.leaseinsight.entities.ResidenceImageFile;
 import com.rm.leaseinsight.entities.enums.OccupancyStatus;
 import com.rm.leaseinsight.entities.enums.PropertyType;
 
@@ -29,6 +31,7 @@ public class ResidenceResponseDTO {
 
 	private ResidenceAddressResponseDTO residenceAddress;
 	private OwnerResponseDTO owner;
+	private Set<ResidenceImageFile> images;
 
 	public ResidenceResponseDTO() {
 	}
@@ -54,6 +57,7 @@ public class ResidenceResponseDTO {
 		this.dateLastRenovation = residence.getDateLastRenovation();
 		this.residenceAddress = new ResidenceAddressResponseDTO(residence.getResidenceAddress());
 		this.owner = new OwnerResponseDTO(residence.getOwner());
+		this.images = residence.getFiles();
 	}
 
 	public String getId() {
@@ -142,6 +146,14 @@ public class ResidenceResponseDTO {
 
 	public OwnerResponseDTO getOwner() {
 		return owner;
+	}
+
+	public Set<ResidenceImageFile> getImages() {
+		return images;
+	}
+
+	public void setImages(Set<ResidenceImageFile> images) {
+		this.images = images;
 	}
 
 }
