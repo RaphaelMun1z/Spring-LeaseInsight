@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rm.leaseinsight.dto.LoginRequestDTO;
-import com.rm.leaseinsight.dto.LoginResponseDTO;
+import com.rm.leaseinsight.dto.req.LoginRequestDTO;
+import com.rm.leaseinsight.dto.res.LoginResponseDTO;
 import com.rm.leaseinsight.services.AuthorizationService;
 
 import jakarta.validation.Valid;

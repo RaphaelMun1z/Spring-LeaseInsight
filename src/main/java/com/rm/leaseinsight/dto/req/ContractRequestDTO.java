@@ -1,44 +1,30 @@
-package com.rm.leaseinsight.dto;
+package com.rm.leaseinsight.dto.req;
 
 import java.time.LocalDate;
-
-import org.springframework.beans.BeanUtils;
 
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.enums.ContractStatus;
 
-public class ContractDTO {
-	private String id;
+public class ContractRequestDTO {
 	private LocalDate contractStartDate;
 	private LocalDate contractEndDate;
 	private Double defaultRentalValue;
 	private ContractStatus contractStatus;
-	private Integer invoiceDueDate;
+	private int invoiceDueDate;
+	private String residenceId;
+	private String tenantId;
 
-	public ContractDTO() {
-
+	public ContractRequestDTO() {
 	}
 
-	public ContractDTO(String id, LocalDate contractStartDate, LocalDate contractEndDate, Double defaultRentalValue,
-			ContractStatus contractStatus, Integer invoiceDueDate) {
-		this.id = id;
-		this.contractStartDate = contractStartDate;
-		this.contractEndDate = contractEndDate;
-		this.defaultRentalValue = defaultRentalValue;
-		this.contractStatus = contractStatus;
-		this.invoiceDueDate = invoiceDueDate;
-	}
-
-	public ContractDTO(Contract contract) {
-		BeanUtils.copyProperties(contract, this);
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+	public ContractRequestDTO(Contract contract) {
+		this.contractStartDate = contract.getContractStartDate();
+		this.contractEndDate = contract.getContractEndDate();
+		this.defaultRentalValue = contract.getDefaultRentalValue();
+		this.contractStatus = contract.getContractStatus();
+		this.invoiceDueDate = contract.getInvoiceDueDate();
+		this.residenceId = contract.getResidence().getId();
+		this.tenantId = contract.getTenant().getId();
 	}
 
 	public LocalDate getContractStartDate() {
@@ -77,8 +63,23 @@ public class ContractDTO {
 		return invoiceDueDate;
 	}
 
-	public void setInvoiceDueDate(Integer invoiceDueDate) {
+	public void setInvoiceDueDate(int invoiceDueDate) {
 		this.invoiceDueDate = invoiceDueDate;
 	}
 
+	public String getResidenceId() {
+		return residenceId;
+	}
+
+	public void setResidenceId(String residenceId) {
+		this.residenceId = residenceId;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 }

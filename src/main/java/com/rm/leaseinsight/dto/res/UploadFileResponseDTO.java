@@ -1,4 +1,4 @@
-package com.rm.leaseinsight.dto;
+package com.rm.leaseinsight.dto.res;
 
 public class UploadFileResponseDTO {
 	private String fileName;

@@ -12,8 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rm.leaseinsight.dto.StaffRequestDTO;
-import com.rm.leaseinsight.dto.StaffResponseDTO;
+import com.rm.leaseinsight.dto.req.StaffRequestDTO;
+import com.rm.leaseinsight.dto.res.StaffResponseDTO;
 import com.rm.leaseinsight.entities.Staff;
 import com.rm.leaseinsight.repositories.StaffRepository;
 import com.rm.leaseinsight.services.exceptions.DataViolationException;

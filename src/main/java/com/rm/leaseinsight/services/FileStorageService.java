@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.leaseinsight.config.FileStorageConfig;
-import com.rm.leaseinsight.dto.UploadFileResponseDTO;
+import com.rm.leaseinsight.dto.res.UploadFileResponseDTO;
 import com.rm.leaseinsight.services.exceptions.DatabaseException;
 import com.rm.leaseinsight.services.exceptions.FileStorageException;
 import com.rm.leaseinsight.services.exceptions.ResourceNotFoundException;

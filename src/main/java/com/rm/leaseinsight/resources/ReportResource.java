@@ -32,8 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.leaseinsight.dto.ReportRequestDTO;
-import com.rm.leaseinsight.dto.ReportResponseDTO;
+import com.rm.leaseinsight.dto.req.ReportRequestDTO;
+import com.rm.leaseinsight.dto.res.ReportResponseDTO;
 import com.rm.leaseinsight.entities.Report;
 import com.rm.leaseinsight.entities.ReportFile;
 import com.rm.leaseinsight.services.FileStorageService;

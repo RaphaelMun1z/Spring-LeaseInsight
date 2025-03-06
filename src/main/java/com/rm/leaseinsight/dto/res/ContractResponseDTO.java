@@ -1,18 +1,20 @@
-package com.rm.leaseinsight.dto;
+package com.rm.leaseinsight.dto.res;
 
 import java.time.LocalDate;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.enums.ContractStatus;
+import com.rm.leaseinsight.mapper.Mapper;
 
-public class ContractResponseDTO {
+public class ContractResponseDTO extends RepresentationModel<ContractResponseDTO> {
 	private String id;
 	private LocalDate contractStartDate;
 	private LocalDate contractEndDate;
 	private Double defaultRentalValue;
-	private int contractStatus;
+	private ContractStatus contractStatus;
 	private int invoiceDueDate;
-	
 	private ResidenceResponseDTO residence;
 	private TenantResponseDTO tenant;
 
@@ -20,16 +22,14 @@ public class ContractResponseDTO {
 	}
 
 	public ContractResponseDTO(Contract contract) {
-		super();
 		this.id = contract.getId();
 		this.contractStartDate = contract.getContractStartDate();
 		this.contractEndDate = contract.getContractEndDate();
 		this.defaultRentalValue = contract.getDefaultRentalValue();
-		setContractStatus(contract.getContractStatus());
+		this.contractStatus = contract.getContractStatus();
 		this.invoiceDueDate = contract.getInvoiceDueDate();
-		if(contract.getResidence() != null)
-			this.residence = new ResidenceResponseDTO(contract.getResidence());
-		this.tenant = new TenantResponseDTO(contract.getTenant());
+		this.residence = Mapper.modelMapper(contract.getResidence(), ResidenceResponseDTO.class);
+		this.tenant = Mapper.modelMapper(contract.getTenant(), TenantResponseDTO.class);
 	}
 
 	public String getId() {
@@ -40,34 +40,55 @@ public class ContractResponseDTO {
 		return contractStartDate;
 	}
 
+	public void setContractStartDate(LocalDate contractStartDate) {
+		this.contractStartDate = contractStartDate;
+	}
+
 	public LocalDate getContractEndDate() {
 		return contractEndDate;
+	}
+
+	public void setContractEndDate(LocalDate contractEndDate) {
+		this.contractEndDate = contractEndDate;
 	}
 
 	public Double getDefaultRentalValue() {
 		return defaultRentalValue;
 	}
 
+	public void setDefaultRentalValue(Double defaultRentalValue) {
+		this.defaultRentalValue = defaultRentalValue;
+	}
+
 	public ContractStatus getContractStatus() {
-		return ContractStatus.valueOf(contractStatus);
+		return contractStatus;
 	}
 
 	public void setContractStatus(ContractStatus contractStatus) {
-		if (contractStatus != null) {
-			this.contractStatus = contractStatus.getCode();
-		}
+		this.contractStatus = contractStatus;
 	}
 
 	public int getInvoiceDueDate() {
 		return invoiceDueDate;
 	}
 
+	public void setInvoiceDueDate(int invoiceDueDate) {
+		this.invoiceDueDate = invoiceDueDate;
+	}
+
 	public ResidenceResponseDTO getResidence() {
 		return residence;
+	}
+
+	public void setResidence(ResidenceResponseDTO residence) {
+		this.residence = residence;
 	}
 
 	public TenantResponseDTO getTenant() {
 		return tenant;
 	}
 
+	public void setTenant(TenantResponseDTO tenant) {
+		this.tenant = tenant;
+	}
 }

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.leaseinsight.dto.BillingAddressResponseDTO;
+import com.rm.leaseinsight.dto.res.BillingAddressResponseDTO;
 import com.rm.leaseinsight.entities.BillingAddress;
 import com.rm.leaseinsight.services.BillingAddressService;
 

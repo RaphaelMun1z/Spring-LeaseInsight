@@ -1,4 +1,4 @@
-package com.rm.leaseinsight.dto;
+package com.rm.leaseinsight.dto.req;
 
 import com.rm.leaseinsight.entities.ResidenceFeature;
 

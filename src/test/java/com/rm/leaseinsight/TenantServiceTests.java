@@ -15,8 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.rm.leaseinsight.dto.TenantRequestDTO;
-import com.rm.leaseinsight.dto.TenantResponseDTO;
+import com.rm.leaseinsight.dto.req.TenantRequestDTO;
+import com.rm.leaseinsight.dto.res.TenantResponseDTO;
 import com.rm.leaseinsight.entities.BillingAddress;
 import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.entities.enums.TenantStatus;

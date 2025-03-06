@@ -1,4 +1,4 @@
-package com.rm.leaseinsight.dto;
+package com.rm.leaseinsight.dto.req;
 
 import org.springframework.hateoas.RepresentationModel;
 import jakarta.validation.constraints.NotNull;

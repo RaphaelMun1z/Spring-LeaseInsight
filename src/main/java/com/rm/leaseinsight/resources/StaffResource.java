@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.leaseinsight.dto.StaffRequestDTO;
-import com.rm.leaseinsight.dto.StaffResponseDTO;
+import com.rm.leaseinsight.dto.req.StaffRequestDTO;
+import com.rm.leaseinsight.dto.res.StaffResponseDTO;
 import com.rm.leaseinsight.entities.Staff;
 import com.rm.leaseinsight.services.StaffService;
 

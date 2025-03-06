@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.leaseinsight.dto.AdmRegisterRequestDTO;
-import com.rm.leaseinsight.dto.AdmResponseDTO;
+import com.rm.leaseinsight.dto.req.AdmRegisterRequestDTO;
+import com.rm.leaseinsight.dto.res.AdmResponseDTO;
 import com.rm.leaseinsight.entities.Adm;
 import com.rm.leaseinsight.repositories.AdmRepository;
 import com.rm.leaseinsight.services.AdmService;

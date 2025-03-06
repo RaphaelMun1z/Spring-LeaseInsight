@@ -1,4 +1,4 @@
-package com.rm.leaseinsight.dto;
+package com.rm.leaseinsight.dto.res;
 
 import com.rm.leaseinsight.entities.Owner;
 

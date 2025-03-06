@@ -3,7 +3,6 @@ package com.rm.leaseinsight.resources;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,12 +32,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.leaseinsight.dto.ContractDTO;
 import com.rm.leaseinsight.dto.ResidenceFeatureDTO;
-import com.rm.leaseinsight.dto.ResidenceFeatureRequestDTO;
-import com.rm.leaseinsight.dto.ResidenceMinimalResponseDTO;
-import com.rm.leaseinsight.dto.ResidenceResponseDTO;
-import com.rm.leaseinsight.entities.Contract;
+import com.rm.leaseinsight.dto.req.ResidenceFeatureRequestDTO;
+import com.rm.leaseinsight.dto.res.ContractResponseDTO;
+import com.rm.leaseinsight.dto.res.ResidenceMinimalResponseDTO;
+import com.rm.leaseinsight.dto.res.ResidenceResponseDTO;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.entities.ResidenceFeature;
 import com.rm.leaseinsight.entities.ResidenceImageFile;
@@ -120,20 +118,14 @@ public class ResidenceResource {
 
 	@Transactional(readOnly = true)
 	@GetMapping(value = "/{id}/current-contract")
-	public ResponseEntity<ContractDTO> getContract(@PathVariable String id) {
-		ContractDTO contractDTO = new ContractDTO(service.getCurrentContract(id));
-		return ResponseEntity.ok().body(contractDTO);
+	public ResponseEntity<ContractResponseDTO> getContract(@PathVariable String id) {
+		return ResponseEntity.ok().body(service.getCurrentContract(id));
 	}
 
 	@Transactional(readOnly = true)
 	@GetMapping(value = "/{id}/contracts")
-	public ResponseEntity<Set<ContractDTO>> getAllContracts(@PathVariable String id) {
-		Set<Contract> contracts = service.getAllContracts(id);
-		Set<ContractDTO> contractsDTO = new HashSet<>();
-		for (Contract contract : contracts) {
-			contractsDTO.add(new ContractDTO(contract));
-		}
-		return ResponseEntity.ok().body(contractsDTO);
+	public ResponseEntity<Set<ContractResponseDTO>> getAllContracts(@PathVariable String id) {
+		return ResponseEntity.ok().body(service.getAllContracts(id));
 	}
 
 	@GetMapping(value = "/{id}/images")

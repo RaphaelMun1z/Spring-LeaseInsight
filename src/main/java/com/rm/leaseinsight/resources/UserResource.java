@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rm.leaseinsight.dto.UserResponseDTO;
 import com.rm.leaseinsight.dto.res.UserDetailsResponseDTO;
+import com.rm.leaseinsight.dto.res.UserResponseDTO;
 import com.rm.leaseinsight.entities.User;
 import com.rm.leaseinsight.services.UserService;
 

@@ -25,9 +25,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.leaseinsight.dto.OwnerRequestDTO;
-import com.rm.leaseinsight.dto.OwnerResponseDTO;
-import com.rm.leaseinsight.dto.ResidenceResponseDTO;
+import com.rm.leaseinsight.dto.req.OwnerRequestDTO;
+import com.rm.leaseinsight.dto.res.OwnerResponseDTO;
+import com.rm.leaseinsight.dto.res.ResidenceResponseDTO;
 import com.rm.leaseinsight.entities.Owner;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.services.OwnerService;

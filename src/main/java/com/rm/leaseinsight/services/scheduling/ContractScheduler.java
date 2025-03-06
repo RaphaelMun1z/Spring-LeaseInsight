@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.rm.leaseinsight.dto.RentalHistoryRequestDTO;
+import com.rm.leaseinsight.dto.req.RentalHistoryRequestDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.entities.enums.ContractStatus;

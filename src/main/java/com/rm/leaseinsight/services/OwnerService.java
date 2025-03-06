@@ -13,8 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rm.leaseinsight.dto.OwnerRequestDTO;
-import com.rm.leaseinsight.dto.OwnerResponseDTO;
+import com.rm.leaseinsight.dto.req.OwnerRequestDTO;
+import com.rm.leaseinsight.dto.res.OwnerResponseDTO;
 import com.rm.leaseinsight.entities.Owner;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.repositories.OwnerRepository;

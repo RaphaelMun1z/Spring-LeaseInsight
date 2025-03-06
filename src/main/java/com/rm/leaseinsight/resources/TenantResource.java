@@ -25,12 +25,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.leaseinsight.dto.ContractDTO;
-import com.rm.leaseinsight.dto.RentalHistoryResponseDTO;
-import com.rm.leaseinsight.dto.ReportResponseDTO;
-import com.rm.leaseinsight.dto.TenantRequestDTO;
-import com.rm.leaseinsight.dto.TenantResponseDTO;
-import com.rm.leaseinsight.entities.Contract;
+import com.rm.leaseinsight.dto.req.TenantRequestDTO;
+import com.rm.leaseinsight.dto.res.ContractResponseDTO;
+import com.rm.leaseinsight.dto.res.RentalHistoryResponseDTO;
+import com.rm.leaseinsight.dto.res.ReportResponseDTO;
+import com.rm.leaseinsight.dto.res.TenantResponseDTO;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.entities.Report;
 import com.rm.leaseinsight.entities.Tenant;
@@ -94,13 +93,8 @@ public class TenantResource {
 	}
 
 	@GetMapping(value = "/{id}/contracts")
-	public ResponseEntity<Set<ContractDTO>> getContracts(@PathVariable String id) {
-		Set<Contract> contracts = contractService.findByTenant(id);
-		Set<ContractDTO> list = new HashSet<>();
-		for (Contract c : contracts) {
-			list.add(new ContractDTO(c));
-		}
-		return ResponseEntity.ok().body(list);
+	public ResponseEntity<Set<ContractResponseDTO>> getContracts(@PathVariable String id) {
+		return ResponseEntity.ok().body(contractService.findByTenant(id));
 	}
 
 	@GetMapping(value = "/{id}/invoices")

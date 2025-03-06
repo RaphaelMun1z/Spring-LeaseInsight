@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.leaseinsight.dto.ContractResponseDTO;
+import com.rm.leaseinsight.dto.res.ContractResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.services.ContractService;
 
@@ -49,8 +49,7 @@ public class ContractResource {
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ContractResponseDTO> findById(@PathVariable String id) {
-		ContractResponseDTO obj = new ContractResponseDTO(service.findById(id));
-		return ResponseEntity.ok().body(obj);
+		return ResponseEntity.ok().body(service.findById(id));
 	}
 
 	@PostMapping

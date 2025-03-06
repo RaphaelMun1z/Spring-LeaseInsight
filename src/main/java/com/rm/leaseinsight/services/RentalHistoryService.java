@@ -1,5 +1,8 @@
 package com.rm.leaseinsight.services;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,12 +17,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rm.leaseinsight.dto.RentalHistoryMinimalResponseDTO;
-import com.rm.leaseinsight.dto.RentalHistoryRequestDTO;
+import com.rm.leaseinsight.dto.req.RentalHistoryRequestDTO;
+import com.rm.leaseinsight.dto.res.RentalHistoryMinimalResponseDTO;
+import com.rm.leaseinsight.dto.res.RentalHistoryResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.entities.Tenant;
+import com.rm.leaseinsight.mapper.Mapper;
+import com.rm.leaseinsight.repositories.ContractRepository;
 import com.rm.leaseinsight.repositories.RentalHistoryRepository;
+import com.rm.leaseinsight.resources.RentalHistoryResource;
 import com.rm.leaseinsight.services.exceptions.DataViolationException;
 import com.rm.leaseinsight.services.exceptions.DatabaseException;
 import com.rm.leaseinsight.services.exceptions.ResourceNotFoundException;
@@ -38,6 +45,9 @@ public class RentalHistoryService {
 
 	@Autowired
 	private TenantService tenantService;
+	
+	@Autowired
+	private ContractRepository contractRepository;
 
 	@Autowired
 	private CacheService cacheService;
@@ -68,14 +78,17 @@ public class RentalHistoryService {
 	}
 
 	@Transactional
-	public RentalHistory create(RentalHistoryRequestDTO obj) {
+	public RentalHistoryResponseDTO create(RentalHistoryRequestDTO obj) {
 		try {
-			Contract contract = contractService.findById(obj.getContractId());
-			RentalHistory rh = new RentalHistory(null, obj.getRentalStartDate(), obj.getPaymentStatus(), contract);
-			System.out.println("================================rh: " + rh);
-			repository.save(rh);
+			Contract contract = contractRepository.findById(obj.getContractId()).orElseThrow(() -> new ResourceNotFoundException("Contract", obj.getContractId()));
+			RentalHistory rentalHistory = new RentalHistory(null, obj.getRentalStartDate(), obj.getPaymentStatus(), contract);
+			RentalHistory rentalHistorySaved = repository.save(rentalHistory);		
+			
+			RentalHistoryResponseDTO rentalHistoryDTO = Mapper.modelMapper(rentalHistorySaved, RentalHistoryResponseDTO.class);			
+			rentalHistoryDTO.add(linkTo(methodOn(RentalHistoryResource.class).findById(rentalHistorySaved.getId())).withSelfRel());
 			cacheService.putRentalHistoryCache();
-			return rh;
+			
+			return rentalHistoryDTO;
 		} catch (DataIntegrityViolationException e) {
 			throw new DataViolationException("Rental History");
 		} catch (ResourceNotFoundException e) {

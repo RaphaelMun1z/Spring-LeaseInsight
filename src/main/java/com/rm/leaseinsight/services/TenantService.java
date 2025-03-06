@@ -13,8 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rm.leaseinsight.dto.TenantRequestDTO;
-import com.rm.leaseinsight.dto.TenantResponseDTO;
+import com.rm.leaseinsight.dto.req.TenantRequestDTO;
+import com.rm.leaseinsight.dto.res.TenantResponseDTO;
 import com.rm.leaseinsight.entities.BillingAddress;
 import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.repositories.TenantRepository;

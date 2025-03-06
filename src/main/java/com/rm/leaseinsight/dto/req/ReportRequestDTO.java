@@ -1,4 +1,4 @@
-package com.rm.leaseinsight.dto;
+package com.rm.leaseinsight.dto.req;
 
 import java.time.LocalDate;
 import java.util.List;

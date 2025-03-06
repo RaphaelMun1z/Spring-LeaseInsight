@@ -1,4 +1,4 @@
-package com.rm.leaseinsight.dto;
+package com.rm.leaseinsight.dto.res;
 
 import java.math.BigDecimal;
 import java.util.Set;

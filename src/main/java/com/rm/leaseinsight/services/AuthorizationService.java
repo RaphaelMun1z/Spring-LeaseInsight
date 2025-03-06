@@ -10,9 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.rm.leaseinsight.dto.LoginRequestDTO;
-import com.rm.leaseinsight.dto.LoginResponseDTO;
 import com.rm.leaseinsight.dto.TokenDTO;
+import com.rm.leaseinsight.dto.req.LoginRequestDTO;
+import com.rm.leaseinsight.dto.res.LoginResponseDTO;
 import com.rm.leaseinsight.entities.User;
 import com.rm.leaseinsight.infra.security.TokenService;
 import com.rm.leaseinsight.repositories.UserRepository;

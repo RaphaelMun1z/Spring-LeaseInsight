@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.rm.leaseinsight.dto.ReportRequestDTO;
-import com.rm.leaseinsight.dto.ReportResponseDTO;
-import com.rm.leaseinsight.dto.UploadFileResponseDTO;
+import com.rm.leaseinsight.dto.req.ReportRequestDTO;
+import com.rm.leaseinsight.dto.res.ReportResponseDTO;
+import com.rm.leaseinsight.dto.res.UploadFileResponseDTO;
 import com.rm.leaseinsight.entities.Report;
 import com.rm.leaseinsight.entities.ReportFile;
 import com.rm.leaseinsight.entities.Residence;

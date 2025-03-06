@@ -1,8 +1,11 @@
 package com.rm.leaseinsight.services;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,13 +15,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rm.leaseinsight.dto.RentalHistoryRequestDTO;
+import com.rm.leaseinsight.dto.req.RentalHistoryRequestDTO;
+import com.rm.leaseinsight.dto.res.ContractResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.entities.enums.PaymentStatus;
+import com.rm.leaseinsight.mapper.Mapper;
 import com.rm.leaseinsight.repositories.ContractRepository;
+import com.rm.leaseinsight.resources.ContractResource;
 import com.rm.leaseinsight.services.async.ContractAsyncService;
 import com.rm.leaseinsight.services.exceptions.DataViolationException;
 import com.rm.leaseinsight.services.exceptions.DatabaseException;
@@ -56,10 +62,11 @@ public class ContractService {
 		return repository.findAll();
 	}
 
-	public Contract findById(String id) {
-		Optional<Contract> obj = repository.findById(id);
-		System.out.println("Contrato id: " + id + " | esse: " + obj);
-		return obj.orElseThrow(() -> new ResourceNotFoundException("Contract", id));
+	public ContractResponseDTO findById(String id) {
+		Contract contract = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Contract", id));
+		ContractResponseDTO contractDTO = Mapper.modelMapper(contract, ContractResponseDTO.class);
+		contractDTO.add(linkTo(methodOn(ContractResource.class).findById(id)).withSelfRel());
+		return contractDTO;
 	}
 
 	@Transactional
@@ -99,6 +106,21 @@ public class ContractService {
 		} catch (ResourceNotFoundException e) {
 			throw new ResourceNotFoundException(e.getMessage());
 		}
+	}
+
+	public Set<Contract> findByContractStatus(Integer code) {
+		return repository.findByContractStatus(code);
+	}
+
+	@PreAuthorize("@authenticatedUserService.hasId(#id)")
+	public Set<ContractResponseDTO> findByTenant(String id) {
+		Tenant tenant = tenantService.findById(id);
+		Set<Contract> contracts = repository.findByTenant(tenant);
+		Set<ContractResponseDTO> contractsResponse = contracts.stream()
+				.map(contract -> Mapper.modelMapper(contract, ContractResponseDTO.class)).collect(Collectors.toSet());
+		contractsResponse.forEach(contract -> contract
+				.add(linkTo(methodOn(ContractResource.class).findById(contract.getId())).withSelfRel()));
+		return contractsResponse;
 	}
 
 	@Transactional
@@ -145,15 +167,5 @@ public class ContractService {
 			entity.setContractStatus(obj.getContractStatus());
 		if (obj.getInvoiceDueDate() != 0)
 			entity.setInvoiceDueDate(obj.getInvoiceDueDate());
-	}
-
-	public Set<Contract> findByContractStatus(Integer code) {
-		return repository.findByContractStatus(code);
-	}
-
-	@PreAuthorize("@authenticatedUserService.hasId(#id)")
-	public Set<Contract> findByTenant(String id) {
-		Tenant tenant = tenantService.findById(id);
-		return repository.findByTenant(tenant);
 	}
 }

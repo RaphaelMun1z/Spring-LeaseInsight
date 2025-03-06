@@ -13,8 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.rm.leaseinsight.dto.StaffRequestDTO;
-import com.rm.leaseinsight.dto.StaffResponseDTO;
+import com.rm.leaseinsight.dto.req.StaffRequestDTO;
+import com.rm.leaseinsight.dto.res.StaffResponseDTO;
 import com.rm.leaseinsight.entities.Staff;
 import com.rm.leaseinsight.repositories.StaffRepository;
 import com.rm.leaseinsight.services.CacheService;

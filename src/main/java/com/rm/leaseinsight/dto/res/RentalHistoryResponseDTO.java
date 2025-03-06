@@ -1,28 +1,29 @@
-package com.rm.leaseinsight.dto;
+package com.rm.leaseinsight.dto.res;
 
 import java.time.LocalDate;
+
+import org.springframework.hateoas.RepresentationModel;
 
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.entities.enums.PaymentStatus;
 
-public class RentalHistoryResponseDTO {
+public class RentalHistoryResponseDTO extends RepresentationModel<RentalHistoryResponseDTO> {
 	private String id;
 	private LocalDate rentalStartDate;
 	private LocalDate rentalEndDate;
 	private Double rentalValue;
-	private Integer paymentStatus;
+	private PaymentStatus paymentStatus;
 	private ContractResponseDTO contract;
 
 	public RentalHistoryResponseDTO() {
 	}
 
 	public RentalHistoryResponseDTO(RentalHistory rentalHistory) {
-		super();
 		this.id = rentalHistory.getId();
 		this.rentalStartDate = rentalHistory.getRentalStartDate();
 		this.rentalEndDate = rentalHistory.getRentalEndDate();
 		this.rentalValue = rentalHistory.getRentalValue();
-		setPaymentStatus(rentalHistory.getPaymentStatus());
+		this.paymentStatus = rentalHistory.getPaymentStatus();
 		this.contract = new ContractResponseDTO(rentalHistory.getContract());
 	}
 
@@ -34,33 +35,39 @@ public class RentalHistoryResponseDTO {
 		return rentalStartDate;
 	}
 
+	public void setRentalStartDate(LocalDate rentalStartDate) {
+		this.rentalStartDate = rentalStartDate;
+	}
+
 	public LocalDate getRentalEndDate() {
 		return rentalEndDate;
+	}
+
+	public void setRentalEndDate(LocalDate rentalEndDate) {
+		this.rentalEndDate = rentalEndDate;
 	}
 
 	public Double getRentalValue() {
 		return rentalValue;
 	}
 
-	public Integer getPaymentStatus() {
+	public void setRentalValue(Double rentalValue) {
+		this.rentalValue = rentalValue;
+	}
+
+	public PaymentStatus getPaymentStatus() {
 		return paymentStatus;
 	}
 
 	public void setPaymentStatus(PaymentStatus paymentStatus) {
-		if (paymentStatus != null) {
-			this.paymentStatus = paymentStatus.getCode();
-		}
+		this.paymentStatus = paymentStatus;
 	}
 
 	public ContractResponseDTO getContract() {
 		return contract;
 	}
 
-	@Override
-	public String toString() {
-		return "RentalHistoryResponseDTO [id=" + id + ", rentalStartDate=" + rentalStartDate + ", rentalEndDate="
-				+ rentalEndDate + ", rentalValue=" + rentalValue + ", paymentStatus=" + paymentStatus + ", contract="
-				+ contract + "]";
+	public void setContract(ContractResponseDTO contract) {
+		this.contract = contract;
 	}
-
 }

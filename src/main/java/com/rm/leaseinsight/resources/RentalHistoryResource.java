@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rm.leaseinsight.dto.RentalHistoryMinimalResponseDTO;
-import com.rm.leaseinsight.dto.RentalHistoryRequestDTO;
-import com.rm.leaseinsight.dto.RentalHistoryResponseDTO;
+import com.rm.leaseinsight.dto.req.RentalHistoryRequestDTO;
+import com.rm.leaseinsight.dto.res.RentalHistoryMinimalResponseDTO;
+import com.rm.leaseinsight.dto.res.RentalHistoryResponseDTO;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.services.RentalHistoryService;
 
@@ -59,11 +59,10 @@ public class RentalHistoryResource {
 
 	@PostMapping
 	public ResponseEntity<RentalHistoryResponseDTO> insert(@RequestBody @Valid RentalHistoryRequestDTO obj) {
-		RentalHistory rentalHistoryCreated = service.create(obj);
-		RentalHistoryResponseDTO rentalHistory = new RentalHistoryResponseDTO(rentalHistoryCreated);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(rentalHistory.getId())
-				.toUri();
-		return ResponseEntity.created(uri).body(rentalHistory);
+		RentalHistoryResponseDTO rentalHistoryDTO = service.create(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(rentalHistoryDTO.getId()).toUri();
+		return ResponseEntity.created(uri).body(rentalHistoryDTO);
 	}
 
 	@DeleteMapping(value = "/{id}")

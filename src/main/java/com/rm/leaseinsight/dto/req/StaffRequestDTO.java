@@ -1,26 +1,20 @@
-package com.rm.leaseinsight.dto;
+package com.rm.leaseinsight.dto.req;
 
 import com.rm.leaseinsight.entities.Staff;
 
-public class StaffResponseDTO {
-	private String id;
+public class StaffRequestDTO {
 	private String name;
 	private String phone;
 	private String email;
 
-	public StaffResponseDTO() {
+	public StaffRequestDTO() {
 	}
 
-	public StaffResponseDTO(Staff staff) {
+	public StaffRequestDTO(Staff staff) {
 		super();
-		this.id = staff.getId();
 		this.name = staff.getName();
 		this.phone = staff.getPhone();
 		this.email = staff.getEmail();
-	}
-
-	public String getId() {
-		return id;
 	}
 
 	public String getName() {
