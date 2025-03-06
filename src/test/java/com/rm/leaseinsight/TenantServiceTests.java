@@ -15,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.rm.leaseinsight.dto.TenantRequestDTO;
+import com.rm.leaseinsight.dto.TenantResponseDTO;
 import com.rm.leaseinsight.entities.BillingAddress;
 import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.entities.enums.TenantStatus;
@@ -56,7 +58,8 @@ class TenantServiceTests {
 				"507.205.280-03", "22.222.222-2", LocalDate.now(), TenantStatus.PENDING, ba);
 		Mockito.when(tenantRepository.save(Mockito.any(Tenant.class))).thenReturn(tenant);
 
-		Tenant createdTenant = tenantService.create(tenant);
+		TenantRequestDTO tenantRequest = new TenantRequestDTO(tenant);
+		TenantResponseDTO createdTenant = tenantService.create(tenantRequest);
 
 		assertEquals(tenant, createdTenant);
 		Mockito.verify(billingAddressService).findById("def");
@@ -76,7 +79,8 @@ class TenantServiceTests {
 				new BillingAddress("def", 0, null, null, null, null, null, null, null));
 
 		assertThrows(ResourceNotFoundException.class, () -> {
-			tenantService.create(tenant);
+			TenantRequestDTO tenantRequest = new TenantRequestDTO(tenant);
+			tenantService.create(tenantRequest);
 		});
 
 		Mockito.verify(billingAddressService).findById("def");

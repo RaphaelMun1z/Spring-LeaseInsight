@@ -156,4 +156,10 @@ public class RentalHistory implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
+	@Override
+	public String toString() {
+		return "RentalHistory [id=" + id + ", rentalStartDate=" + rentalStartDate + ", rentalEndDate=" + rentalEndDate
+				+ ", rentalValue=" + rentalValue + ", paymentStatus=" + paymentStatus + ", contract=" + contract + "]";
+	}
+
 }

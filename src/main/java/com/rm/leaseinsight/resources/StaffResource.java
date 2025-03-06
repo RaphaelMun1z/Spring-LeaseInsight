@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.leaseinsight.dto.StaffRequestDTO;
 import com.rm.leaseinsight.dto.StaffResponseDTO;
 import com.rm.leaseinsight.entities.Staff;
 import com.rm.leaseinsight.services.StaffService;
@@ -47,9 +48,8 @@ public class StaffResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<StaffResponseDTO> insert(@RequestBody @Valid Staff obj) {
-		obj = service.create(obj);
-		StaffResponseDTO staff = new StaffResponseDTO(obj);
+	public ResponseEntity<StaffResponseDTO> insert(@RequestBody @Valid StaffRequestDTO obj) {
+		StaffResponseDTO staff = service.create(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(staff.getId()).toUri();
 		return ResponseEntity.created(uri).body(staff);
 	}

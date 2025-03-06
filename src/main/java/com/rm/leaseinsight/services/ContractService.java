@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.leaseinsight.dto.RentalHistoryRequestDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.entities.Residence;
@@ -57,6 +58,7 @@ public class ContractService {
 
 	public Contract findById(String id) {
 		Optional<Contract> obj = repository.findById(id);
+		System.out.println("Contrato id: " + id + " | esse: " + obj);
 		return obj.orElseThrow(() -> new ResourceNotFoundException("Contract", id));
 	}
 
@@ -82,13 +84,15 @@ public class ContractService {
 			throw new ResourceNotFoundException(e.getMessage());
 		} catch (DataViolationException e) {
 			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
 	private void createFirstRental(Contract c) {
 		try {
 			RentalHistory rental = new RentalHistory(null, c.getContractStartDate(), PaymentStatus.PENDING, c);
-			rentalHistoryService.create(rental);
+			rentalHistoryService.create(new RentalHistoryRequestDTO(rental));
 			contractAsyncService.sendInvoiceByEmail(c, rental);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataViolationException();

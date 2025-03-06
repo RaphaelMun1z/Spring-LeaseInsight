@@ -1,5 +1,6 @@
 package com.rm.leaseinsight.services;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -12,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.leaseinsight.dto.OwnerRequestDTO;
+import com.rm.leaseinsight.dto.OwnerResponseDTO;
 import com.rm.leaseinsight.entities.Owner;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.repositories.OwnerRepository;
@@ -47,15 +50,26 @@ public class OwnerService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException("Owner", id));
 	}
 
+	public static String generateRandomString(int length) {
+		String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		SecureRandom RANDOM = new SecureRandom();
+		StringBuilder sb = new StringBuilder(length);
+		for (int ii = 0; ii < length; ii++) {
+			sb.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
+		}
+		return sb.toString();
+	}
+	
 	@Transactional
-	public Owner create(Owner obj) {
+	public OwnerResponseDTO create(OwnerRequestDTO obj) {
 		try {
-			String encryptedPassword = new BCryptPasswordEncoder().encode(obj.getPassword());
+			String encryptedPassword = new BCryptPasswordEncoder().encode(generateRandomString(10));
 			Owner owner = new Owner(null, obj.getName(), obj.getPhone(), obj.getEmail(), encryptedPassword);
 			repository.save(owner);
 			cacheService.putOwnerCache();
 			cacheService.putUserCache();
-			return owner;
+			OwnerResponseDTO ownerResponse = new OwnerResponseDTO(owner);
+			return ownerResponse;
 		} catch (DataIntegrityViolationException e) {
 			throw new DataViolationException();
 		} catch (IllegalArgumentException e) {

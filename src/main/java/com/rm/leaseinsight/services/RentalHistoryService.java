@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rm.leaseinsight.dto.RentalHistoryMinimalResponseDTO;
+import com.rm.leaseinsight.dto.RentalHistoryRequestDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.entities.Tenant;
@@ -67,18 +68,20 @@ public class RentalHistoryService {
 	}
 
 	@Transactional
-	public RentalHistory create(RentalHistory obj) {
+	public RentalHistory create(RentalHistoryRequestDTO obj) {
 		try {
-			Contract contract = contractService.findById(obj.getContract().getId());
+			Contract contract = contractService.findById(obj.getContractId());
 			RentalHistory rh = new RentalHistory(null, obj.getRentalStartDate(), obj.getPaymentStatus(), contract);
+			System.out.println("================================rh: " + rh);
 			repository.save(rh);
 			cacheService.putRentalHistoryCache();
 			return rh;
 		} catch (DataIntegrityViolationException e) {
-			System.out.println("Erro: " + e.getMessage());
 			throw new DataViolationException("Rental History");
 		} catch (ResourceNotFoundException e) {
 			throw new ResourceNotFoundException(e.getMessage());
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 

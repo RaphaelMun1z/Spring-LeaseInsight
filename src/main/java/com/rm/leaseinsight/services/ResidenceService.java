@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.rm.leaseinsight.dto.ResidenceFeatureDTO;
+import com.rm.leaseinsight.dto.ResidenceFeatureRequestDTO;
 import com.rm.leaseinsight.dto.UploadFileResponseDTO;
 import com.rm.leaseinsight.entities.AdditionalFeature;
 import com.rm.leaseinsight.entities.Contract;
@@ -125,22 +125,6 @@ public class ResidenceService {
 	}
 
 	@Transactional
-	public void delete(String id) {
-		try {
-			if (repository.existsById(id)) {
-				repository.deleteById(id);
-				cacheService.evictAllCacheValues("findAllResidence");
-			} else {
-				throw new ResourceNotFoundException(id);
-			}
-		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException(id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException(e.getMessage());
-		}
-	}
-
-	@Transactional
 	public Residence patch(String id, Residence obj) {
 		try {
 			Residence entity = repository.getReferenceById(id);
@@ -194,15 +178,12 @@ public class ResidenceService {
 	}
 
 	@Transactional
-	public ResidenceFeature addFeature(ResidenceFeature obj) {
+	public ResidenceFeature addFeature(ResidenceFeatureRequestDTO obj) {
 		try {
-			Residence r = this.findById(obj.getProperty().getId());
-			AdditionalFeature af = additionalFeatureService.findById(obj.getFeature().getId());
-			
-			obj.setProperty(r);
-			obj.setFeature(af);
-			
-			return residenceFeatureService.create(obj);
+			Residence residence = this.findById(obj.getPropertyId());
+			AdditionalFeature additionalFeature = additionalFeatureService.findById(obj.getFeatureId());
+			ResidenceFeature residenceFeature = new ResidenceFeature(residence, additionalFeature);
+			return residenceFeatureService.create(residenceFeature);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataViolationException();
 		} catch (ResourceNotFoundException e) {

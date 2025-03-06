@@ -48,8 +48,8 @@ public class ContractResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Contract> findById(@PathVariable String id) {
-		Contract obj = service.findById(id);
+	public ResponseEntity<ContractResponseDTO> findById(@PathVariable String id) {
+		ContractResponseDTO obj = new ContractResponseDTO(service.findById(id));
 		return ResponseEntity.ok().body(obj);
 	}
 

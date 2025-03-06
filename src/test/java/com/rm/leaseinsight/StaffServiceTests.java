@@ -13,6 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.rm.leaseinsight.dto.StaffRequestDTO;
+import com.rm.leaseinsight.dto.StaffResponseDTO;
 import com.rm.leaseinsight.entities.Staff;
 import com.rm.leaseinsight.repositories.StaffRepository;
 import com.rm.leaseinsight.services.CacheService;
@@ -37,7 +39,8 @@ class StaffServiceTests {
 		Staff staff = new Staff(null, "Func", "(11) 91111-1111", "func@gmail.com", "teste");
 		Mockito.when(staffRepository.save(Mockito.any(Staff.class))).thenReturn(staff);
 
-		Staff createdStaff = staffService.create(staff);
+		StaffRequestDTO staffRequest = new StaffRequestDTO(staff);
+		StaffResponseDTO createdStaff = staffService.create(staffRequest);
 
 		assertEquals(staff, createdStaff);
 		Mockito.verify(staffRepository).save(staff);
@@ -51,7 +54,8 @@ class StaffServiceTests {
 		Staff staff = new Staff(null, "Func", "(11) 91111-1111", "func@gmail.com", null);
 
 		assertThrows(IllegalArgumentException.class, () -> {
-			staffService.create(staff);
+			StaffRequestDTO staffRequest = new StaffRequestDTO(staff);
+			staffService.create(staffRequest);
 		});
 
 		Mockito.verify(staffRepository, Mockito.never()).save(Mockito.any(Staff.class));

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rm.leaseinsight.entities.enums.ContractStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +19,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -52,8 +52,8 @@ public class Contract implements Serializable {
 	@NotNull(message = "Required field")
 	private int invoiceDueDate;
 
-	@NotNull(message = "Required field")
-	@OneToOne
+	@ManyToOne
+	@NotNull
 	@JoinColumn(name = "residence_id")
 	private Residence residence;
 
@@ -63,15 +63,15 @@ public class Contract implements Serializable {
 	private Tenant tenant;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "contract")
+	@OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<RentalHistory> rentals = new HashSet<>();
 
 	public Contract() {
 
 	}
 
-	public Contract(String id, Residence residence, Tenant tenant, LocalDate contractStartDate, LocalDate contractEndDate,
-			Double defaultRentalValue, ContractStatus contractStatus, int invoiceDueDate) {
+	public Contract(String id, Residence residence, Tenant tenant, LocalDate contractStartDate,
+			LocalDate contractEndDate, Double defaultRentalValue, ContractStatus contractStatus, int invoiceDueDate) {
 		super();
 		this.id = id;
 		this.residence = residence;

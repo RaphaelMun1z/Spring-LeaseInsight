@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.leaseinsight.dto.RentalHistoryMinimalResponseDTO;
+import com.rm.leaseinsight.dto.RentalHistoryRequestDTO;
 import com.rm.leaseinsight.dto.RentalHistoryResponseDTO;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.services.RentalHistoryService;
@@ -57,9 +58,9 @@ public class RentalHistoryResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<RentalHistoryResponseDTO> insert(@RequestBody @Valid RentalHistory obj) {
-		obj = service.create(obj);
-		RentalHistoryResponseDTO rentalHistory = new RentalHistoryResponseDTO(obj);
+	public ResponseEntity<RentalHistoryResponseDTO> insert(@RequestBody @Valid RentalHistoryRequestDTO obj) {
+		RentalHistory rentalHistoryCreated = service.create(obj);
+		RentalHistoryResponseDTO rentalHistory = new RentalHistoryResponseDTO(rentalHistoryCreated);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(rentalHistory.getId())
 				.toUri();
 		return ResponseEntity.created(uri).body(rentalHistory);

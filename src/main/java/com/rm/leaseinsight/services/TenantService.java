@@ -1,5 +1,7 @@
 package com.rm.leaseinsight.services;
 
+import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.leaseinsight.dto.TenantRequestDTO;
+import com.rm.leaseinsight.dto.TenantResponseDTO;
 import com.rm.leaseinsight.entities.BillingAddress;
 import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.repositories.TenantRepository;
@@ -50,21 +54,36 @@ public class TenantService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException("Tenant", id));
 	}
 
+	public static String generateRandomString(int length) {
+		String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		SecureRandom RANDOM = new SecureRandom();
+		StringBuilder sb = new StringBuilder(length);
+		for (int ii = 0; ii < length; ii++) {
+			sb.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
+		}
+		return sb.toString();
+	}
+
 	@Transactional
-	public Tenant create(Tenant obj) {
+	public TenantResponseDTO create(TenantRequestDTO obj) {
 		try {
-			String encryptedPassword = new BCryptPasswordEncoder().encode(obj.getPassword());
+			String encryptedPassword = new BCryptPasswordEncoder().encode(generateRandomString(10));
 			BillingAddress tba = billingAddressService.findById(obj.getTenantBillingAddress().getId());
 			Tenant tenant = new Tenant(null, obj.getName(), obj.getPhone(), obj.getEmail(), encryptedPassword,
-					obj.getDateOfBirth(), obj.getCpf(), obj.getRg(), obj.getRegistrationDate(), obj.getTenantStatus(),
+					obj.getDateOfBirth(), obj.getCpf(), obj.getRg(), LocalDate.now(), obj.getTenantStatus(),
 					tba);
 			repository.save(tenant);
 			cacheService.putTenantCache();
 			cacheService.putUserCache();
-			tenantAsyncService.sendNewTenantEmail(obj);
-			return tenant;
+			TenantResponseDTO tenantResponse = new TenantResponseDTO(tenant);
+			tenantAsyncService.sendNewTenantEmail(tenantResponse);
+			return tenantResponse;
 		} catch (DataIntegrityViolationException e) {
 			throw new DataViolationException();
+		} catch (ResourceNotFoundException e) {
+			throw new ResourceNotFoundException(e.getMessage());
+		} catch (DataViolationException e) {
+			throw e;
 		}
 	}
 

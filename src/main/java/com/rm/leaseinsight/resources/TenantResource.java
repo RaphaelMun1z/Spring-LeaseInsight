@@ -28,6 +28,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.rm.leaseinsight.dto.ContractDTO;
 import com.rm.leaseinsight.dto.RentalHistoryResponseDTO;
 import com.rm.leaseinsight.dto.ReportResponseDTO;
+import com.rm.leaseinsight.dto.TenantRequestDTO;
 import com.rm.leaseinsight.dto.TenantResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.RentalHistory;
@@ -74,10 +75,9 @@ public class TenantResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<TenantResponseDTO> createTenant(@RequestBody @Valid Tenant obj) {
-		obj = service.create(obj);
-		TenantResponseDTO tenant = new TenantResponseDTO(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+	public ResponseEntity<TenantResponseDTO> createTenant(@RequestBody @Valid TenantRequestDTO obj) {
+		TenantResponseDTO tenant = service.create(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(tenant.getId()).toUri();
 		return ResponseEntity.created(uri).body(tenant);
 	}
 

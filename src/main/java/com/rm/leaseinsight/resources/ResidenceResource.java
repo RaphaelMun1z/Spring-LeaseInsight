@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,6 +35,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.leaseinsight.dto.ContractDTO;
 import com.rm.leaseinsight.dto.ResidenceFeatureDTO;
+import com.rm.leaseinsight.dto.ResidenceFeatureRequestDTO;
 import com.rm.leaseinsight.dto.ResidenceMinimalResponseDTO;
 import com.rm.leaseinsight.dto.ResidenceResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
@@ -72,9 +72,10 @@ public class ResidenceResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Residence> findById(@PathVariable String id) {
+	public ResponseEntity<ResidenceResponseDTO> findById(@PathVariable String id) {
 		Residence obj = service.findById(id);
-		return ResponseEntity.ok().body(obj);
+		ResidenceResponseDTO residenceResponse = new ResidenceResponseDTO(obj);
+		return ResponseEntity.ok().body(residenceResponse);
 	}
 
 	@GetMapping(value = "/occupancy-status/{status}")
@@ -98,12 +99,6 @@ public class ResidenceResource {
 		return ResponseEntity.created(uri).body(residence);
 	}
 
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable String id) {
-		service.delete(id);
-		return ResponseEntity.noContent().build();
-	}
-
 	@PatchMapping(value = "/{id}")
 	public ResponseEntity<Residence> patch(@PathVariable String id, @RequestBody Residence obj) {
 		obj = service.patch(id, obj);
@@ -111,7 +106,7 @@ public class ResidenceResource {
 	}
 
 	@PostMapping(value = "/add-feature")
-	public ResponseEntity<ResidenceFeaturePK> addFeature(@RequestBody ResidenceFeature obj) {
+	public ResponseEntity<ResidenceFeaturePK> addFeature(@RequestBody ResidenceFeatureRequestDTO obj) {
 		ResidenceFeature rf = service.addFeature(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(rf.getId()).toUri();
 		return ResponseEntity.created(uri).body(rf.getId());

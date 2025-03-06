@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import com.rm.leaseinsight.entities.Tenant;
+import com.rm.leaseinsight.dto.TenantResponseDTO;
 import com.rm.leaseinsight.entities.enums.TemplatesEnum;
 import com.rm.leaseinsight.services.EmailService;
 
@@ -16,7 +16,7 @@ public class TenantAsyncService {
 	@Autowired
 	private EmailService emailService;
 
-	public CompletableFuture<String> sendNewTenantEmail(Tenant t) {
+	public CompletableFuture<String> sendNewTenantEmail(TenantResponseDTO t) {
 		emailService.sendEmail(TemplatesEnum.WELCOME, t.getName(), t.getEmail(), "Bem-vindo(a) à LeaseInsight");
 		return CompletableFuture.completedFuture("Processado!");
 	}

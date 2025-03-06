@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.leaseinsight.dto.OwnerRequestDTO;
 import com.rm.leaseinsight.dto.OwnerResponseDTO;
 import com.rm.leaseinsight.dto.ResidenceResponseDTO;
 import com.rm.leaseinsight.entities.Owner;
@@ -57,9 +58,8 @@ public class OwnerResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<OwnerResponseDTO> insert(@RequestBody @Valid Owner obj) {
-		obj = service.create(obj);
-		OwnerResponseDTO owner = new OwnerResponseDTO(obj);
+	public ResponseEntity<OwnerResponseDTO> insert(@RequestBody @Valid OwnerRequestDTO obj) {
+		OwnerResponseDTO owner = service.create(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(owner.getId()).toUri();
 		return ResponseEntity.created(uri).body(owner);
 	}

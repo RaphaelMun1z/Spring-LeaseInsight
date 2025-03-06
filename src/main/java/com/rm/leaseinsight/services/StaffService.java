@@ -1,5 +1,6 @@
 package com.rm.leaseinsight.services;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.leaseinsight.dto.StaffRequestDTO;
+import com.rm.leaseinsight.dto.StaffResponseDTO;
 import com.rm.leaseinsight.entities.Staff;
 import com.rm.leaseinsight.repositories.StaffRepository;
 import com.rm.leaseinsight.services.exceptions.DataViolationException;
@@ -42,15 +45,26 @@ public class StaffService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException("Staff", id));
 	}
 
+	public static String generateRandomString(int length) {
+		String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		SecureRandom RANDOM = new SecureRandom();
+		StringBuilder sb = new StringBuilder(length);
+		for (int ii = 0; ii < length; ii++) {
+			sb.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
+		}
+		return sb.toString();
+	}
+
 	@Transactional
-	public Staff create(Staff obj) {
+	public StaffResponseDTO create(StaffRequestDTO obj) {
 		try {
-			String encryptedPassword = new BCryptPasswordEncoder().encode(obj.getPassword());
+			String encryptedPassword = new BCryptPasswordEncoder().encode(generateRandomString(10));
 			Staff staff = new Staff(null, obj.getName(), obj.getPhone(), obj.getEmail(), encryptedPassword);
 			repository.save(staff);
 			cacheService.putStaffCache();
 			cacheService.putUserCache();
-			return staff;
+			StaffResponseDTO staffResponse = new StaffResponseDTO(staff);
+			return staffResponse;
 		} catch (DataIntegrityViolationException e) {
 			throw new DataViolationException();
 		}

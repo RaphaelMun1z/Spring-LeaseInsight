@@ -3,20 +3,20 @@ package com.rm.leaseinsight.dto;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Year;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.rm.leaseinsight.entities.Residence;
+import com.rm.leaseinsight.entities.ResidenceFeature;
 import com.rm.leaseinsight.entities.ResidenceImageFile;
 import com.rm.leaseinsight.entities.enums.OccupancyStatus;
 import com.rm.leaseinsight.entities.enums.PropertyType;
 
 public class ResidenceResponseDTO {
 	private String id;
-	private Integer propertyType;
-	private Integer number;
+	private BigDecimal marketValue;
+	private BigDecimal rentalValue;
 	private String description;
-	private Integer aptNumber;
-	private String complement;
 	private int numberBedrooms;
 	private int numberBathrooms;
 	private int numberSuites;
@@ -24,14 +24,17 @@ public class ResidenceResponseDTO {
 	private float builtArea;
 	private int garageSpaces;
 	private Year yearConstruction;
-	private Integer occupancyStatus;
-	private BigDecimal marketValue;
-	private BigDecimal rentalValue;
+	private PropertyType propertyType;
+	private OccupancyStatus occupancyStatus;
+	private Integer number;
+	private Integer aptNumber;
+	private String complement;
 	private Instant dateLastRenovation;
 
 	private ResidenceAddressResponseDTO residenceAddress;
 	private OwnerResponseDTO owner;
-	private Set<ResidenceImageFile> images;
+	private Set<ResidenceImageFile> files;
+	private Set<ResidenceFeature> features = new HashSet<>();
 
 	public ResidenceResponseDTO() {
 	}
@@ -39,11 +42,9 @@ public class ResidenceResponseDTO {
 	public ResidenceResponseDTO(Residence residence) {
 		super();
 		this.id = residence.getId();
-		setPropertyType(residence.getPropertyType());
+		this.marketValue = residence.getMarketValue();
+		this.rentalValue = residence.getRentalValue();
 		this.description = residence.getDescription();
-		this.number = residence.getNumber();
-		this.aptNumber = residence.getAptNumber();
-		this.complement = residence.getComplement();
 		this.numberBedrooms = residence.getNumberBedrooms();
 		this.numberBathrooms = residence.getNumberBathrooms();
 		this.numberSuites = residence.getNumberSuites();
@@ -51,27 +52,20 @@ public class ResidenceResponseDTO {
 		this.builtArea = residence.getBuiltArea();
 		this.garageSpaces = residence.getGarageSpaces();
 		this.yearConstruction = residence.getYearConstruction();
-		setOccupancyStatus(residence.getOccupancyStatus());
-		this.marketValue = residence.getMarketValue();
-		this.rentalValue = residence.getRentalValue();
+		this.propertyType = residence.getPropertyType();
+		this.occupancyStatus = residence.getOccupancyStatus();
+		this.number = residence.getNumber();
+		this.aptNumber = residence.getAptNumber();
+		this.complement = residence.getComplement();
 		this.dateLastRenovation = residence.getDateLastRenovation();
 		this.residenceAddress = new ResidenceAddressResponseDTO(residence.getResidenceAddress());
 		this.owner = new OwnerResponseDTO(residence.getOwner());
-		this.images = residence.getFiles();
+		this.files = residence.getFiles();
+		this.features = residence.getFeatures();
 	}
 
 	public String getId() {
 		return id;
-	}
-
-	public PropertyType getPropertyType() {
-		return PropertyType.valueOf(propertyType);
-	}
-
-	public void setPropertyType(PropertyType propertyType) {
-		if (propertyType != null) {
-			this.propertyType = propertyType.getCode();
-		}
 	}
 
 	public Integer getNumber() {
@@ -118,16 +112,6 @@ public class ResidenceResponseDTO {
 		return yearConstruction;
 	}
 
-	public Integer getOccupancyStatus() {
-		return occupancyStatus;
-	}
-
-	public void setOccupancyStatus(OccupancyStatus occupancyStatus) {
-		if (occupancyStatus != null) {
-			this.occupancyStatus = occupancyStatus.getCode();
-		}
-	}
-
 	public BigDecimal getMarketValue() {
 		return marketValue;
 	}
@@ -140,6 +124,22 @@ public class ResidenceResponseDTO {
 		return dateLastRenovation;
 	}
 
+	public PropertyType getPropertyType() {
+		return propertyType;
+	}
+
+	public void setPropertyType(PropertyType propertyType) {
+		this.propertyType = propertyType;
+	}
+
+	public OccupancyStatus getOccupancyStatus() {
+		return occupancyStatus;
+	}
+
+	public void setOccupancyStatus(OccupancyStatus occupancyStatus) {
+		this.occupancyStatus = occupancyStatus;
+	}
+
 	public ResidenceAddressResponseDTO getResidenceAddress() {
 		return residenceAddress;
 	}
@@ -148,12 +148,19 @@ public class ResidenceResponseDTO {
 		return owner;
 	}
 
-	public Set<ResidenceImageFile> getImages() {
-		return images;
+	public Set<ResidenceImageFile> getFiles() {
+		return files;
 	}
 
-	public void setImages(Set<ResidenceImageFile> images) {
-		this.images = images;
+	public void setFiles(Set<ResidenceImageFile> files) {
+		this.files = files;
 	}
 
+	public Set<ResidenceFeature> getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(Set<ResidenceFeature> features) {
+		this.features = features;
+	}
 }

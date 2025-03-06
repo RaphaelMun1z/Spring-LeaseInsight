@@ -27,7 +27,8 @@ public class ContractResponseDTO {
 		this.defaultRentalValue = contract.getDefaultRentalValue();
 		setContractStatus(contract.getContractStatus());
 		this.invoiceDueDate = contract.getInvoiceDueDate();
-		this.residence = new ResidenceResponseDTO(contract.getResidence());
+		if(contract.getResidence() != null)
+			this.residence = new ResidenceResponseDTO(contract.getResidence());
 		this.tenant = new TenantResponseDTO(contract.getTenant());
 	}
 

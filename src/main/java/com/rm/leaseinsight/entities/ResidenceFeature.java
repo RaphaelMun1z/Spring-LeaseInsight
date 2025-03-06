@@ -3,6 +3,7 @@ package com.rm.leaseinsight.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rm.leaseinsight.entities.pk.ResidenceFeaturePK;
 
 import jakarta.persistence.EmbeddedId;
@@ -14,6 +15,7 @@ import jakarta.persistence.Table;
 public class ResidenceFeature implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	@EmbeddedId
 	private ResidenceFeaturePK id = new ResidenceFeaturePK();
 
@@ -31,6 +33,7 @@ public class ResidenceFeature implements Serializable {
 		return id;
 	}
 
+	@JsonIgnore
 	public Residence getProperty() {
 		return id.getProperty();
 	}
