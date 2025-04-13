@@ -1,8 +1,12 @@
 package com.rm.leaseinsight.dto.res;
 
+import java.io.Serializable;
+
 import com.rm.leaseinsight.entities.Owner;
 
-public class OwnerResponseDTO {
+public class OwnerResponseDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+
 	private String id;
 	private String name;
 	private String phone;

@@ -1,14 +1,16 @@
 package com.rm.leaseinsight.dto.res;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import org.springframework.hateoas.RepresentationModel;
 
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.enums.ContractStatus;
-import com.rm.leaseinsight.mapper.Mapper;
 
-public class ContractResponseDTO extends RepresentationModel<ContractResponseDTO> {
+public class ContractResponseDTO extends RepresentationModel<ContractResponseDTO> implements Serializable {
+    private static final long serialVersionUID = 1L;
+	
 	private String id;
 	private LocalDate contractStartDate;
 	private LocalDate contractEndDate;
@@ -28,8 +30,8 @@ public class ContractResponseDTO extends RepresentationModel<ContractResponseDTO
 		this.defaultRentalValue = contract.getDefaultRentalValue();
 		this.contractStatus = contract.getContractStatus();
 		this.invoiceDueDate = contract.getInvoiceDueDate();
-		this.residence = Mapper.modelMapper(contract.getResidence(), ResidenceResponseDTO.class);
-		this.tenant = Mapper.modelMapper(contract.getTenant(), TenantResponseDTO.class);
+		this.residence = new ResidenceResponseDTO(contract.getResidence());
+		this.tenant = new TenantResponseDTO(contract.getTenant());
 	}
 
 	public String getId() {
@@ -91,4 +93,12 @@ public class ContractResponseDTO extends RepresentationModel<ContractResponseDTO
 	public void setTenant(TenantResponseDTO tenant) {
 		this.tenant = tenant;
 	}
+
+	@Override
+	public String toString() {
+		return "ContractResponseDTO [id=" + id + ", contractStartDate=" + contractStartDate + ", contractEndDate="
+				+ contractEndDate + ", defaultRentalValue=" + defaultRentalValue + ", contractStatus=" + contractStatus
+				+ ", invoiceDueDate=" + invoiceDueDate + "]";
+	}
+
 }

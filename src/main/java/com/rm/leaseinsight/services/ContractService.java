@@ -54,17 +54,23 @@ public class ContractService {
 	private CacheService cacheService;
 
 	@Cacheable("findAllContract")
-	public List<Contract> findAllCached() {
+	public List<ContractResponseDTO> findAllCached() {
 		return findAll();
 	}
 
-	public List<Contract> findAll() {
-		return repository.findAll();
+	public List<ContractResponseDTO> findAll() {
+		List<Contract> contracts = repository.findAll();
+		List<ContractResponseDTO> contractsResponse = contracts.stream()
+				.map(contract -> new ContractResponseDTO(contract)).collect(Collectors.toList());
+
+		contractsResponse.forEach(contract -> contract
+				.add(linkTo(methodOn(ContractResource.class).findById(contract.getId())).withSelfRel()));
+		return contractsResponse;
 	}
 
 	public ContractResponseDTO findById(String id) {
 		Contract contract = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Contract", id));
-		ContractResponseDTO contractDTO = Mapper.modelMapper(contract, ContractResponseDTO.class);
+		ContractResponseDTO contractDTO = new ContractResponseDTO(contract);
 		contractDTO.add(linkTo(methodOn(ContractResource.class).findById(id)).withSelfRel());
 		return contractDTO;
 	}

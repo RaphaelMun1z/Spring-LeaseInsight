@@ -1,12 +1,17 @@
 package com.rm.leaseinsight.dto.res;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+
+import org.springframework.hateoas.RepresentationModel;
 
 import com.rm.leaseinsight.entities.BillingAddress;
 import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.entities.enums.TenantStatus;
 
-public class TenantResponseDTO {
+public class TenantResponseDTO extends RepresentationModel<TenantResponseDTO> implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private String id;
 	private String name;
 	private String phone;

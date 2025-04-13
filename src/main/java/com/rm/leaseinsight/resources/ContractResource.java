@@ -1,7 +1,6 @@
 package com.rm.leaseinsight.resources;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,13 +37,7 @@ public class ContractResource {
 
 	@GetMapping
 	public ResponseEntity<List<ContractResponseDTO>> findAll() {
-		List<Contract> list = service.findAllCached();
-		List<ContractResponseDTO> contracts = new ArrayList<>();
-
-		for (Contract contract : list) {
-			contracts.add(new ContractResponseDTO(contract));
-		}
-		return ResponseEntity.ok().body(contracts);
+		return ResponseEntity.ok().body(service.findAllCached());
 	}
 
 	@GetMapping(value = "/{id}")
@@ -74,8 +67,8 @@ public class ContractResource {
 
 	@GetMapping(value = "/status/{code}")
 	public ResponseEntity<Set<Contract>> findByContractStatus(@PathVariable Integer code) {
-		Set<Contract> list = service.findByContractStatus(code);
-		return ResponseEntity.ok().body(list);
+		Set<Contract> contractsDTO = service.findByContractStatus(code);
+		return ResponseEntity.ok().body(contractsDTO);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

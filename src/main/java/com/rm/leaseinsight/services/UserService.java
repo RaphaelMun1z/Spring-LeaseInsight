@@ -51,8 +51,10 @@ public class UserService {
 			UserDetailsResponseDTO user = new UserDetailsResponseDTO(userDetails);
 			return user;
 		} catch (DataIntegrityViolationException e) {
+			System.out.println("Erro ao detalhar usuário: " + e.getMessage());
 			throw new DatabaseException(e.getMessage());
 		} catch (Exception e) {
+			System.out.println("Erro ao detalhar usuário: " + e.getMessage());
 			throw new RuntimeException(e);
 		}
 	}

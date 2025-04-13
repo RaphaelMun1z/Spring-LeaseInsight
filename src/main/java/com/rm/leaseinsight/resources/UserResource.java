@@ -41,7 +41,6 @@ public class UserResource {
 
 	@GetMapping(value = "/me")
 	public ResponseEntity<UserDetailsResponseDTO> getMe() {
-		System.out.println("================================================Chegou aqui ");
 		UserDetailsResponseDTO obj = service.getAuthenticatedUser();
 		return ResponseEntity.ok().body(obj);
 	}

@@ -11,7 +11,6 @@ import com.rm.leaseinsight.entities.User;
 @Service
 public class AuthenticatedUserService {
 	public boolean hasId(String id) {
-
 		if (isAllowed(getAuthenticatedUser().getPrincipal())) {
 			return true;
 		}

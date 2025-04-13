@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.leaseinsight.dto.req.TenantPatchRequestDTO;
 import com.rm.leaseinsight.dto.req.TenantRequestDTO;
 import com.rm.leaseinsight.dto.res.TenantResponseDTO;
 import com.rm.leaseinsight.entities.BillingAddress;
@@ -70,8 +72,7 @@ public class TenantService {
 			String encryptedPassword = new BCryptPasswordEncoder().encode(generateRandomString(10));
 			BillingAddress tba = billingAddressService.findById(obj.getTenantBillingAddress().getId());
 			Tenant tenant = new Tenant(null, obj.getName(), obj.getPhone(), obj.getEmail(), encryptedPassword,
-					obj.getDateOfBirth(), obj.getCpf(), obj.getRg(), LocalDate.now(), obj.getTenantStatus(),
-					tba);
+					obj.getDateOfBirth(), obj.getCpf(), obj.getRg(), LocalDate.now(), obj.getTenantStatus(), tba);
 			repository.save(tenant);
 			cacheService.putTenantCache();
 			cacheService.putUserCache();
@@ -103,27 +104,32 @@ public class TenantService {
 		}
 	}
 
+	@PreAuthorize("@authenticatedUserService.hasId(#id)")
 	@Transactional
-	public Tenant patch(String id, Tenant obj) {
+	public TenantResponseDTO patch(String id, TenantPatchRequestDTO obj) {
 		try {
 			Tenant entity = repository.getReferenceById(id);
 			patchData(entity, obj);
-			Tenant t = repository.save(entity);
+			Tenant savedTenant = repository.save(entity);
 			cacheService.putTenantCache();
-			return t;
+			TenantResponseDTO tenantDTO = new TenantResponseDTO(savedTenant);
+			return tenantDTO;
 		} catch (EntityNotFoundException e) {
+			System.out.println("Erro ao atualizar inquilino: " + e.getMessage());
 			throw new ResourceNotFoundException(id);
 		} catch (ConstraintViolationException e) {
+			System.out.println("Erro ao atualizar inquilino: " + e.getMessage());
 			throw new DatabaseException("Some invalid field.");
 		} catch (DataIntegrityViolationException e) {
+			System.out.println("Erro ao atualizar inquilino: " + e.getMessage());
 			throw new DataViolationException();
 		} catch (Exception e) {
-			System.out.println("Erro: " + e.getClass());
+			System.out.println("Erro ao atualizar inquilino: " + e.getMessage());
 			return null;
 		}
 	}
 
-	private void patchData(Tenant entity, Tenant obj) {
+	private void patchData(Tenant entity, TenantPatchRequestDTO obj) {
 		if (obj.getName() != null)
 			entity.setName(obj.getName());
 		if (obj.getEmail() != null)
@@ -132,10 +138,6 @@ public class TenantService {
 			entity.setPhone(obj.getPhone());
 		if (obj.getDateOfBirth() != null)
 			entity.setDateOfBirth(obj.getDateOfBirth());
-		if (obj.getCpf() != null)
-			entity.setCpf(obj.getCpf());
-		if (obj.getRg() != null)
-			entity.setRg(obj.getRg());
 		if (obj.getTenantStatus() != null)
 			entity.setTenantStatus(obj.getTenantStatus());
 	}

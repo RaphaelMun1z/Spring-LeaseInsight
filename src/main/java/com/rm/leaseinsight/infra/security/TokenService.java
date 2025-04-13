@@ -38,7 +38,7 @@ public class TokenService {
 			Instant expiration = genExpirationDate();
 			String issuerUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 			String token = JWT.create().withClaim("role", user.getRole()).withIssuedAt(createdAt)
-					.withExpiresAt(expiration).withIssuer(issuerUrl).withSubject(user.getEmail()).sign(algorithm)
+					.withExpiresAt(expiration).withIssuer(issuerUrl).withSubject(user.getId()).sign(algorithm)
 					.strip();
 			return new TokenDTO(username, createdAt, expiration, token);
 		} catch (JWTCreationException exception) {

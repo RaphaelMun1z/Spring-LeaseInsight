@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.leaseinsight.dto.req.TenantPatchRequestDTO;
 import com.rm.leaseinsight.dto.req.TenantRequestDTO;
 import com.rm.leaseinsight.dto.res.ContractResponseDTO;
 import com.rm.leaseinsight.dto.res.RentalHistoryResponseDTO;
@@ -87,9 +88,9 @@ public class TenantResource {
 	}
 
 	@PatchMapping(value = "/{id}")
-	public ResponseEntity<Tenant> patch(@PathVariable String id, @RequestBody Tenant obj) {
-		obj = service.patch(id, obj);
-		return ResponseEntity.ok().body(obj);
+	public ResponseEntity<TenantResponseDTO> patch(@PathVariable String id, @RequestBody TenantPatchRequestDTO obj) {
+		TenantResponseDTO tenantDTO = service.patch(id, obj);
+		return ResponseEntity.ok().body(tenantDTO);
 	}
 
 	@GetMapping(value = "/{id}/contracts")

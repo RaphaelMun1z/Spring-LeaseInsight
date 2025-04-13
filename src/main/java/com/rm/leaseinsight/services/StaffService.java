@@ -52,7 +52,8 @@ public class StaffService {
 		for (int ii = 0; ii < length; ii++) {
 			sb.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
 		}
-		return sb.toString();
+		return "senha123";
+		//return sb.toString();
 	}
 
 	@Transactional

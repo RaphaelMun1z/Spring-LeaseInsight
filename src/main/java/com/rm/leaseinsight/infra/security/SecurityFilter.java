@@ -32,8 +32,9 @@ public class SecurityFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		var token = this.recoverToken(request);
 		if (token != null) {
-			var email = tokenService.validateToken(token);
-			UserDetails user = userRepository.findByEmail(email);
+			var userId = tokenService.validateToken(token);
+			UserDetails user = userRepository.findById(userId).orElse(null);
+
 
 			if (user != null) {
 				var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

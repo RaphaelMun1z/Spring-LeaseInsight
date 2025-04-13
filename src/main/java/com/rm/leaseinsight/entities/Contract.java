@@ -176,5 +176,4 @@ public class Contract implements Serializable {
 		Contract other = (Contract) obj;
 		return Objects.equals(id, other.id);
 	}
-
 }

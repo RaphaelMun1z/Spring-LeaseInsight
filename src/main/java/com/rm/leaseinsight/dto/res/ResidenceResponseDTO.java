@@ -1,10 +1,13 @@
 package com.rm.leaseinsight.dto.res;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.hateoas.RepresentationModel;
 
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.entities.ResidenceFeature;
@@ -12,7 +15,9 @@ import com.rm.leaseinsight.entities.ResidenceImageFile;
 import com.rm.leaseinsight.entities.enums.OccupancyStatus;
 import com.rm.leaseinsight.entities.enums.PropertyType;
 
-public class ResidenceResponseDTO {
+public class ResidenceResponseDTO extends RepresentationModel<ResidenceResponseDTO> implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
 	private String id;
 	private BigDecimal marketValue;
 	private BigDecimal rentalValue;
@@ -40,7 +45,6 @@ public class ResidenceResponseDTO {
 	}
 
 	public ResidenceResponseDTO(Residence residence) {
-		super();
 		this.id = residence.getId();
 		this.marketValue = residence.getMarketValue();
 		this.rentalValue = residence.getRentalValue();
@@ -163,4 +167,17 @@ public class ResidenceResponseDTO {
 	public void setFeatures(Set<ResidenceFeature> features) {
 		this.features = features;
 	}
+
+	@Override
+	public String toString() {
+		return "ResidenceResponseDTO [id=" + id + ", marketValue=" + marketValue + ", rentalValue=" + rentalValue
+				+ ", description=" + description + ", numberBedrooms=" + numberBedrooms + ", numberBathrooms="
+				+ numberBathrooms + ", numberSuites=" + numberSuites + ", totalArea=" + totalArea + ", builtArea="
+				+ builtArea + ", garageSpaces=" + garageSpaces + ", yearConstruction=" + yearConstruction
+				+ ", propertyType=" + propertyType + ", occupancyStatus=" + occupancyStatus + ", number=" + number
+				+ ", aptNumber=" + aptNumber + ", complement=" + complement + ", dateLastRenovation="
+				+ dateLastRenovation + ", residenceAddress=" + residenceAddress + ", owner=" + owner + ", files="
+				+ files + ", features=" + features + "]";
+	}
+
 }
