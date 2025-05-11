@@ -16,8 +16,8 @@ import com.rm.leaseinsight.entities.enums.OccupancyStatus;
 import com.rm.leaseinsight.entities.enums.PropertyType;
 
 public class ResidenceResponseDTO extends RepresentationModel<ResidenceResponseDTO> implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
+	private static final long serialVersionUID = 1L;
+
 	private String id;
 	private BigDecimal marketValue;
 	private BigDecimal rentalValue;
@@ -72,60 +72,88 @@ public class ResidenceResponseDTO extends RepresentationModel<ResidenceResponseD
 		return id;
 	}
 
-	public Integer getNumber() {
-		return number;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getAptNumber() {
-		return aptNumber;
-	}
-
-	public String getComplement() {
-		return complement;
-	}
-
-	public int getNumberBedrooms() {
-		return numberBedrooms;
-	}
-
-	public int getNumberBathrooms() {
-		return numberBathrooms;
-	}
-
-	public int getNumberSuites() {
-		return numberSuites;
-	}
-
-	public float getTotalArea() {
-		return totalArea;
-	}
-
-	public float getBuiltArea() {
-		return builtArea;
-	}
-
-	public int getGarageSpaces() {
-		return garageSpaces;
-	}
-
-	public Year getYearConstruction() {
-		return yearConstruction;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public BigDecimal getMarketValue() {
 		return marketValue;
 	}
 
+	public void setMarketValue(BigDecimal marketValue) {
+		this.marketValue = marketValue;
+	}
+
 	public BigDecimal getRentalValue() {
 		return rentalValue;
 	}
 
-	public Instant getDateLastRenovation() {
-		return dateLastRenovation;
+	public void setRentalValue(BigDecimal rentalValue) {
+		this.rentalValue = rentalValue;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public int getNumberBedrooms() {
+		return numberBedrooms;
+	}
+
+	public void setNumberBedrooms(int numberBedrooms) {
+		this.numberBedrooms = numberBedrooms;
+	}
+
+	public int getNumberBathrooms() {
+		return numberBathrooms;
+	}
+
+	public void setNumberBathrooms(int numberBathrooms) {
+		this.numberBathrooms = numberBathrooms;
+	}
+
+	public int getNumberSuites() {
+		return numberSuites;
+	}
+
+	public void setNumberSuites(int numberSuites) {
+		this.numberSuites = numberSuites;
+	}
+
+	public float getTotalArea() {
+		return totalArea;
+	}
+
+	public void setTotalArea(float totalArea) {
+		this.totalArea = totalArea;
+	}
+
+	public float getBuiltArea() {
+		return builtArea;
+	}
+
+	public void setBuiltArea(float builtArea) {
+		this.builtArea = builtArea;
+	}
+
+	public int getGarageSpaces() {
+		return garageSpaces;
+	}
+
+	public void setGarageSpaces(int garageSpaces) {
+		this.garageSpaces = garageSpaces;
+	}
+
+	public Year getYearConstruction() {
+		return yearConstruction;
+	}
+
+	public void setYearConstruction(Year yearConstruction) {
+		this.yearConstruction = yearConstruction;
 	}
 
 	public PropertyType getPropertyType() {
@@ -144,12 +172,52 @@ public class ResidenceResponseDTO extends RepresentationModel<ResidenceResponseD
 		this.occupancyStatus = occupancyStatus;
 	}
 
+	public Integer getNumber() {
+		return number;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
+
+	public Integer getAptNumber() {
+		return aptNumber;
+	}
+
+	public void setAptNumber(Integer aptNumber) {
+		this.aptNumber = aptNumber;
+	}
+
+	public String getComplement() {
+		return complement;
+	}
+
+	public void setComplement(String complement) {
+		this.complement = complement;
+	}
+
+	public Instant getDateLastRenovation() {
+		return dateLastRenovation;
+	}
+
+	public void setDateLastRenovation(Instant dateLastRenovation) {
+		this.dateLastRenovation = dateLastRenovation;
+	}
+
 	public ResidenceAddressResponseDTO getResidenceAddress() {
 		return residenceAddress;
 	}
 
+	public void setResidenceAddress(ResidenceAddressResponseDTO residenceAddress) {
+		this.residenceAddress = residenceAddress;
+	}
+
 	public OwnerResponseDTO getOwner() {
 		return owner;
+	}
+
+	public void setOwner(OwnerResponseDTO owner) {
+		this.owner = owner;
 	}
 
 	public Set<ResidenceImageFile> getFiles() {

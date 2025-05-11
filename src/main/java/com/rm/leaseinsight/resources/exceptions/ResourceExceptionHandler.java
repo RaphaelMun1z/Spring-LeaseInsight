@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
+import com.rm.leaseinsight.entities.FieldViolationMessage;
 import com.rm.leaseinsight.services.exceptions.DataViolationException;
 import com.rm.leaseinsight.services.exceptions.DatabaseException;
+import com.rm.leaseinsight.services.exceptions.FieldViolationException;
 import com.rm.leaseinsight.services.exceptions.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -60,12 +62,35 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(status).body(err);
 	}
 
+	@ExceptionHandler(FieldViolationException.class)
+	public ResponseEntity<StandardError> fieldViolation(FieldViolationException e, HttpServletRequest request) {
+		Map<String, String> errors = new HashMap<>();
+		for (FieldViolationMessage fm : e.getErrors()) {
+			errors.put(fm.getFieldName(), fm.getMessage());
+		}
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		StandardError err = new StandardError(Instant.now(), status.value(), errors, e.getMessage(),
+				request.getRequestURI());
+		return ResponseEntity.status(status).body(err);
+	}
+
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<StandardError> badCredentials(BadCredentialsException e, HttpServletRequest request) {
 		Map<String, String> errors = new HashMap<>();
 		errors.put("error", "Bad credentials.");
 		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		StandardError err = new StandardError(Instant.now(), status.value(), errors, "Bad credentials.",
+				request.getRequestURI());
+		return ResponseEntity.status(status).body(err);
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<?> conflict(Exception e, HttpServletRequest request) {
+		System.out.println("Unhandled exception: " + e);
+		Map<String, String> errors = new HashMap<>();
+		errors.put("error", "Unable to perform operation.");
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		StandardError err = new StandardError(Instant.now(), status.value(), errors, "Unable to perform operation.",
 				request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}

@@ -13,16 +13,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.rm.leaseinsight.dto.ResidenceFeatureDTO;
 import com.rm.leaseinsight.dto.req.ResidenceFeatureRequestDTO;
+import com.rm.leaseinsight.dto.req.ResidenceFilterDTO;
+import com.rm.leaseinsight.dto.req.ResidenceRequestDTO;
 import com.rm.leaseinsight.dto.res.ContractResponseDTO;
+import com.rm.leaseinsight.dto.res.ResidenceResponseDTO;
 import com.rm.leaseinsight.dto.res.UploadFileResponseDTO;
 import com.rm.leaseinsight.entities.AdditionalFeature;
 import com.rm.leaseinsight.entities.Contract;
+import com.rm.leaseinsight.entities.FieldViolationMessage;
 import com.rm.leaseinsight.entities.Owner;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.entities.ResidenceAddress;
@@ -32,8 +44,10 @@ import com.rm.leaseinsight.entities.enums.OccupancyStatus;
 import com.rm.leaseinsight.mapper.Mapper;
 import com.rm.leaseinsight.repositories.ResidenceRepository;
 import com.rm.leaseinsight.resources.ContractResource;
+import com.rm.leaseinsight.resources.ResidenceResource;
 import com.rm.leaseinsight.services.exceptions.DataViolationException;
 import com.rm.leaseinsight.services.exceptions.DatabaseException;
+import com.rm.leaseinsight.services.exceptions.FieldViolationException;
 import com.rm.leaseinsight.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -67,6 +81,9 @@ public class ResidenceService {
 	@Autowired
 	private CacheService cacheService;
 
+	@Autowired
+	PagedResourcesAssembler<ResidenceResponseDTO> assembler;
+
 	@Cacheable("findAllResidence")
 	public List<Residence> findAllCached() {
 		return findAll();
@@ -74,6 +91,20 @@ public class ResidenceService {
 
 	public List<Residence> findAll() {
 		return repository.findAll();
+	}
+
+	public PagedModel<EntityModel<ResidenceResponseDTO>> findDynamic(ResidenceFilterDTO filter, Pageable pageable) {
+		Page<Residence> residencePage = repository.findAll(filter.toSpec(), pageable);
+
+		Page<ResidenceResponseDTO> dtoPage = residencePage.map(residence -> {
+			ResidenceResponseDTO dto = new ResidenceResponseDTO(residence);
+			dto.add(linkTo(methodOn(ResidenceResource.class).findById(dto.getId())).withSelfRel());
+			return dto;
+		});
+
+		Link selfLink = linkTo(methodOn(ResidenceResource.class).findDynamic(filter, pageable)).withSelfRel();
+
+		return assembler.toModel(dtoPage, selfLink);
 	}
 
 	public Set<Residence> findByOccupancyStatus(String status) {
@@ -130,7 +161,7 @@ public class ResidenceService {
 			throw new ResourceNotFoundException(e.getMessage());
 		}
 	}
-	
+
 	@Transactional
 	public ResidenceFeature addFeature(ResidenceFeatureRequestDTO obj) {
 		try {
@@ -157,12 +188,12 @@ public class ResidenceService {
 	}
 
 	public ContractResponseDTO getCurrentContract(String id) {
-		try {			
+		try {
 			Residence residence = this.findById(id);
 			Contract contract = residence.getActiveContract();
 			if (contract == null)
 				new ResourceNotFoundException("Current Contract", id);
-			
+
 			ContractResponseDTO contractDTO = Mapper.modelMapper(contract, ContractResponseDTO.class);
 			contractDTO.add(linkTo(methodOn(ContractResource.class).findById(id)).withSelfRel());
 			return contractDTO;
@@ -192,7 +223,39 @@ public class ResidenceService {
 	}
 
 	@Transactional
-	public Residence patch(String id, Residence obj) {
+	public void delete(String id) {
+		try {
+			if (!repository.existsById(id)) {
+				throw new ResourceNotFoundException(id);
+			}
+
+			Residence r = this.findById(id);
+			int qntContracts = r.getContracts().size();
+			int qntReports = r.getReports().size();
+
+			if (qntContracts > 0) {
+				throw new DatabaseException("Erro de integridade referencial: a residência está vinculada a "
+						+ qntContracts + " contrato(s).");
+			}
+
+			if (qntReports > 0) {
+				throw new DatabaseException(
+						"Erro de integridade referencial: a residência está vinculada a " + qntReports + " relato(s).");
+			}
+
+			repository.deleteById(id);
+			cacheService.evictAllCacheValues("findAllResidence");
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch (DatabaseException e) {
+			throw new DatabaseException(e.getMessage());
+		} catch (Exception e) {
+			throw new DatabaseException("Erro: " + e.getMessage());
+		}
+	}
+
+	@Transactional
+	public Residence patch(String id, ResidenceRequestDTO obj) {
 		try {
 			Residence entity = repository.getReferenceById(id);
 			patchData(entity, obj);
@@ -202,16 +265,21 @@ public class ResidenceService {
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		} catch (ConstraintViolationException e) {
-			throw new DatabaseException("Some invalid field.");
+			List<FieldViolationMessage> errors = e.getConstraintViolations().stream()
+					.map(violation -> new FieldViolationMessage(violation.getPropertyPath().toString(),
+							violation.getMessage()))
+					.toList();
+			throw new FieldViolationException(errors);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataViolationException();
+		} catch (HttpMessageNotReadableException e) {
+			throw new DataViolationException();
 		} catch (Exception e) {
-			System.out.println("Erro: " + e.getClass());
-			return null;
+			throw new RuntimeException();
 		}
 	}
 
-	private void patchData(Residence entity, Residence obj) {
+	private void patchData(Residence entity, ResidenceRequestDTO obj) {
 		if (obj.getPropertyType() != null)
 			entity.setPropertyType(obj.getPropertyType());
 		if (obj.getDescription() != null)

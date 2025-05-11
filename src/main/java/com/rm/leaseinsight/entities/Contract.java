@@ -176,4 +176,12 @@ public class Contract implements Serializable {
 		Contract other = (Contract) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	@Override
+	public String toString() {
+		return "Contract [id=" + id + ", contractStartDate=" + contractStartDate + ", contractEndDate="
+				+ contractEndDate + ", defaultRentalValue=" + defaultRentalValue + ", contractStatus=" + contractStatus
+				+ ", invoiceDueDate=" + invoiceDueDate + "]";
+	}
+
 }

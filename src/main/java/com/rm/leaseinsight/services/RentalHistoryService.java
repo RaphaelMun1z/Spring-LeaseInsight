@@ -3,10 +3,10 @@ package com.rm.leaseinsight.services;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -45,7 +45,7 @@ public class RentalHistoryService {
 
 	@Autowired
 	private TenantService tenantService;
-	
+
 	@Autowired
 	private ContractRepository contractRepository;
 
@@ -53,12 +53,18 @@ public class RentalHistoryService {
 	private CacheService cacheService;
 
 	@Cacheable("findAllRentalHistory")
-	public List<RentalHistory> findAllCached() {
+	public List<RentalHistoryResponseDTO> findAllCached() {
 		return findAll();
 	}
 
-	public List<RentalHistory> findAll() {
-		return repository.findAll();
+	public List<RentalHistoryResponseDTO> findAll() {
+		List<RentalHistory> rentalHistories = repository.findAll();
+		List<RentalHistoryResponseDTO> rentalHistoriesResponse = rentalHistories.stream()
+				.map(rentalHistory -> new RentalHistoryResponseDTO(rentalHistory)).collect(Collectors.toList());
+
+		rentalHistoriesResponse.forEach(rentalHistory -> rentalHistory
+				.add(linkTo(methodOn(RentalHistoryResource.class).findById(rentalHistory.getId())).withSelfRel()));
+		return rentalHistoriesResponse;
 	}
 
 	public RentalHistory findById(String id) {
@@ -67,27 +73,32 @@ public class RentalHistoryService {
 	}
 
 	public List<RentalHistoryMinimalResponseDTO> findAllMinimal() {
-		List<RentalHistory> list = this.findAll();
-		List<RentalHistoryMinimalResponseDTO> rentalHistories = new ArrayList<>();
+		List<RentalHistoryResponseDTO> rentalHistories = this.findAll();
+		List<RentalHistoryMinimalResponseDTO> rentalHistoriesMinimalResponse = rentalHistories.stream()
+				.map(rentalHistoryMinimal -> new RentalHistoryMinimalResponseDTO(rentalHistoryMinimal))
+				.collect(Collectors.toList());
 
-		for (RentalHistory rentalHistory : list) {
-			rentalHistories.add(new RentalHistoryMinimalResponseDTO(rentalHistory));
-		}
+		rentalHistoriesMinimalResponse.forEach(rentalHistoryMinimal -> rentalHistoryMinimal.add(
+				linkTo(methodOn(RentalHistoryResource.class).findById(rentalHistoryMinimal.getId())).withSelfRel()));
 
-		return rentalHistories;
+		return rentalHistoriesMinimalResponse;
 	}
 
 	@Transactional
 	public RentalHistoryResponseDTO create(RentalHistoryRequestDTO obj) {
 		try {
-			Contract contract = contractRepository.findById(obj.getContractId()).orElseThrow(() -> new ResourceNotFoundException("Contract", obj.getContractId()));
-			RentalHistory rentalHistory = new RentalHistory(null, obj.getRentalStartDate(), obj.getPaymentStatus(), contract);
-			RentalHistory rentalHistorySaved = repository.save(rentalHistory);		
-			
-			RentalHistoryResponseDTO rentalHistoryDTO = Mapper.modelMapper(rentalHistorySaved, RentalHistoryResponseDTO.class);			
-			rentalHistoryDTO.add(linkTo(methodOn(RentalHistoryResource.class).findById(rentalHistorySaved.getId())).withSelfRel());
+			Contract contract = contractRepository.findById(obj.getContractId())
+					.orElseThrow(() -> new ResourceNotFoundException("Contract", obj.getContractId()));
+			RentalHistory rentalHistory = new RentalHistory(null, obj.getRentalStartDate(), obj.getPaymentStatus(),
+					contract);
+			RentalHistory rentalHistorySaved = repository.save(rentalHistory);
+
+			RentalHistoryResponseDTO rentalHistoryDTO = Mapper.modelMapper(rentalHistorySaved,
+					RentalHistoryResponseDTO.class);
+			rentalHistoryDTO.add(
+					linkTo(methodOn(RentalHistoryResource.class).findById(rentalHistorySaved.getId())).withSelfRel());
 			cacheService.putRentalHistoryCache();
-			
+
 			return rentalHistoryDTO;
 		} catch (DataIntegrityViolationException e) {
 			throw new DataViolationException("Rental History");

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: "Poppins", sans-serif;
+		}
+
+		body {
+			background: brown;
+			padding: 1em;
+		}
+
+		.container {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			width: 700px;
+			background-color: #fff;
+			border-radius: 5px;
+			padding: 2em;
+			gap: 2em;
+		}
+
+		.title {
+			font-size: 25pt;
+			color: blue;
+			font-weight: 700;
+		}
+
+		.subtitle {
+			font-size: 15pt;
+			color: blue;
+			font-weight: 700;
+		}
+
+		#logo-image {
+			position: relative;
+			display: flex;
+			width: fit-content;
+			height: 40px;
+			object-fit: cover;
+		}
+
+		.content-container {
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
+		}
+
+		.email-address {
+			color: blue;
+		}
+
+		.code-container {
+			display: flex;
+			gap: 0.5em;
+			margin-top: 1em;
+		}
+
+		.code-box {
+			width: 50px;
+			height: 60px;
+			background-color: #f1f1f1;
+			border: 2px solid #dcdcdc;
+			border-radius: 5px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 24pt;
+			font-weight: 600;
+			color: #333;
+		}
+
+		.button {
+			background-color: blue;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			padding: 1em 1.5em;
+			font-weight: 500;
+			cursor: pointer;
+			transition: all .1s;
+			width: fit-content;
+		}
+
+		.button:hover {
+			opacity: .8;
+		}
+
+		footer {
+			display: flex;
+			flex-direction: column;
+			gap: 1.5em;
+			font-size: 10pt;
+		}
+
+		.footer-content {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5em;
+		}
+
+		.logo-image {
+			height: 40px;
+			width: fit-content;
+		}
+
+		hr {
+			border: 1px solid #dcdcdc;
+		}
+	</style>
+</head>
+
+<body>
+	<section class="container">
+		<img src="cid:Logo1" alt="Logo" id="logo-image">
+		<div class="content-container">
+			<h1 class="title">Sua Senha Temporária</h1>
+			<h3>Olá #{name},</h3>
+			<p>Conforme solicitado, segue abaixo sua senha temporária para acesso à plataforma LeaseInsight.</p>
+			<p><strong>Essa senha tem validade limitada e deve ser alterada assim que você acessar sua conta.</strong>
+			</p>
+			<div class="code-container">
+				<div class="code-box">#{pass-1}</div>
+				<div class="code-box">#{pass-2}</div>
+				<div class="code-box">#{pass-3}</div>
+				<div class="code-box">#{pass-4}</div>
+				<div class="code-box">#{pass-5}</div>
+				<div class="code-box">#{pass-6}</div>
+			</div>
+		</div>
+		<div class="content-container">
+			<p>Para acessar sua conta, clique no botão abaixo:</p>
+			<button class="button">Acessar conta</button>
+		</div>
+		<div class="content-container">
+			<p>Em caso de dúvidas, entre em contato com nosso suporte em <span
+					class="email-address">suporte@leaseinsight.com</span>.</p>
+		</div>
+		<hr>
+		<footer>
+			<div class="footer-content">
+				<p>Você recebeu este email de <span class="email-address">support@leaseinsight</span> em resposta à
+					solicitação de nova senha.</p>
+				<p>Se você não fez essa solicitação, <a href="#">clique aqui</a>.</p>
+			</div>
+			<p class="copyright">© LeaseInsight 2024. Todos os direitos reservados.</p>
+			<img src="cid:Logo2" alt="Logo" class="logo-image">
+		</footer>
+	</section>
+</body>
+
+</html>

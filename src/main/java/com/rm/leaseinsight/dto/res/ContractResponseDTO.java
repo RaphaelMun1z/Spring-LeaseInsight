@@ -9,8 +9,8 @@ import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.enums.ContractStatus;
 
 public class ContractResponseDTO extends RepresentationModel<ContractResponseDTO> implements Serializable {
-    private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 1L;
+
 	private String id;
 	private LocalDate contractStartDate;
 	private LocalDate contractEndDate;
@@ -36,6 +36,10 @@ public class ContractResponseDTO extends RepresentationModel<ContractResponseDTO
 
 	public String getId() {
 		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public LocalDate getContractStartDate() {

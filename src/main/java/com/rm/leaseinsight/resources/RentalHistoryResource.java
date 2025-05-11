@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,8 +38,7 @@ public class RentalHistoryResource {
 
 	@GetMapping
 	public ResponseEntity<List<RentalHistoryResponseDTO>> findAll() {
-		List<RentalHistoryResponseDTO> rentalsHistory = service.findAllCached().stream()
-				.map(RentalHistoryResponseDTO::new).collect(Collectors.toList());
+		List<RentalHistoryResponseDTO> rentalsHistory = service.findAllCached();
 		return ResponseEntity.ok().body(rentalsHistory);
 	}
 

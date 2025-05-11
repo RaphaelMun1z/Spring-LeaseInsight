@@ -89,7 +89,14 @@ public class FileStorageService {
 			if (resource.exists()) {
 				return resource;
 			} else {
-				throw new ResourceNotFoundException(fileName);
+				Path defaultFilePath = this.fileStorageLocation.resolve("not-found-image.png").normalize();
+				Resource defaultResource = new UrlResource(defaultFilePath.toUri());
+
+				if (defaultResource.exists()) {
+					return defaultResource;
+				} else {
+					throw new ResourceNotFoundException(fileName);
+				}
 			}
 		} catch (Exception e) {
 			throw new ResourceNotFoundException(fileName);

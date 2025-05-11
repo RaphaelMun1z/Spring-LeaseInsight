@@ -47,6 +47,12 @@ public class BillingAddressResource {
 		BillingAddress obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
+	
+	@GetMapping(value = "/authuser")
+	public ResponseEntity<BillingAddress> findByAuthUser() {
+		BillingAddress obj = service.findByAuthUser();
+		return ResponseEntity.ok().body(obj);
+	}
 
 	@PostMapping
 	public ResponseEntity<BillingAddress> insert(@RequestBody @Valid BillingAddress obj) {

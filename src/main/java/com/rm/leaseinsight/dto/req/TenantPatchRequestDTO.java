@@ -11,6 +11,8 @@ public class TenantPatchRequestDTO {
 	private String email;
 	private LocalDate dateOfBirth;
 	private TenantStatus tenantStatus;
+	private String cpf;
+	private String rg;
 
 	public TenantPatchRequestDTO() {
 	}
@@ -21,6 +23,8 @@ public class TenantPatchRequestDTO {
 		this.email = tenant.getEmail();
 		this.dateOfBirth = tenant.getDateOfBirth();
 		this.tenantStatus = tenant.getTenantStatus();
+		this.cpf = tenant.getCpf();
+		this.rg = tenant.getRg();
 	}
 
 	public String getName() {
@@ -41,5 +45,13 @@ public class TenantPatchRequestDTO {
 
 	public TenantStatus getTenantStatus() {
 		return this.tenantStatus;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public String getRg() {
+		return rg;
 	}
 }

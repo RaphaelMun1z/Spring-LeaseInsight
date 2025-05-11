@@ -11,6 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,6 +40,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rm.leaseinsight.dto.ResidenceFeatureDTO;
 import com.rm.leaseinsight.dto.req.ResidenceFeatureRequestDTO;
+import com.rm.leaseinsight.dto.req.ResidenceFilterDTO;
+import com.rm.leaseinsight.dto.req.ResidenceRequestDTO;
 import com.rm.leaseinsight.dto.res.ContractResponseDTO;
 import com.rm.leaseinsight.dto.res.ResidenceMinimalResponseDTO;
 import com.rm.leaseinsight.dto.res.ResidenceResponseDTO;
@@ -69,6 +77,12 @@ public class ResidenceResource {
 		return ResponseEntity.ok().body(residences);
 	}
 
+	@GetMapping(value = "/dynamic-search")
+	public ResponseEntity<PagedModel<EntityModel<ResidenceResponseDTO>>> findDynamic(ResidenceFilterDTO filter,
+			@PageableDefault(direction = Direction.ASC, sort = "rentalValue") Pageable pageable) {
+		return ResponseEntity.ok().body(service.findDynamic(filter, pageable));
+	}
+
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ResidenceResponseDTO> findById(@PathVariable String id) {
 		Residence obj = service.findById(id);
@@ -97,10 +111,16 @@ public class ResidenceResource {
 		return ResponseEntity.created(uri).body(residence);
 	}
 
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable String id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+
 	@PatchMapping(value = "/{id}")
-	public ResponseEntity<Residence> patch(@PathVariable String id, @RequestBody Residence obj) {
-		obj = service.patch(id, obj);
-		return ResponseEntity.ok().body(obj);
+	public ResponseEntity<Residence> patch(@PathVariable String id, @RequestBody ResidenceRequestDTO obj) {
+		Residence r = service.patch(id, obj);
+		return ResponseEntity.ok().body(r);
 	}
 
 	@PostMapping(value = "/add-feature")

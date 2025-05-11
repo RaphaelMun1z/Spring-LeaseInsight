@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rm.leaseinsight.dto.req.ContractRequestDTO;
 import com.rm.leaseinsight.dto.res.ContractResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.services.ContractService;
@@ -46,10 +47,9 @@ public class ContractResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<ContractResponseDTO> insert(@RequestBody @Valid Contract obj) {
-		obj = service.create(obj);
-		ContractResponseDTO contract = new ContractResponseDTO(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+	public ResponseEntity<ContractResponseDTO> insert(@RequestBody @Valid ContractRequestDTO obj) {
+		ContractResponseDTO contract = service.create(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(contract.getId()).toUri();
 		return ResponseEntity.created(uri).body(contract);
 	}
 

@@ -82,4 +82,13 @@ public class ContractRequestDTO {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
+
+	@Override
+	public String toString() {
+		return "ContractRequestDTO [contractStartDate=" + contractStartDate + ", contractEndDate=" + contractEndDate
+				+ ", defaultRentalValue=" + defaultRentalValue + ", contractStatus=" + contractStatus
+				+ ", invoiceDueDate=" + invoiceDueDate + ", residenceId=" + residenceId + ", tenantId=" + tenantId
+				+ "]";
+	}
+
 }

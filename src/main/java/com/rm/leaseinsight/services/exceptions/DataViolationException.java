@@ -1,5 +1,7 @@
 package com.rm.leaseinsight.services.exceptions;
 
+import org.springframework.dao.NonTransientDataAccessException;
+
 public class DataViolationException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
@@ -8,6 +10,10 @@ public class DataViolationException extends RuntimeException {
 	}
 
 	public DataViolationException(String msg) {
-		super("Resource already exists. " + msg + ".");
+		super(msg);
+	}
+
+	public DataViolationException(String type, NonTransientDataAccessException e) {
+		super(type + ": " + e);
 	}
 }

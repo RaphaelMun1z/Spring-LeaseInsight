@@ -1,5 +1,6 @@
 package com.rm.leaseinsight.dto.res;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import org.springframework.hateoas.RepresentationModel;
@@ -7,7 +8,9 @@ import org.springframework.hateoas.RepresentationModel;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.entities.enums.PaymentStatus;
 
-public class RentalHistoryResponseDTO extends RepresentationModel<RentalHistoryResponseDTO> {
+public class RentalHistoryResponseDTO extends RepresentationModel<RentalHistoryResponseDTO> implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private String id;
 	private LocalDate rentalStartDate;
 	private LocalDate rentalEndDate;
@@ -29,6 +32,10 @@ public class RentalHistoryResponseDTO extends RepresentationModel<RentalHistoryR
 
 	public String getId() {
 		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public LocalDate getRentalStartDate() {

@@ -18,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.rm.leaseinsight.dto.req.ContractRequestDTO;
+import com.rm.leaseinsight.dto.res.ContractResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.Owner;
 import com.rm.leaseinsight.entities.Residence;
@@ -70,14 +72,16 @@ class ContractServiceTests {
 				null, "Bloco 10", 4, 1, 2, 162.13f, 110.49f, 4, Year.of(2021), OccupancyStatus.VACANT,
 				new BigDecimal("2140000"), new BigDecimal("2500"), Instant.now(), new ResidenceAddress());
 		Tenant tenant = new Tenant();
+
 		Contract contract = new Contract(null, residence, tenant, LocalDate.now(), LocalDate.now().plusYears(1), 1750.0,
 				ContractStatus.ACTIVE, 15);
+		ContractRequestDTO cReqDTO = new ContractRequestDTO(contract);
 
 		Mockito.when(residenceService.findById(residence.getId())).thenReturn(residence);
 		Mockito.when(tenantService.findById(tenant.getId())).thenReturn(tenant);
 		Mockito.when(contractRepository.save(Mockito.any(Contract.class))).thenReturn(contract);
 
-		Contract createdContract = contractService.create(contract);
+		ContractResponseDTO createdContract = contractService.create(cReqDTO);
 
 		assertEquals(contract, createdContract);
 		Mockito.verify(contractRepository).save(contract);
@@ -92,11 +96,13 @@ class ContractServiceTests {
 				null, "Bloco 10", 4, 1, 2, 162.13f, 110.49f, 4, Year.of(2021), OccupancyStatus.VACANT,
 				new BigDecimal("2140000"), new BigDecimal("2500"), Instant.now(), new ResidenceAddress());
 		Tenant tenant = null;
+
 		Contract contract = new Contract("abc", residence, tenant, LocalDate.now(), LocalDate.now().plusYears(1),
 				1750.0, ContractStatus.ACTIVE, 15);
+		ContractRequestDTO cReqDTO = new ContractRequestDTO(contract);
 
 		assertThrows(NullPointerException.class, () -> {
-			contractService.create(contract);
+			contractService.create(cReqDTO);
 		});
 
 		Mockito.verify(contractRepository, Mockito.never()).save(Mockito.any(Contract.class));

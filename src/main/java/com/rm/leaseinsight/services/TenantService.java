@@ -18,11 +18,13 @@ import com.rm.leaseinsight.dto.req.TenantPatchRequestDTO;
 import com.rm.leaseinsight.dto.req.TenantRequestDTO;
 import com.rm.leaseinsight.dto.res.TenantResponseDTO;
 import com.rm.leaseinsight.entities.BillingAddress;
+import com.rm.leaseinsight.entities.FieldViolationMessage;
 import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.repositories.TenantRepository;
 import com.rm.leaseinsight.services.async.TenantAsyncService;
 import com.rm.leaseinsight.services.exceptions.DataViolationException;
 import com.rm.leaseinsight.services.exceptions.DatabaseException;
+import com.rm.leaseinsight.services.exceptions.FieldViolationException;
 import com.rm.leaseinsight.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -83,24 +85,48 @@ public class TenantService {
 			throw new DataViolationException();
 		} catch (ResourceNotFoundException e) {
 			throw new ResourceNotFoundException(e.getMessage());
-		} catch (DataViolationException e) {
-			throw e;
+		} catch (ConstraintViolationException e) {
+			List<FieldViolationMessage> errors = e.getConstraintViolations().stream()
+					.map(violation -> new FieldViolationMessage(violation.getPropertyPath().toString(),
+							violation.getMessage()))
+					.toList();
+			throw new FieldViolationException(errors);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e);
 		}
 	}
 
 	@Transactional
 	public void delete(String id) {
 		try {
-			if (repository.existsById(id)) {
-				repository.deleteById(id);
-				cacheService.evictAllCacheValues("findAllTenant");
-			} else {
+			if (!repository.existsById(id)) {
 				throw new ResourceNotFoundException(id);
 			}
+
+			Tenant t = this.findById(id);
+			int qntContracts = t.getContracts().size();
+			int qntReports = t.getReports().size();
+
+			if (qntContracts > 0) {
+				throw new DatabaseException("Erro de integridade referencial: o inquilino está vinculado a "
+						+ qntContracts + " contrato(s).");
+			}
+
+			if (qntReports > 0) {
+				throw new DatabaseException(
+						"Erro de integridade referencial: o inquilino está vinculado a " + qntReports + " relato(s).");
+			}
+
+			repository.deleteById(id);
+			cacheService.evictAllCacheValues("findAllTenant");
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
-		} catch (DataIntegrityViolationException e) {
+		} catch (DatabaseException e) {
 			throw new DatabaseException(e.getMessage());
+		} catch (Exception e) {
+			System.out.println("Classe: " + e.getClass());
+			throw new DatabaseException("Erro: " + e.getMessage());
 		}
 	}
 
@@ -118,8 +144,11 @@ public class TenantService {
 			System.out.println("Erro ao atualizar inquilino: " + e.getMessage());
 			throw new ResourceNotFoundException(id);
 		} catch (ConstraintViolationException e) {
-			System.out.println("Erro ao atualizar inquilino: " + e.getMessage());
-			throw new DatabaseException("Some invalid field.");
+			List<FieldViolationMessage> errors = e.getConstraintViolations().stream()
+					.map(violation -> new FieldViolationMessage(violation.getPropertyPath().toString(),
+							violation.getMessage()))
+					.toList();
+			throw new FieldViolationException(errors);
 		} catch (DataIntegrityViolationException e) {
 			System.out.println("Erro ao atualizar inquilino: " + e.getMessage());
 			throw new DataViolationException();
@@ -140,6 +169,10 @@ public class TenantService {
 			entity.setDateOfBirth(obj.getDateOfBirth());
 		if (obj.getTenantStatus() != null)
 			entity.setTenantStatus(obj.getTenantStatus());
+		if (obj.getRg() != null)
+			entity.setRg(obj.getRg());
+		if (obj.getCpf() != null)
+			entity.setCpf(obj.getCpf());
 	}
 
 }

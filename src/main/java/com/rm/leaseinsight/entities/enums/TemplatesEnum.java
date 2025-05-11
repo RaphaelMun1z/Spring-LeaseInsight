@@ -1,7 +1,9 @@
 package com.rm.leaseinsight.entities.enums;
 
 public enum TemplatesEnum {
-	WELCOME(1), INVOICE(2);
+	WELCOME(1), 
+	INVOICE(2),
+	NEW_ACCOUNT(3);
 
 	private Integer code;
 

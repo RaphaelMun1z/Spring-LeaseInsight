@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.rm.leaseinsight.dto.res.ContractResponseDTO;
+import com.rm.leaseinsight.dto.res.RentalHistoryResponseDTO;
 import com.rm.leaseinsight.entities.AdditionalFeature;
 import com.rm.leaseinsight.entities.Adm;
 import com.rm.leaseinsight.entities.BillingAddress;
 import com.rm.leaseinsight.entities.Owner;
-import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.entities.Report;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.entities.ResidenceAddress;
@@ -110,7 +110,7 @@ public class CacheService {
 	}
 
 	@CachePut("findAllRentalHistory")
-	public List<RentalHistory> putRentalHistoryCache() {
+	public List<RentalHistoryResponseDTO> putRentalHistoryCache() {
 		return rentalHistoryService.findAll();
 	}
 

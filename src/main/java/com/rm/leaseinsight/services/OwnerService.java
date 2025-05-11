@@ -59,7 +59,7 @@ public class OwnerService {
 		}
 		return sb.toString();
 	}
-	
+
 	@Transactional
 	public OwnerResponseDTO create(OwnerRequestDTO obj) {
 		try {
@@ -80,12 +80,20 @@ public class OwnerService {
 	@Transactional
 	public void delete(String id) {
 		try {
-			if (repository.existsById(id)) {
-				repository.deleteById(id);
-				cacheService.evictAllCacheValues("findAllOwner");
-			} else {
+			if (!repository.existsById(id)) {
 				throw new ResourceNotFoundException(id);
 			}
+
+			Owner o = this.findById(id);
+			int qntResidence = o.getProperties().size();
+
+			if (qntResidence > 0) {
+				throw new DatabaseException("Erro de integridade referencial: o proprietário está vinculado a "
+						+ qntResidence + " propriedade(s).");
+			}
+
+			repository.deleteById(id);
+			cacheService.evictAllCacheValues("findAllOwner");
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
 		} catch (DataIntegrityViolationException e) {

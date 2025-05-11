@@ -11,16 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.leaseinsight.dto.req.ContractRequestDTO;
 import com.rm.leaseinsight.dto.req.RentalHistoryRequestDTO;
 import com.rm.leaseinsight.dto.res.ContractResponseDTO;
 import com.rm.leaseinsight.entities.Contract;
 import com.rm.leaseinsight.entities.RentalHistory;
 import com.rm.leaseinsight.entities.Residence;
 import com.rm.leaseinsight.entities.Tenant;
+import com.rm.leaseinsight.entities.enums.OccupancyStatus;
 import com.rm.leaseinsight.entities.enums.PaymentStatus;
 import com.rm.leaseinsight.mapper.Mapper;
 import com.rm.leaseinsight.repositories.ContractRepository;
@@ -76,29 +79,39 @@ public class ContractService {
 	}
 
 	@Transactional
-	public Contract create(Contract obj) {
+	public ContractResponseDTO create(ContractRequestDTO obj) {
 		try {
-			Residence r = residenceService.findById(obj.getResidence().getId());
+			String residenceId = obj.getResidenceId();
+			Residence r = residenceService.findById(residenceId);
+
+			if (r.getOccupancyStatus() != OccupancyStatus.AVAILABLE) {
+				throw new DataViolationException("Residence is not available");
+			}
+
 			if (r.getActiveContract() != null) {
 				throw new DataViolationException("Residence already has a Contract");
 			}
 
-			obj.setResidence(r);
-			Tenant t = tenantService.findById(obj.getTenant().getId());
-			obj.setTenant(t);
-			Contract contract = repository.save(obj);
+			Contract c = new Contract(null, null, null, obj.getContractStartDate(), obj.getContractEndDate(),
+					obj.getDefaultRentalValue(), obj.getContractStatus(), obj.getInvoiceDueDate());
+
+			c.setResidence(r);
+
+			String tenantId = obj.getTenantId();
+			Tenant t = tenantService.findById(tenantId);
+			c.setTenant(t);
+
+			repository.save(c);
+
 			cacheService.putContractCache();
-			contractAsyncService.sendContractBeginEmail(contract);
-			createFirstRental(contract);
-			return contract;
-		} catch (DataIntegrityViolationException e) {
-			throw new DataViolationException();
-		} catch (ResourceNotFoundException e) {
-			throw new ResourceNotFoundException(e.getMessage());
-		} catch (DataViolationException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+			contractAsyncService.sendContractBeginEmail(c);
+
+			createFirstRental(c);
+
+			ContractResponseDTO cDTO = new ContractResponseDTO(c);
+			return cDTO;
+		} catch (DataIntegrityViolationException | InvalidDataAccessApiUsageException e) {
+			throw new DataViolationException("Data access error", e);
 		}
 	}
 

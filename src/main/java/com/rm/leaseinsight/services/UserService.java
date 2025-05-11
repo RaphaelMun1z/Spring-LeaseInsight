@@ -13,7 +13,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rm.leaseinsight.dto.res.AdmResponseDTO;
+import com.rm.leaseinsight.dto.res.OwnerResponseDTO;
+import com.rm.leaseinsight.dto.res.StaffResponseDTO;
+import com.rm.leaseinsight.dto.res.TenantResponseDTO;
 import com.rm.leaseinsight.dto.res.UserDetailsResponseDTO;
+import com.rm.leaseinsight.dto.res.UserResponseDTO;
+import com.rm.leaseinsight.entities.Adm;
+import com.rm.leaseinsight.entities.Owner;
+import com.rm.leaseinsight.entities.Staff;
+import com.rm.leaseinsight.entities.Tenant;
 import com.rm.leaseinsight.entities.User;
 import com.rm.leaseinsight.repositories.UserRepository;
 import com.rm.leaseinsight.services.exceptions.DatabaseException;
@@ -41,7 +50,7 @@ public class UserService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException("User", id));
 	}
 
-	public UserDetailsResponseDTO getAuthenticatedUser() {
+	public UserResponseDTO getAuthenticatedUser() {
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			if (auth == null || !auth.isAuthenticated()) {
@@ -49,7 +58,19 @@ public class UserService {
 			}
 			UserDetails userDetails = (UserDetails) auth.getPrincipal();
 			UserDetailsResponseDTO user = new UserDetailsResponseDTO(userDetails);
-			return user;
+			User authenticatedUser = findById(user.getId());
+
+			if (authenticatedUser instanceof Tenant) {
+				return new TenantResponseDTO((Tenant) authenticatedUser);
+			} else if (authenticatedUser instanceof Staff) {
+				return new StaffResponseDTO((Staff) authenticatedUser);
+			} else if (authenticatedUser instanceof Adm) {
+				return new AdmResponseDTO((Adm) authenticatedUser);
+			} else if (authenticatedUser instanceof Owner) {
+				return new OwnerResponseDTO((Owner) authenticatedUser);
+			} else {
+				throw new RuntimeException("Tipo de usuário desconhecido");
+			}
 		} catch (DataIntegrityViolationException e) {
 			System.out.println("Erro ao detalhar usuário: " + e.getMessage());
 			throw new DatabaseException(e.getMessage());
