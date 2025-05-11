@@ -1,29 +1,43 @@
+version: '3.8'
+
 services:
   app:
-    container_name: app_container
+    container_name: leaseinsight_app
+    build:
+      context: .
+    ports:
+      - "8889:8080"
+    depends_on:
+      - postgres
+      - redis
+    restart: always
+    command: mvn spring-boot:run
     environment:
+      SPRING_PROFILES_ACTIVE: prod
+      JWT_SECRET: 123456789
       MAIL_HOST: sandbox.smtp.mailtrap.io
       MAIL_PORT: 587
       MAIL_USERNAME: 1c3dd26c8cdee3
       MAIL_PASSWORD: 9d0a3fc4036e40
-      REDIS_HOST: localhost
-      REDIS_PORT: 6379
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
       REDIS_TTL: 60
-    image: raphaelmuniz/leaseinsight
-    ports:
-      - "8889:8889"
-    depends_on:
-      - db
-      - redis
-    restart: always
-    command: mvn spring-boot:run
-    build:
-      context: .
+      DB_URL_PROD: jdbc:postgresql://postgres:5432/leaseinsight_database
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      UPLOAD_DIR: D:/teste
     networks:
-      - postgres-compose-network
+      - redis_network
+
   redis:
     container_name: redis_container
     image: redis:7.0.5-alpine
+    command: ["redis-server", "--bind", "0.0.0.0"]
+    ports:
+      - "6379:6379"
+    networks:
+      - redis_network
+
   postgres:
     container_name: postgres_container
     image: postgres:16.3
@@ -33,10 +47,11 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: leaseinsight_database
     ports:
-      - "5000:5432"
+      - "5432:5432"
     restart: always
     networks:
-      - postgres-compose-network
+      - redis_network
+
 networks:
-  postgres-compose-network:
+  redis_network:
     driver: bridge
