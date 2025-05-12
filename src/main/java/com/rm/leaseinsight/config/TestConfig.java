@@ -16,9 +16,12 @@ public class TestConfig implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Adm adm = new Adm(null, "Irineu", "(11) 91234-5678", "irineu@gmail.com",
-				"$2a$10$0P9rooXJBsWKpHufu19Xwei7JC3QSw8C1KqfBRxB5zfMVS4RNZkEu");
-		admRepository.save(adm);
+		String email = "irineu@gmail.com";
+		if (admRepository.findByEmail(email) == null) {
+			Adm adm = new Adm(null, "Irineu", "(11) 91234-5678", email,
+					"$2a$10$0P9rooXJBsWKpHufu19Xwei7JC3QSw8C1KqfBRxB5zfMVS4RNZkEu");
+			admRepository.save(adm);
+		}
 	}
 
 }
