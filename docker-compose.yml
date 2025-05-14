@@ -15,18 +15,18 @@ services:
     environment:
       TZ: America/Sao_Paulo
       SPRING_PROFILES_ACTIVE: prod
-      JWT_SECRET: 123456789
-      MAIL_HOST: sandbox.smtp.mailtrap.io
-      MAIL_PORT: 587
-      MAIL_USERNAME: 1c3dd26c8cdee3
-      MAIL_PASSWORD: 9d0a3fc4036e40
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
-      REDIS_TTL: 60
-      DB_URL_PROD: jdbc:postgresql://postgres:5432/leaseinsight_database
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: password
-      UPLOAD_DIR: D:/teste
+      JWT_SECRET: ${JWT_SECRET}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      SPRING_REDIS_HOST: ${SPRING_REDIS_HOST}
+      SPRING_REDIS_PORT: ${SPRING_REDIS_PORT}
+      REDIS_TTL: ${REDIS_TTL}
+      DB_URL_PROD: ${DB_URL_PROD}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      UPLOAD_DIR: ${UPLOAD_DIR}
     networks:
       - redis_network
 
@@ -44,9 +44,9 @@ services:
     image: postgres:16.3
     environment:
       TZ: America/Sao_Paulo
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: leaseinsight_database
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     restart: always
